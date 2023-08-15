@@ -22,7 +22,7 @@
         android:id="@+id/exerciseSpinner"
         android:layout_width="300dp"
         android:layout_height="48dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
         android:entries="@array/workOuts"
         android:scrollbarSize="4dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,5 +37,36 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exerciseSpinner" />
+
+    <TextView
+        android:id="@+id/avgSetPerDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Avg. Sets (Per Day):"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/exerciseSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/monthlyExerciseData" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/monthlyWeightMonitor"
+        android:layout_width="350dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weightLineText" />
+
+    <TextView
+        android:id="@+id/weightLineText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Weight (Monthly)"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/avgSetPerDay" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
