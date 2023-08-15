@@ -37,4 +37,24 @@
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toEndOf="@+id/month"
         app:layout_constraintTop_toBottomOf="@+id/muscleDistribution" />
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/muscleBreakdown"
+        android:layout_width="350dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/monthSelect" />
+
+    <TextView
+        android:id="@+id/totalWorkouts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="Total Workouts:"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/muscleBreakdown" />
 </androidx.constraintlayout.widget.ConstraintLayout>
