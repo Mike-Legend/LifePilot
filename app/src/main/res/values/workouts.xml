@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources><string-array name="workOuts">
-    <item>Push-Ups</item>
-    <item>Sit-Ups</item>
-    <item>Crunches</item>
-    <item>Burpees</item>
+<resources>
+    <string-array name="workOuts">
+    <string>Push-Ups</string>
+    <string>Sit-Ups</string>
+    <string>Crunches</string>
+    <string>Burpees</string>
 </string-array>
 </resources>
