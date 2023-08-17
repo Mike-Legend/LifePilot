@@ -13,12 +13,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override //Initial App Generation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.sign_in);
     }
 
     @Override //Used for on click section in layout button attribute to switch layouts.
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.CancelExercises_Button) {
             FrameLayout routineoverlay = (FrameLayout) findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.GONE);
+        } else if (id == R.id.googleSignIn) {
+            setContentView(R.layout.activity_main);
         } else {
             setContentView(R.layout.activity_main);
         }
