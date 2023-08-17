@@ -1,8 +1,12 @@
 package DarkSideArrival.LifePilot;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.animation.ObjectAnimator;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.transition.AutoTransition;
 import android.view.View;
@@ -12,6 +16,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -48,6 +53,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.CancelExercises_Button) {
             FrameLayout routineoverlay = (FrameLayout) findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.GONE);
+        } else if (id == R.id.AddExercises_Button) {
+            FrameLayout routineoverlay = (FrameLayout) findViewById(R.id.routineoverlay);
+            routineoverlay.setVisibility(View.GONE);
+
+            LinearLayout ll = (LinearLayout)findViewById(R.id.ButtonAddsHere);
+            Button btn = new Button(this);
+            btn.setText("Manual Add");
+            btn.setTextSize(24);
+            btn.setTextColor(Color.WHITE);
+            GradientDrawable gradDraw = new GradientDrawable();
+            gradDraw.setShape(GradientDrawable.RECTANGLE);
+            gradDraw.setCornerRadius(100);
+            gradDraw.setColor(getResources().getColor(R.color.purple));
+            btn.setBackground(gradDraw);
+            btn.setPadding(0,0,0,8);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+            params.setMargins(0, 30, 0, 0);
+            btn.setLayoutParams(params);
+            ll.addView(btn);
         } else {
             setContentView(R.layout.activity_main);
         }

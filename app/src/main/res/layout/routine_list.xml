@@ -65,133 +65,151 @@
         app:layout_constraintVertical_bias="0.088">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
-            android:translationX="35dp">
+            android:translationX="35dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/NewRoutineCreate_Button"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:onClick="onClick"
-                android:text="Create new routine"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/RoutineList_TopText" />
-
-            <TextView
-                android:id="@+id/MyRoutines_Text"
+            <LinearLayout
+                android:id="@+id/ButtonAddsHere"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="My Routines"
-                android:textSize="34sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/NewRoutineCreate_Button" />
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/TestMyRoutine_Button"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:onClick="onClick"
-                android:text="&quot;Test my new routine&quot;"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.495"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/MyRoutines_Text" />
+                <Button
+                    android:id="@+id/NewRoutineCreate_Button"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:onClick="onClick"
+                    android:text="Create new routine"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/RoutineList_TopText" />
 
-            <TextView
-                android:id="@+id/PreMadeRoutines_Text"
+                <TextView
+                    android:id="@+id/MyRoutines_Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="My Routines"
+                    android:textSize="34sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/NewRoutineCreate_Button" />
+
+                <Button
+                    android:id="@+id/TestMyRoutine_Button"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:onClick="onClick"
+                    android:text="&quot;Test my new routine&quot;"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.495"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/MyRoutines_Text" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/PreMadeRoutines"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="Pre-Made Routines"
-                android:textSize="34sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/TestMyRoutine_Button" />
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@+id/ButtonAddsHere">
 
-            <Button
-                android:id="@+id/PreMadeRoutine3_Button"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Leg Day"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.495"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/PreMadeRoutine2_Button" />
+                <TextView
+                    android:id="@+id/PreMadeRoutines_Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:text="Pre-Made Routines"
+                    android:textSize="34sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/TestMyRoutine_Button" />
 
-            <Button
-                android:id="@+id/PreMadeRoutine2_Button"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Ab Destroyer"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.504"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/PreMadeRoutine1_Button" />
+                <Button
+                    android:id="@+id/PreMadeRoutine3_Button"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Leg Day"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.495"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/PreMadeRoutine2_Button" />
 
-            <Button
-                android:id="@+id/PreMadeRoutine1_Button"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="Chest Day"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.495"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/PreMadeRoutines_Text" />
+                <Button
+                    android:id="@+id/PreMadeRoutine2_Button"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Ab Destroyer"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.504"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/PreMadeRoutine1_Button" />
 
-            <Button
-                android:id="@+id/PreMadeRoutine4_Button"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Advanced Workouts"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.504"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/PreMadeRoutine3_Button" />
+                <Button
+                    android:id="@+id/PreMadeRoutine1_Button"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Chest Day"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.495"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/PreMadeRoutines_Text" />
 
-            <Button
-                android:id="@+id/PreMadeRoutine5_Button"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="More Workouts"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.504"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/PreMadeRoutine3_Button" />
+                <Button
+                    android:id="@+id/PreMadeRoutine4_Button"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Advanced Workouts"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.504"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/PreMadeRoutine3_Button" />
 
-            <Button
-                android:id="@+id/PreMadeRoutine6_Button"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Insane Workouts"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.504"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/PreMadeRoutine3_Button" />
+                <Button
+                    android:id="@+id/PreMadeRoutine5_Button"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="More Workouts"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.504"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/PreMadeRoutine3_Button" />
+
+                <Button
+                    android:id="@+id/PreMadeRoutine6_Button"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Insane Workouts"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.504"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/PreMadeRoutine3_Button" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
@@ -275,6 +293,54 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
+                    <CheckBox
+                        android:id="@+id/Exercise1Check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:scaleX="2"
+                        android:scaleY="2"
+                        app:layout_constraintEnd_toStartOf="@+id/NewExerciseTemp_Button"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <CheckBox
+                        android:id="@+id/Exercise2Check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="15dp"
+                        android:scaleX="2"
+                        android:scaleY="2"
+                        app:layout_constraintEnd_toStartOf="@+id/NewExerciseTemp2_Button"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/Exercise1Check" />
+
+                    <CheckBox
+                        android:id="@+id/Exercise3Check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="15dp"
+                        android:scaleX="2"
+                        android:scaleY="2"
+                        app:layout_constraintEnd_toStartOf="@+id/NewExerciseTemp3_Button"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/Exercise2Check" />
+
+                    <CheckBox
+                        android:id="@+id/Exercise4Check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="15dp"
+                        android:scaleX="2"
+                        android:scaleY="2"
+                        app:layout_constraintEnd_toStartOf="@+id/NewExerciseTemp4_Button"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/Exercise3Check" />
 
                     <Button
                         android:id="@+id/NewExerciseTemp_Button"
