@@ -6,10 +6,12 @@ import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.transition.AutoTransition;
 import android.view.View;
+import android.transition.Visibility;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -34,8 +36,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.routine_goals);
         } else if (id == R.id.GoalBack_Button) {
             setContentView(R.layout.routine_list);
-        } else if (id == R.id.routinegotobutton) {
+        } else if (id == R.id.routinesButton) {
             setContentView(R.layout.routine_list);
+        } else if (id == R.id.analytics_button) {
+            setContentView(R.layout.data_screen);
+        } else if (id == R.id.Home_Button) {
+            setContentView(R.layout.activity_main);
+        } else if (id == R.id.NewRoutineCreate_Button) {
+            FrameLayout routineoverlay = (FrameLayout) findViewById(R.id.routineoverlay);
+            routineoverlay.setVisibility(View.VISIBLE);
+        } else if (id == R.id.CancelExercises_Button) {
+            FrameLayout routineoverlay = (FrameLayout) findViewById(R.id.routineoverlay);
+            routineoverlay.setVisibility(View.GONE);
+        } else {
+            setContentView(R.layout.activity_main);
         }
     }
 }
