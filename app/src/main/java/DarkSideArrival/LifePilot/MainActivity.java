@@ -36,8 +36,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.routine_list);
         } else if (id == R.id.routinegotobutton) {
             setContentView(R.layout.routine_list);
-        } else if (id == R.id.Home_Button) {
-            setContentView(R.layout.activity_main);
         }
     }
 }

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">LifePilot</string>
+    <string name="Routines">Routines</string>
+    <string name="Analytics">Analytics</string>
+    <string name="Calendar">Calendar</string>
+    <string name="Profile">Profile</string>
+    <string name="logoDescription">LifePilot Logo</string>
 </resources>
