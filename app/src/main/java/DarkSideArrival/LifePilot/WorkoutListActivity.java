@@ -327,8 +327,6 @@ public class WorkoutListActivity extends AppCompatActivity implements AdapterVie
         {
             workoutList.myWorkouts = cardioExercises;
         }
-
-
         workoutList.notifyDataSetChanged();
     }
 
