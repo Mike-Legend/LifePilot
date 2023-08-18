@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:windowSoftInputMode="adjustNothing"
     android:layout_height="match_parent">
 
     <ImageView
@@ -57,6 +58,7 @@
         android:id="@+id/RoutineListScroll"
         android:layout_width="370dp"
         android:layout_height="556dp"
+        android:isScrollContainer="false"
         app:layout_constraintBottom_toTopOf="@+id/Home_Button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.487"
@@ -72,7 +74,7 @@
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/ButtonAddsHere"
+                android:id="@+id/RoutineButtonAddsHere"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -101,20 +103,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/NewRoutineCreate_Button" />
-
-                <Button
-                    android:id="@+id/TestMyRoutine_Button"
-                    android:layout_width="300dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:onClick="onClick"
-                    android:text="&quot;Test my new routine&quot;"
-                    android:textSize="24sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.495"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/MyRoutines_Text" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -214,10 +202,10 @@
     </ScrollView>
 
     <FrameLayout
-        android:id="@+id/routineoverlay"
-        android:layout_width="376dp"
-        android:layout_height="572dp"
-        android:layout_marginTop="20dp"
+        android:id="@+id/routinelistoverlay"
+        android:layout_width="379dp"
+        android:layout_height="240dp"
+        android:layout_marginBottom="140dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -228,8 +216,9 @@
             android:id="@+id/overlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleX="2"
+            android:scaleX="5"
             android:scaleY="1.3"
+            android:translationX="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -237,16 +226,16 @@
             app:srcCompat="@drawable/overlaybackground" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="379dp"
+            android:layout_height="240dp">
 
             <TextView
-                android:id="@+id/Exercises_TopText"
+                android:id="@+id/RoutineName_TopText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif"
-                android:text="Exercises"
+                android:text="New Routine"
                 android:textSize="40sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -255,19 +244,19 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
-                android:id="@+id/AddExercises_Button"
+                android:id="@+id/ConfirmNewRoutine_Button"
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:onClick="onClick"
-                android:text="Add"
+                android:text="Create"
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <Button
-                android:id="@+id/CancelExercises_Button"
+                android:id="@+id/CancelNewRoutine_Button"
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -278,168 +267,32 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <ScrollView
-                android:layout_width="341dp"
-                android:layout_height="417dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="14dp"
-                app:layout_constraintBottom_toTopOf="@+id/AddExercises_Button"
-                app:layout_constraintEnd_toEndOf="parent"
+            <TextView
+                android:id="@+id/NameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:text="Name:"
+                android:textSize="24sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/Exercises_TopText">
+                app:layout_constraintTop_toBottomOf="@+id/RoutineName_TopText" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <CheckBox
-                        android:id="@+id/Exercise1Check"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="5dp"
-                        android:scaleX="2"
-                        android:scaleY="2"
-                        app:layout_constraintEnd_toStartOf="@+id/NewExerciseTemp_Button"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <CheckBox
-                        android:id="@+id/Exercise2Check"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="15dp"
-                        android:scaleX="2"
-                        android:scaleY="2"
-                        app:layout_constraintEnd_toStartOf="@+id/NewExerciseTemp2_Button"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/Exercise1Check" />
-
-                    <CheckBox
-                        android:id="@+id/Exercise3Check"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="15dp"
-                        android:scaleX="2"
-                        android:scaleY="2"
-                        app:layout_constraintEnd_toStartOf="@+id/NewExerciseTemp3_Button"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/Exercise2Check" />
-
-                    <CheckBox
-                        android:id="@+id/Exercise4Check"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="15dp"
-                        android:scaleX="2"
-                        android:scaleY="2"
-                        app:layout_constraintEnd_toStartOf="@+id/NewExerciseTemp4_Button"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/Exercise3Check" />
-
-                    <Button
-                        android:id="@+id/NewExerciseTemp_Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:onClick="onClick"
-                        android:text="Temp Exercise"
-                        android:textSize="20sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <Button
-                        android:id="@+id/NewExerciseTemp2_Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:onClick="onClick"
-                        android:text="Temp Exercise"
-                        android:textSize="20sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/NewExerciseTemp_Button" />
-
-                    <Button
-                        android:id="@+id/NewExerciseTemp3_Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:onClick="onClick"
-                        android:text="Temp Exercise"
-                        android:textSize="20sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/NewExerciseTemp2_Button" />
-
-                    <Button
-                        android:id="@+id/NewExerciseTemp4_Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:onClick="onClick"
-                        android:text="Temp Exercise"
-                        android:textSize="20sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/NewExerciseTemp3_Button" />
-
-                    <Button
-                        android:id="@+id/NewExerciseTemp5_Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:onClick="onClick"
-                        android:text="Temp Exercise"
-                        android:textSize="20sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/NewExerciseTemp4_Button" />
-
-                    <Button
-                        android:id="@+id/NewExerciseTemp6_Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:onClick="onClick"
-                        android:text="Temp Exercise"
-                        android:textSize="20sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/NewExerciseTemp5_Button" />
-
-                    <Button
-                        android:id="@+id/NewExerciseTemp7_Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:onClick="onClick"
-                        android:text="Temp Exercise"
-                        android:textSize="20sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/NewExerciseTemp6_Button" />
-
-                    <Button
-                        android:id="@+id/NewExerciseTemp8_Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:onClick="onClick"
-                        android:text="Temp Exercise"
-                        android:textSize="20sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/NewExerciseTemp7_Button" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </ScrollView>
+            <EditText
+                android:id="@+id/RoutineNameEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="13dp"
+                android:layout_marginEnd="30dp"
+                android:ems="10"
+                android:hint='   "Enter Routine Name"'
+                android:inputType="textVisiblePassword"
+                android:text=""
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/NameText"
+                app:layout_constraintTop_toBottomOf="@+id/RoutineName_TopText" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
