@@ -121,6 +121,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ll.addView(btn);
                 userExercisesArrayList.get(routineIDActive).add(btn);
             }
+            //Uncheck exercises if on same screen
+            for(int i = 0; i < 4; i++) {
+                CheckBox echeck = findViewById(eCheckIDs[i]);
+                if(echeck.isChecked()) {
+                    echeck.setChecked(false);
+                }
+            }
         } else if (id == R.id.ConfirmNewRoutine_Button) {
             //overlay trigger
             FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
