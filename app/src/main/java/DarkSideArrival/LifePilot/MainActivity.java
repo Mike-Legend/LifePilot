@@ -5,6 +5,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.animation.ObjectAnimator;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -25,18 +27,22 @@ import android.widget.TextView;
 
 import com.google.protobuf.NullValue;
 
+import org.checkerframework.checker.units.qual.A;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ArrayList<Button> userRoutines;
-    private ArrayList<Button> userExercises;
-    //private ArrayList<userExercises> userExercisesArrayList;
+    private ArrayList<ArrayList<Button>> userExercisesArrayList;
+    public int routineIDActive;
 
     @Override //Initial App Generation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Set User session data
         userRoutines = new ArrayList<>();
-        userExercises = new ArrayList<>();
+        userExercisesArrayList = new ArrayList<ArrayList<Button>>();
     }
 
     @Override //Used for on click section in layout button attribute to switch layouts.
@@ -67,36 +73,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.Home_Button) {
             setContentView(R.layout.activity_main);
         } else if (id == R.id.NewRoutineCreate_Button) {
-            FrameLayout routinelistoverlay = (FrameLayout) findViewById(R.id.routinelistoverlay);
+            FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
             routinelistoverlay.setVisibility(View.VISIBLE);
         } else if (id == R.id.NewExerciseAdd_Button) {
-            FrameLayout routineoverlay = (FrameLayout) findViewById(R.id.routineoverlay);
+            FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.VISIBLE);
         } else if (id == R.id.CancelNewRoutine_Button) {
-            FrameLayout routinelistoverlay = (FrameLayout) findViewById(R.id.routinelistoverlay);
+            FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
             routinelistoverlay.setVisibility(View.GONE);
             //if keyboard doesn't go away
             InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
         } else if (id == R.id.CancelExercises_Button) {
-            FrameLayout routineoverlay = (FrameLayout) findViewById(R.id.routineoverlay);
+            FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.GONE);
         } else if (id == R.id.AddExercises_Button) {
             //overlay trigger
-            FrameLayout routineoverlay = (FrameLayout) findViewById(R.id.routineoverlay);
+            FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.GONE);
             //button creation
-            LinearLayout ll = (LinearLayout)findViewById(R.id.ExerciseButtonAddsHere);
+            LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
             int checks = 0;
             int[] eCheckIDs = new int[] {R.id.Exercise1Check, R.id.Exercise2Check, R.id.Exercise3Check, R.id.Exercise4Check};
             //check amount, based off number of available exercises
             for(int i = 0; i < 4; i++) {
-                CheckBox echeck = (CheckBox)findViewById(eCheckIDs[i]);
+                CheckBox echeck = findViewById(eCheckIDs[i]);
                 if(echeck.isChecked()) {
                     checks++;
                 }
             }
-            //mass button create for selected exercises
+            //mass button create for selected exercises TODO: Change to select workout info later with array
             for(int i = 0; i < checks; i++) {
                 Button btn = new Button(this);
                 btn.setText("Temp Exercise");
@@ -113,18 +119,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 params.setMargins(0, 30, 0, 0);
                 btn.setLayoutParams(params);
                 ll.addView(btn);
-                userExercises.add(btn);
+                userExercisesArrayList.get(routineIDActive).add(btn);
             }
         } else if (id == R.id.ConfirmNewRoutine_Button) {
             //overlay trigger
-            FrameLayout routinelistoverlay = (FrameLayout) findViewById(R.id.routinelistoverlay);
+            FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
             routinelistoverlay.setVisibility(View.GONE);
             //button creation
-            LinearLayout ll = (LinearLayout)findViewById(R.id.RoutineButtonAddsHere);
+            LinearLayout ll = findViewById(R.id.RoutineButtonAddsHere);
             Button btn = new Button(this);
             btn.setAllCaps(false);
             TextView buttontext = findViewById(R.id.RoutineNameEditText);
-            btn.setText(buttontext.getText());
+            if(buttontext.getText().length() == 0) {
+                btn.setText("New Routine");
+            } else {
+                btn.setText(buttontext.getText());
+            }
             btn.setTextSize(24);
             btn.setTextColor(Color.WHITE);
             btn.setClickable(true);
@@ -143,28 +153,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
             //added to routine list
-            userRoutines.add(btn);
             btn.setId(userRoutines.size());
+            userRoutines.add(btn);
+            //New Exercise Array
+            userExercisesArrayList.add(new ArrayList<Button>());
         } else if (id < userRoutines.size() || id == userRoutines.size()) {
             setContentView(R.layout.routine_newlist);
-            //Generate Name
+            //Generate Name and routine separation
+            routineIDActive = id;
             TextView titletext = findViewById(R.id.NewRoutineSet_TopText);
             for(int i = 0; i < userRoutines.size(); i++) {
                 if(userRoutines.get(i).getId() == id) {
                     titletext.setText(userRoutines.get(i).getText());
                 }
             }
-            if(userExercises.size() != 0) {
+            //Generate Routine Exercises
+            if(userExercisesArrayList.get(routineIDActive).size() != 0) {
                 LoadUserRoutineExercises();
             }
-        } else {
+        } else if (id == R.id.ExerciseSave_Button){
+            //TODO: Sync to firebase
+            setContentView(R.layout.routine_list);
+            LoadUserRoutines();
+        }else {
             setContentView(R.layout.activity_main);
         }
     }
 
     //load custom routines
     public void LoadUserRoutines() {
-        LinearLayout ll = (LinearLayout)findViewById(R.id.RoutineButtonAddsHere);
+        LinearLayout ll = findViewById(R.id.RoutineButtonAddsHere);
         for (int i = 0; i < userRoutines.size(); i++) {
             if(userRoutines.get(i).getParent() != null) {
                 ((ViewGroup)userRoutines.get(i).getParent()).removeView(userRoutines.get(i));
@@ -175,12 +193,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //load custom exercises per routine
     public void LoadUserRoutineExercises() {
-        LinearLayout ll = (LinearLayout)findViewById(R.id.ExerciseButtonAddsHere);
-        for (int i = 0; i < userExercises.size(); i++) {
-            if(userExercises.get(i).getParent() != null) {
-                ((ViewGroup)userExercises.get(i).getParent()).removeView(userExercises.get(i));
+        LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
+        Button temp;
+        for(int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
+            temp = (userExercisesArrayList.get(routineIDActive).get(i));
+            if(temp.getParent() != null) {
+                ((ViewGroup)temp.getParent()).removeView(temp);
             }
-            ll.addView(userExercises.get(i));
+            ll.addView(temp);
         }
     }
 }
