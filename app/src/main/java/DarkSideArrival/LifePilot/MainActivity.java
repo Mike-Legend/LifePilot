@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //TODO: Sync to firebase
             setContentView(R.layout.routine_list);
             LoadUserRoutines();
-        }else {
+        } else {
             setContentView(R.layout.activity_main);
         }
     }
