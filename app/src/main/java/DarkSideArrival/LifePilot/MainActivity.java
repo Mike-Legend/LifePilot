@@ -3,30 +3,27 @@ package DarkSideArrival.LifePilot;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-
 import android.animation.ObjectAnimator;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.transition.AutoTransition;
+import android.transition.Scene;
+import android.transition.Transition;
+import android.transition.TransitionManager;
+import android.view.Gravity;
 import android.view.View;
+import android.transition.Slide;
 import android.transition.Visibility;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.google.protobuf.NullValue;
-
 import org.checkerframework.checker.units.qual.A;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -34,11 +31,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Button> userRoutines;
     private ArrayList<ArrayList<Button>> userExercisesArrayList;
     public int routineIDActive;
+    private Scene routineAnimation, homeAnimation, goalAnimation, nRoutineAnimation;
 
     @Override //Initial App Generation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Home screen animation to layout - ONLY from home screen, duplicate to home button onClick
+        routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
 
         //Set User session data
         userRoutines = new ArrayList<>();
@@ -48,30 +49,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override //Used for on click section in layout button attribute to switch layouts.
     public void onClick(View view) //add button with an else-if statement
     {
-        //TODO: animations work in progress
-        Animation SlideLeftIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
-        Animation SlideRightIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
-        Animation SlideLeftOut = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
-        Animation SlideRightOut = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
-
         int id = view.getId();
         if(id == R.id.Goal_Button) {
-            view.startAnimation(SlideLeftIn);
-            setContentView(R.layout.routine_goals);
+            Transition slide = new Slide(Gravity.RIGHT);
+            TransitionManager.go(goalAnimation, slide);
+
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionGoalLayout), R.layout.routine_list, this);
         } else if (id == R.id.GoalBack_Button) {
-            setContentView(R.layout.routine_list);
+            Transition slide = new Slide(Gravity.LEFT);
+            TransitionManager.go(routineAnimation, slide);
             if(userRoutines.size() != 0) {
                 LoadUserRoutines();
             }
         } else if (id == R.id.routinesButton) {
-            setContentView(R.layout.routine_list);
+            Transition slide = new Slide(Gravity.RIGHT);
+            TransitionManager.go(routineAnimation, slide);
             if(userRoutines.size() != 0) {
                 LoadUserRoutines();
             }
+            //setup next button animations
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
+            nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
         } else if (id == R.id.analytics_button) {
             setContentView(R.layout.data_screen);
         } else if (id == R.id.Home_Button) {
-            setContentView(R.layout.activity_main);
+            Transition slide = new Slide(Gravity.LEFT);
+            TransitionManager.go(homeAnimation, slide);
+            //Next Buttons
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
         } else if (id == R.id.NewRoutineCreate_Button) {
             FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
             routinelistoverlay.setVisibility(View.VISIBLE);
@@ -165,7 +171,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //New Exercise Array
             userExercisesArrayList.add(new ArrayList<Button>());
         } else if (id < userRoutines.size() || id == userRoutines.size()) {
-            setContentView(R.layout.routine_newlist);
+            Transition slide = new Slide(Gravity.RIGHT);
+            TransitionManager.go(nRoutineAnimation, slide);
             //Generate Name and routine separation
             routineIDActive = id;
             TextView titletext = findViewById(R.id.NewRoutineSet_TopText);
@@ -178,6 +185,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(userExercisesArrayList.get(routineIDActive).size() != 0) {
                 LoadUserRoutineExercises();
             }
+            //button usage animations
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id == R.id.ExerciseSave_Button){
             //TODO: Sync to firebase
             setContentView(R.layout.routine_list);
