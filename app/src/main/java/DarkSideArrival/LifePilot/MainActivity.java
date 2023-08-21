@@ -6,6 +6,9 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import android.animation.ObjectAnimator;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -72,7 +75,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
             nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
         } else if (id == R.id.analytics_button) {
-            setContentView(R.layout.data_screen);
+            //Adjusted to change activity
+            Intent userInt = new Intent(getApplicationContext(), Analytics.class);
+            startActivity(userInt);
         } else if (id == R.id.Home_Button) {
             Transition slide = new Slide(Gravity.LEFT);
             TransitionManager.go(homeAnimation, slide);
