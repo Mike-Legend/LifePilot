@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(id == R.id.Goal_Button) {
             Transition slide = new Slide(Gravity.RIGHT);
             TransitionManager.go(goalAnimation, slide);
+
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionGoalLayout), R.layout.routine_list, this);
         } else if (id == R.id.GoalBack_Button) {
             Transition slide = new Slide(Gravity.LEFT);
