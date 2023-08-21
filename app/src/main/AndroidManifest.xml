@@ -15,12 +15,21 @@
         android:theme="@style/Theme.LifePilot"
         tools:targetApi="31">
         <activity
+            android:name=".MuscleDistribution"
+            android:exported="false" />
+        <activity
+            android:name=".ExerciseData"
+            android:exported="false" />
+        <activity
+            android:name=".Analytics"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"
-            android:theme = "@style/Theme.Design.NoActionBar"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.Design.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
