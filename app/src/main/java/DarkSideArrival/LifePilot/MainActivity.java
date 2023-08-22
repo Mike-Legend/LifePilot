@@ -2,19 +2,11 @@ package DarkSideArrival.LifePilot;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.animation.ObjectAnimator;
 import android.os.Bundle;
-import android.transition.AutoTransition;
 import android.view.View;
-import android.transition.Visibility;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.FrameLayout;
-
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -52,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             FrameLayout routineoverlay = (FrameLayout) findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.GONE);
         } else if (id == R.id.googleSignIn) {
-            setContentView(R.layout.activity_main);
+            setContentView(R.layout.experience_selection);
         } else {
             setContentView(R.layout.activity_main);
         }
