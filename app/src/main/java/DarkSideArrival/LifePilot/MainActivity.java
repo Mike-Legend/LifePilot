@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -32,9 +33,12 @@ import org.checkerframework.checker.units.qual.A;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ArrayList<Button> userRoutines;
+    private ArrayList<CheckBox> userRoutineCheck;
+    private ArrayList<Button> userGoals;
     private ArrayList<ArrayList<Button>> userExercisesArrayList;
+    private ArrayList<ArrayList<Button>> userGoalArrayList;
     public int routineIDActive;
-    private Scene routineAnimation, homeAnimation, goalAnimation, nRoutineAnimation;
+    private Scene routineAnimation, homeAnimation, goalAnimation, nRoutineAnimation, nGoalAnimation;
 
     @Override //Initial App Generation
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +50,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Set User session data
         userRoutines = new ArrayList<>();
+        userRoutineCheck = new ArrayList<>();
+        userGoals = new ArrayList<>();
         userExercisesArrayList = new ArrayList<ArrayList<Button>>();
+        userGoalArrayList = new ArrayList<ArrayList<Button>>();
     }
 
     @Override //Used for on click section in layout button attribute to switch layouts.
@@ -56,6 +63,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(id == R.id.Goal_Button) {
             Transition slide = new Slide(Gravity.RIGHT);
             TransitionManager.go(goalAnimation, slide);
+            //Generate Goals
+            if(userGoals.size() != 0) {
+                LoadUserGoals();
+            }
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionGoalLayout), R.layout.routine_list, this);
         } else if (id == R.id.GoalBack_Button) {
             Transition slide = new Slide(Gravity.LEFT);
@@ -85,6 +96,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.NewRoutineCreate_Button) {
             FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
             routinelistoverlay.setVisibility(View.VISIBLE);
+        } else if (id == R.id.NewGoalCreate_Button) {
+            FrameLayout routinegoallistoverlay = findViewById(R.id.routinegoallistoverlay);
+            routinegoallistoverlay.setVisibility(View.VISIBLE);
         } else if (id == R.id.NewExerciseAdd_Button) {
             FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.VISIBLE);
@@ -94,9 +108,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //if keyboard doesn't go away
             InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
+        } else if (id == R.id.CancelGoal_Button) {
+            FrameLayout routinegoallistoverlay = findViewById(R.id.goaladdtoroutineoverlay);
+            routinegoallistoverlay.setVisibility(View.GONE);
+        } else if (id == R.id.CancelNewGoal_Button) {
+            FrameLayout routinegoallistoverlay = findViewById(R.id.routinegoallistoverlay);
+            routinegoallistoverlay.setVisibility(View.GONE);
+            //if keyboard doesn't go away
+            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
         } else if (id == R.id.CancelExercises_Button) {
             FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.GONE);
+        } else if (id == R.id.ConfirmNewGoal_Button) {
+            //overlay trigger
+            FrameLayout routinegoallistoverlay = findViewById(R.id.routinegoallistoverlay);
+            routinegoallistoverlay.setVisibility(View.GONE);
+            //button creation
+            LinearLayout ll = findViewById(R.id.RoutineGoalButtonAddsHere);
+            Button btn = new Button(this);
+            btn.setAllCaps(false);
+            TextView buttontext = findViewById(R.id.GoalNameEditText);
+            if(buttontext.getText().length() == 0) {
+                btn.setText("New Goal");
+            } else {
+                btn.setText(buttontext.getText());
+            }
+            btn.setTextSize(24);
+            btn.setTextColor(Color.WHITE);
+            btn.setClickable(true);
+            btn.setOnClickListener(this::onClick);
+            GradientDrawable gradDraw = new GradientDrawable();
+            gradDraw.setShape(GradientDrawable.RECTANGLE);
+            gradDraw.setCornerRadius(100);
+            gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+            btn.setBackground(gradDraw);
+            btn.setPadding(0,0,0,8);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+            params.setMargins(0, 30, 0, 0);
+            btn.setLayoutParams(params);
+            ll.addView(btn);
+            //if keyboard doesn't go away
+            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
+            //added to goal list
+            btn.setId(userGoals.size() + 100);
+            userGoals.add(btn);
+            //New Goal Array
+            userGoalArrayList.add(new ArrayList<Button>());
         } else if (id == R.id.AddExercises_Button) {
             //overlay trigger
             FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
@@ -122,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 GradientDrawable gradDraw = new GradientDrawable();
                 gradDraw.setShape(GradientDrawable.RECTANGLE);
                 gradDraw.setCornerRadius(100);
-                gradDraw.setColor(getResources().getColor(R.color.purple));
+                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
                 btn.setBackground(gradDraw);
                 btn.setPadding(0,0,0,8);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
@@ -138,6 +197,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     echeck.setChecked(false);
                 }
             }
+        } else if (id == R.id.AddGoal_Button) {
+            FrameLayout routinegoallistoverlay = findViewById(R.id.goaladdtoroutineoverlay);
+            routinegoallistoverlay.setVisibility(View.GONE);
+
         } else if (id == R.id.ConfirmNewRoutine_Button) {
             //overlay trigger
             FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
@@ -159,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             GradientDrawable gradDraw = new GradientDrawable();
             gradDraw.setShape(GradientDrawable.RECTANGLE);
             gradDraw.setCornerRadius(100);
-            gradDraw.setColor(getResources().getColor(R.color.purple));
+            gradDraw.setColor(getResources().getColor(R.color.royalPurple));
             btn.setBackground(gradDraw);
             btn.setPadding(0,0,0,8);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
@@ -172,6 +235,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //added to routine list
             btn.setId(userRoutines.size());
             userRoutines.add(btn);
+            //Checkbox create
+            CheckBox temp2 = new CheckBox(getApplicationContext());
+            temp2.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
+            temp2.setScaleX(2);
+            temp2.setScaleY(2);
+            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+            params2.setMargins(0, 30, 0, 0);
+            temp2.setLayoutParams(params);
+            //added to routine check list
+            userRoutineCheck.add(temp2);
             //New Exercise Array
             userExercisesArrayList.add(new ArrayList<Button>());
         } else if (id < userRoutines.size() || id == userRoutines.size()) {
@@ -191,6 +264,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             //button usage animations
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
+        } else if (id > 99 && id < userGoals.size() + 101) {
+            FrameLayout routinegoaloverlay = findViewById(R.id.goaladdtoroutineoverlay);
+            routinegoaloverlay.setVisibility(View.VISIBLE);
+            int goalIdActive = id;
+            TextView titletext = findViewById(R.id.GoalToRoutine_TopText);
+            for(int i = 0; i < userGoals.size(); i++) {
+                if(userGoals.get(i).getId() == id) {
+                    titletext.setText(userGoals.get(i).getText());
+                }
+            }
+            LinearLayout ll = findViewById(R.id.GoalRoutineListHere);
+            Button temp;
+            for(int i = 0; i < userRoutines.size(); i++) {
+                temp = (userRoutines.get(i));
+                if(temp.getParent() != null) {
+                    ((ViewGroup)temp.getParent()).removeView(temp);
+                }
+                ll.addView(temp);
+            }
+            LinearLayout ll2 = findViewById(R.id.GoalCheckRoutineListHere);
+            CheckBox temp2;
+            for(int i = 0; i < userRoutines.size(); i++) {
+                temp2 = (userRoutineCheck.get(i));
+                if(temp2.getParent() != null) {
+                    ((ViewGroup)temp2.getParent()).removeView(temp2);
+                }
+                ll2.addView(temp2);
+            }
         } else if (id == R.id.ExerciseSave_Button){
             //TODO: Sync to firebase
             setContentView(R.layout.routine_list);
@@ -208,6 +309,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ((ViewGroup)userRoutines.get(i).getParent()).removeView(userRoutines.get(i));
             }
             ll.addView(userRoutines.get(i));
+        }
+    }
+
+    //load custom goals
+    public void LoadUserGoals() {
+        LinearLayout ll = findViewById(R.id.RoutineGoalButtonAddsHere);
+        for (int i = 0; i < userGoals.size(); i++) {
+            if(userGoals.get(i).getParent() != null) {
+                ((ViewGroup)userGoals.get(i).getParent()).removeView(userGoals.get(i));
+            }
+            ll.addView(userGoals.get(i));
         }
     }
 
