@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<ArrayList<Button>> userExercisesArrayList;
     private ArrayList<ArrayList<Button>> userGoalArrayList;
     public int routineIDActive;
-    private Scene routineAnimation, homeAnimation, goalAnimation, nRoutineAnimation, nGoalAnimation;
+    private Scene routineAnimation, homeAnimation, goalAnimation, nRoutineAnimation;
 
     @Override //Initial App Generation
     protected void onCreate(Bundle savedInstanceState) {
