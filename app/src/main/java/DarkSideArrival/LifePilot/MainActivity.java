@@ -1,6 +1,11 @@
 package DarkSideArrival.LifePilot;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.content.IntentSender;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import android.animation.ObjectAnimator;
@@ -13,11 +18,14 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.transition.Scene;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.transition.Slide;
 import android.transition.Visibility;
 import android.view.ViewGroup;
@@ -25,6 +33,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.google.android.gms.auth.api.identity.GetSignInIntentRequest;
+import com.google.android.gms.auth.api.identity.Identity;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.protobuf.NullValue;
@@ -41,13 +61,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public int routineIDActive, goalIDActive;
     private Scene routineAnimation, homeAnimation, goalAnimation, nRoutineAnimation;
 
+    //Google Sign in variables
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
+    GoogleSignInAccount account;
+
     @Override //Initial App Generation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.sign_in);
+        //Google Sign In variables
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        gsc = GoogleSignIn.getClient(this, gso);
 
-        //Home screen animation to layout - ONLY from home screen, duplicate to home button onClick
-        routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
+        account = GoogleSignIn.getLastSignedInAccount(this); //is null if user is already signed in
+
+        if (account != null) {
+            setContentView(R.layout.activity_main);
+            //Home screen animation to layout - ONLY from home screen, duplicate to home button onClick
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
+        }else {
+            setContentView(R.layout.sign_in);
+        }
+
+
 
         //Set User session data
         userRoutines = new ArrayList<>();
@@ -60,6 +97,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override //Used for on click section in layout button attribute to switch layouts.
     public void onClick(View view) //add button with an else-if statement
     {
+
+        //TODO: animations work in progress
+        Animation SlideLeftIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
+        Animation SlideRightIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
+        Animation SlideLeftOut = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
+        Animation SlideRightOut = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
+
         int id = view.getId();
         if(id == R.id.Goal_Button) {
             Transition slide = new Slide(Gravity.RIGHT);
@@ -349,10 +393,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //TODO: Sync to firebase
             setContentView(R.layout.routine_list);
             LoadUserRoutines();
+        } else if (id == R.id.googleSignIn) {
+            signIn();
+            //setContentView(R.layout.experience_selection);
+        } else if (id == R.id.temp_logout_button) {
+            signOut();
+            //setContentView(R.layout.experience_selection);
         } else {
             setContentView(R.layout.activity_main);
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
         }
     }
+
+    private static final int REQUEST_CODE_GOOGLE_SIGN_IN = 1200; /* unique request id */
+
+    //Google Sign in functions
+    void signIn(){
+        Intent signInIntent = gsc.getSignInIntent();
+        startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN);
+    }
+
+    void signOut(){
+        gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                setContentView(R.layout.sign_in);
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_GOOGLE_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+            try {
+                task.getResult(ApiException.class);
+                setContentView(R.layout.experience_selection);
+            } catch (ApiException e) {
+                Toast.makeText(getApplicationContext(), "Something went wrong!!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     //load custom routines
     public void LoadUserRoutines() {
