@@ -4,21 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundPrimary"
+    android:id="@+id/TransitionHomeLayout"
     tools:context=".MainActivity">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="447dp"
-        android:layout_height="860dp"
+        android:layout_width="490dp"
+        android:layout_height="937dp"
         android:contentDescription="@string/logoDescription"
         android:onClick="onClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.767"
-        app:srcCompat="@drawable/loginpagemain" />
+        app:layout_constraintVertical_bias="0.373"
+        app:srcCompat="@drawable/gradientblackbackground" />
 
     <Button
         android:id="@+id/routinesButton"
@@ -28,6 +29,7 @@
         android:layout_marginBottom="16dp"
         android:onClick="onClick"
         android:text="@string/Routines"
+        android:backgroundTint="@color/royalPurple"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/analytics_button"
         app:layout_constraintStart_toStartOf="parent" />
@@ -40,6 +42,7 @@
         android:layout_marginBottom="16dp"
         android:onClick="onClick"
         android:text="@string/Analytics"
+        android:backgroundTint="@color/royalPurple"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -52,6 +55,7 @@
         android:layout_marginBottom="16dp"
         android:onClick="onClick"
         android:text="@string/Calendar"
+        android:backgroundTint="@color/royalPurple"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/profile_button"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -64,6 +68,7 @@
         android:layout_marginBottom="16dp"
         android:onClick="onClick"
         android:text="@string/Profile"
+        android:backgroundTint="@color/royalPurple"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
