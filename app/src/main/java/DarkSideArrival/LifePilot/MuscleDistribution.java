@@ -43,12 +43,14 @@ public class MuscleDistribution extends AppCompatActivity implements View.OnClic
         if(id == R.id.muscleHomeButton)
         {
             Intent userInt = new Intent(getApplicationContext(), MainActivity.class);
+            finish();
             startActivity(userInt);
         }
 
         else if (id == R.id.muscleBack)
         {
             Intent userInt = new Intent(getApplicationContext(), Analytics.class);
+            finish();
             startActivity(userInt);
         }
 

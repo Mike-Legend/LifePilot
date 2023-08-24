@@ -41,18 +41,21 @@ public class Analytics extends AppCompatActivity implements View.OnClickListener
         if(id == R.id.analyticsHomeButton)
         {
             Intent userInt = new Intent(getApplicationContext(), MainActivity.class);
+            finish();
             startActivity(userInt);
         }
 
         else if (id == R.id.excerciseData)
         {
             Intent userInt = new Intent(getApplicationContext(), ExerciseData.class);
+            finish();
             startActivity(userInt);
         }
 
         else if (id == R.id.breakDown)
         {
             Intent userInt = new Intent(getApplicationContext(), MuscleDistribution.class);
+            finish();
             startActivity(userInt);
         }
 

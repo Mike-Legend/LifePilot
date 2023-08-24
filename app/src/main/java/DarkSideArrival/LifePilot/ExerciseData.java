@@ -45,12 +45,14 @@ public class ExerciseData extends AppCompatActivity implements View.OnClickListe
         if(id == R.id.exerciseBack)
         {
             Intent userInt = new Intent(getApplicationContext(), Analytics.class);
+            finish();
             startActivity(userInt);
         }
 
         else if (id == R.id.exerciseHomeButton)
         {
             Intent userInt = new Intent(getApplicationContext(), MainActivity.class);
+            finish();
             startActivity(userInt);
         }
 
