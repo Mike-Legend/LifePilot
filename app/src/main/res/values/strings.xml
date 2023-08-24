@@ -5,4 +5,5 @@
     <string name="Calendar">Calendar</string>
     <string name="Profile">Profile</string>
     <string name="logoDescription">LifePilot Logo</string>
+    <string name="signIn">Sign in</string>
 </resources>

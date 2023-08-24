@@ -12,6 +12,7 @@
         android:layout_width="447dp"
         android:layout_height="860dp"
         android:contentDescription="@string/logoDescription"
+        android:onClick="onClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,6 +68,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <Button
+        android:id="@+id/temp_logout_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Temp Logout"
+        android:onClick="onClick"
+        tools:layout_editor_absoluteX="166dp"
+        tools:layout_editor_absoluteY="191dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
