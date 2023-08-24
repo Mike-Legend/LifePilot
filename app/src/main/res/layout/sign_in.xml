@@ -8,6 +8,20 @@
     tools:context=".MainActivity">
 
     <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="490dp"
+        android:layout_height="937dp"
+        android:contentDescription="@string/logoDescription"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.373"
+        app:srcCompat="@drawable/gradientblackbackground" />
+
+    <ImageView
         android:id="@+id/googleSignIn"
         android:layout_width="349dp"
         android:layout_height="85dp"

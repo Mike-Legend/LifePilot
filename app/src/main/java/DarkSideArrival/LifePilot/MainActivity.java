@@ -68,8 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override //Initial App Generation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.sign_in);
-
+        //setContentView(R.layout.sign_in);
         //Google Sign In variables
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
@@ -78,13 +77,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (account != null) {
             setContentView(R.layout.activity_main);
+            //Home screen animation to layout - ONLY from home screen, duplicate to home button onClick
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
         }else {
             setContentView(R.layout.sign_in);
         }
-        setContentView(R.layout.activity_main);
 
-        //Home screen animation to layout - ONLY from home screen, duplicate to home button onClick
-        routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
+
 
         //Set User session data
         userRoutines = new ArrayList<>();
@@ -349,15 +348,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //setContentView(R.layout.experience_selection);
         } else {
             setContentView(R.layout.activity_main);
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
         }
     }
 
-    private static final int REQUEST_CODE_GOOGLE_SIGN_IN = 1; /* unique request id */
+    private static final int REQUEST_CODE_GOOGLE_SIGN_IN = 1200; /* unique request id */
 
     //Google Sign in functions
     void signIn(){
         Intent signInIntent = gsc.getSignInIntent();
-        startActivityForResult(signInIntent, 1200);
+        startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN);
     }
 
     void signOut(){
@@ -372,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1200) {
+        if (requestCode == REQUEST_CODE_GOOGLE_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
 
             try {
