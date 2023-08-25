@@ -25,6 +25,9 @@
             android:name=".Analytics"
             android:exported="false" />
         <activity
+            android:name=".WorkoutListActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
