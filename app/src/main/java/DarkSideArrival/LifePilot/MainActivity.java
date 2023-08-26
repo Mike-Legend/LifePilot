@@ -80,6 +80,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.activity_main);
             //Home screen animation to layout - ONLY from home screen, duplicate to home button onClick
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
+            //Welcome text change
+            TextView welcome = findViewById(R.id.welcome_text);
+            String name = account.getGivenName();
+            welcome.setText("Welcome, "+name+"!");
         }else {
             setContentView(R.layout.sign_in);
         }
@@ -393,12 +397,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             setContentView(R.layout.activity_main);
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
+
+            if (account != null){
+                TextView welcome = findViewById(R.id.welcome_text);
+                String name = account.getGivenName();
+                welcome.setText("Welcome, "+name+"!");
+            }
         }
     }
 
-    private static final int REQUEST_CODE_GOOGLE_SIGN_IN = 1200; /* unique request id */
-
     //Google Sign in functions
+    private static final int REQUEST_CODE_GOOGLE_SIGN_IN = 1200; /* unique request id */
     void signIn(){
         Intent signInIntent = gsc.getSignInIntent();
         startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN);
@@ -422,6 +431,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 task.getResult(ApiException.class);
                 setContentView(R.layout.experience_selection);
+                account = GoogleSignIn.getLastSignedInAccount(this);
             } catch (ApiException e) {
                 Toast.makeText(getApplicationContext(), "Something went wrong!!", Toast.LENGTH_SHORT).show();
             }
