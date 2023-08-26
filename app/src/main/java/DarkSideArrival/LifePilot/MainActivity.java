@@ -95,13 +95,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override //Used for on click section in layout button attribute to switch layouts.
     public void onClick(View view) //add button with an else-if statement
     {
-
-        //TODO: animations work in progress
-        Animation SlideLeftIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
-        Animation SlideRightIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
-        Animation SlideLeftOut = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
-        Animation SlideRightOut = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
-
         int id = view.getId();
         if(id == R.id.Goal_Button) {
             Transition slide = new Slide(Gravity.RIGHT);
