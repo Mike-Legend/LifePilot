@@ -49,6 +49,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.protobuf.NullValue;
 import org.checkerframework.checker.units.qual.A;
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -56,8 +57,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<CheckBox> userRoutineCheck;
     private ArrayList<Button> userGoals;
     private ArrayList<ArrayList<Button>> userExercisesArrayList;
-    private ArrayList<ArrayList<Button>> userGoalArrayList;
-    public int routineIDActive;
+    private ArrayList<ArrayList<TextView>> userGoalArrayList; //Future usage to add multiple goals to one routine
+    public int routineIDActive, goalIDActive;
     private Scene routineAnimation, homeAnimation, goalAnimation, nRoutineAnimation;
 
     //Google Sign in variables
@@ -83,14 +84,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.sign_in);
         }
 
-
-
         //Set User session data
         userRoutines = new ArrayList<>();
         userRoutineCheck = new ArrayList<>();
         userGoals = new ArrayList<>();
         userExercisesArrayList = new ArrayList<ArrayList<Button>>();
-        userGoalArrayList = new ArrayList<ArrayList<Button>>();
+        userGoalArrayList = new ArrayList<ArrayList<TextView>>();
     }
 
     @Override //Used for on click section in layout button attribute to switch layouts.
@@ -195,11 +194,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //if keyboard doesn't go away
             InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
+            buttontext.setText("");
             //added to goal list
             btn.setId(userGoals.size() + 100);
             userGoals.add(btn);
             //New Goal Array
-            userGoalArrayList.add(new ArrayList<Button>());
+            userGoalArrayList.add(new ArrayList<TextView>());
         } else if (id == R.id.AddExercises_Button) {
             //overlay trigger
             FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
@@ -241,10 +241,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     echeck.setChecked(false);
                 }
             }
-        } else if (id == R.id.AddGoal_Button) {
+        } else if (id == R.id.AddGoal_Button) { //TODO: Readding goal bugged, diff goals unchecked bugged
             FrameLayout routinegoallistoverlay = findViewById(R.id.goaladdtoroutineoverlay);
             routinegoallistoverlay.setVisibility(View.GONE);
-
+            TextView goal = new TextView(this);
+            goal.setVisibility(View.GONE);
+            String g1 = "Goal: ";
+            String g2 = String.valueOf(userGoals.get(goalIDActive).getText());
+            goal.setText(g1 + g2);
+            for(int i = 0; i < userRoutineCheck.size(); i++) {
+                if(userRoutineCheck.get(i).isChecked()) {
+                    if(i + 1 > userGoalArrayList.size()) {
+                        userGoalArrayList.add(new ArrayList<TextView>());
+                    } else if(userGoalArrayList.get(i).size() > 0) {
+                        userGoalArrayList.get(i).remove(i);
+                    }
+                    userGoalArrayList.get(i).add(goal);
+                } //else if(userRoutineCheck.get(i).isChecked() == false) {
+                    //if(i + 1 > userGoalArrayList.size()) {
+                        //userGoalArrayList.add(new ArrayList<TextView>());
+                   //}
+                    //if(userGoalArrayList.get(i).size() > 0) {
+                        //userGoalArrayList.get(i).get(0).setText("");
+                    //}
+                //}
+            }
         } else if (id == R.id.ConfirmNewRoutine_Button) {
             //overlay trigger
             FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
@@ -276,6 +297,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //if keyboard doesn't go away
             InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
+            buttontext.setText("");
             //added to routine list
             btn.setId(userRoutines.size());
             userRoutines.add(btn);
@@ -302,6 +324,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     titletext.setText(userRoutines.get(i).getText());
                 }
             }
+            //Check goals
+            if(userGoals.size() != 0) {
+                if(routineIDActive + 1 > userGoalArrayList.size()) {
+                    TextView goal = findViewById(R.id.GoalofRoutine_TopText);
+                    goal.setVisibility(View.GONE);
+                } else if(userGoalArrayList.get(routineIDActive) != null) {
+                    TextView goal = findViewById(R.id.GoalofRoutine_TopText);
+                    goal.setVisibility(View.VISIBLE);
+                    goal.setText(userGoalArrayList.get(routineIDActive).get(0).getText());
+                } else {
+                    TextView goal = findViewById(R.id.GoalofRoutine_TopText);
+                    goal.setVisibility(View.GONE);
+                }
+            } else {
+                TextView goal = findViewById(R.id.GoalofRoutine_TopText);
+                goal.setVisibility(View.GONE);
+            }
             //Generate Routine Exercises
             if(userExercisesArrayList.get(routineIDActive).size() != 0) {
                 LoadUserRoutineExercises();
@@ -311,6 +350,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id > 99 && id < userGoals.size() + 101) {
             FrameLayout routinegoaloverlay = findViewById(R.id.goaladdtoroutineoverlay);
             routinegoaloverlay.setVisibility(View.VISIBLE);
+            goalIDActive = id - 100;
+            //empty check text
+            if(userRoutines.size() == 0) {
+                TextView rl = findViewById(R.id.NoGoal_TopText);
+                rl.setVisibility(View.VISIBLE);
+            } else {
+                TextView rl = findViewById(R.id.NoGoal_TopText);
+                rl.setVisibility(View.GONE);
+            }
+            //Generate goal name
             int goalIdActive = id;
             TextView titletext = findViewById(R.id.GoalToRoutine_TopText);
             for(int i = 0; i < userGoals.size(); i++) {
@@ -318,6 +367,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     titletext.setText(userGoals.get(i).getText());
                 }
             }
+            //list routines to add
             LinearLayout ll = findViewById(R.id.GoalRoutineListHere);
             Button temp;
             for(int i = 0; i < userRoutines.size(); i++) {
@@ -327,6 +377,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 ll.addView(temp);
             }
+            //list checkboxes to add
             LinearLayout ll2 = findViewById(R.id.GoalCheckRoutineListHere);
             CheckBox temp2;
             for(int i = 0; i < userRoutines.size(); i++) {
