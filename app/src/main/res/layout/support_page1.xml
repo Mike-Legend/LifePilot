@@ -4,54 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bluebackground">
+    android:background="@color/black">
 
     <TextView
         android:id="@+id/textView16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="45dp"
         android:text="Support"
+        android:textColor="@color/white"
         android:textSize="24sp"
-        tools:layout_editor_absoluteX="155dp"
-        tools:layout_editor_absoluteY="45dp" />
+        app:layout_constraintStart_toStartOf="@+id/imageView6"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
         android:text="Welcome Username"
-        tools:layout_editor_absoluteX="130dp"
-        tools:layout_editor_absoluteY="222dp" />
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/imageView6"
+        app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
     <TextView
         android:id="@+id/textView18"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="95dp"
+        android:layout_marginTop="265dp"
         android:text="LifePilot support is here for you."
-        tools:layout_editor_absoluteX="95dp"
-        tools:layout_editor_absoluteY="265dp" />
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="14dp"
         android:text="Slidebutton1"
-        tools:layout_editor_absoluteX="130dp"
-        tools:layout_editor_absoluteY="299dp" />
+        app:layout_constraintStart_toStartOf="@+id/textView18"
+        app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
     <Button
         android:id="@+id/button14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="29dp"
+        android:layout_marginTop="290dp"
+        android:layout_marginBottom="288dp"
         android:text="Sign out"
-        tools:layout_editor_absoluteX="29dp"
-        tools:layout_editor_absoluteY="531dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
     <ImageView
         android:id="@+id/imageView6"
         android:layout_width="102dp"
         android:layout_height="83dp"
-        app:srcCompat="@android:drawable/ic_menu_myplaces"
-        tools:layout_editor_absoluteX="154dp"
-        tools:layout_editor_absoluteY="129dp" />
+        android:layout_marginTop="52dp"
+        android:layout_marginBottom="53dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView18"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView16"
+        app:srcCompat="@android:drawable/ic_menu_myplaces" />
 </androidx.constraintlayout.widget.ConstraintLayout>

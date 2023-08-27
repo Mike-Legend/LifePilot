@@ -4,71 +4,101 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bluebackground">
+    android:background="@color/black">
 
     <TextView
         android:id="@+id/textView19"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="65dp"
+        android:layout_marginBottom="75dp"
         android:text="Support"
+        android:textColor="@color/white"
         android:textSize="24sp"
-        tools:layout_editor_absoluteX="156dp"
-        tools:layout_editor_absoluteY="65dp" />
+        app:layout_constraintBottom_toTopOf="@+id/imageView5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView5"
         android:layout_width="136dp"
-        android:layout_height="93dp"
-        app:srcCompat="@android:drawable/ic_dialog_map"
-        tools:layout_editor_absoluteX="137dp"
-        tools:layout_editor_absoluteY="172dp" />
+        android:layout_height="0dp"
+        android:layout_marginBottom="35dp"
+        app:layout_constraintBottom_toTopOf="@+id/textView20"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView19"
+        app:srcCompat="@android:drawable/ic_dialog_map" />
 
     <TextView
         android:id="@+id/textView20"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="9dp"
         android:text="How can we help you?"
+        android:textColor="@color/white"
         android:textSize="18sp"
-        tools:layout_editor_absoluteX="116dp"
-        tools:layout_editor_absoluteY="300dp" />
+        app:layout_constraintBottom_toTopOf="@+id/textView21"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
     <TextView
         android:id="@+id/textView21"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="23dp"
         android:text="Frequently asked questions."
-        tools:layout_editor_absoluteX="116dp"
-        tools:layout_editor_absoluteY="334dp" />
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/multiAutoCompleteTextView"
+        app:layout_constraintStart_toStartOf="@+id/textView20"
+        app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
     <MultiAutoCompleteTextView
         android:id="@+id/multiAutoCompleteTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="26dp"
+        android:layout_marginBottom="9dp"
         android:text="What problems are you having with the app?"
-        tools:layout_editor_absoluteX="26dp"
-        tools:layout_editor_absoluteY="375dp" />
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/multiAutoCompleteTextView2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
     <MultiAutoCompleteTextView
         android:id="@+id/multiAutoCompleteTextView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="26dp"
         android:text="Is the app running slower than usual?"
-        tools:layout_editor_absoluteX="54dp"
-        tools:layout_editor_absoluteY="430dp" />
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/multiAutoCompleteTextView3"
+        app:layout_constraintEnd_toEndOf="@+id/multiAutoCompleteTextView"
+        app:layout_constraintTop_toBottomOf="@+id/multiAutoCompleteTextView" />
 
     <MultiAutoCompleteTextView
         android:id="@+id/multiAutoCompleteTextView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="34dp"
+        android:layout_marginBottom="111dp"
         android:text="Password/Email issues?"
-        tools:layout_editor_absoluteX="88dp"
-        tools:layout_editor_absoluteY="500dp" />
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/button15"
+        app:layout_constraintStart_toStartOf="@+id/multiAutoCompleteTextView2"
+        app:layout_constraintTop_toBottomOf="@+id/multiAutoCompleteTextView2" />
 
     <Button
         android:id="@+id/button15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="39dp"
+        android:layout_marginBottom="162dp"
         android:text="Sign out"
-        tools:layout_editor_absoluteX="39dp"
-        tools:layout_editor_absoluteY="656dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/multiAutoCompleteTextView3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

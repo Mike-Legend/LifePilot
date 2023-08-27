@@ -4,66 +4,84 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bluebackground">
+    android:background="@color/black">
 
     <TextView
         android:id="@+id/textView22"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="74dp"
         android:text="Support"
+        android:textColor="@color/white"
         android:textSize="24sp"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="75dp" />
+        app:layout_constraintStart_toStartOf="@+id/imageView7"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView23"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="21dp"
         android:text="Did that Help?"
+        android:textColor="@color/white"
         android:textSize="18sp"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="278dp" />
+        app:layout_constraintBottom_toTopOf="@+id/textView24"
+        app:layout_constraintEnd_toEndOf="@+id/imageView7" />
 
     <TextView
         android:id="@+id/textView24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="322dp"
+        android:layout_marginEnd="80dp"
         android:text="Please write Feedback below"
+        android:textColor="@color/white"
         android:textSize="16sp"
-        tools:layout_editor_absoluteX="125dp"
-        tools:layout_editor_absoluteY="322dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editTextText3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="53dp"
         android:ems="10"
         android:inputType="text"
         android:text="Feedback"
-        tools:layout_editor_absoluteX="121dp"
-        tools:layout_editor_absoluteY="397dp" />
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/textView24"
+        app:layout_constraintTop_toBottomOf="@+id/textView24" />
 
     <Button
         android:id="@+id/button16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="168dp"
         android:text="Sign out"
-        tools:layout_editor_absoluteX="30dp"
-        tools:layout_editor_absoluteY="650dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button17"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="24dp"
         android:text="Submit Feedback"
-        tools:layout_editor_absoluteX="131dp"
-        tools:layout_editor_absoluteY="466dp" />
+        app:layout_constraintStart_toStartOf="@+id/editTextText3"
+        app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
 
     <ImageView
         android:id="@+id/imageView7"
         android:layout_width="116dp"
         android:layout_height="95dp"
-        app:srcCompat="@android:drawable/stat_notify_chat"
-        tools:layout_editor_absoluteX="159dp"
-        tools:layout_editor_absoluteY="157dp" />
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="51dp"
+        android:layout_marginBottom="49dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView23"
+        app:layout_constraintStart_toStartOf="@+id/textView24"
+        app:layout_constraintTop_toBottomOf="@+id/textView22"
+        app:srcCompat="@android:drawable/stat_notify_chat" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bluebackground"
+    android:background="@color/black"
     android:visibility="visible"
     tools:visibility="visible">
 
@@ -12,105 +12,141 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="118dp"
+        android:layout_marginTop="49dp"
         android:text="Profile Picture"
+        android:textColor="@color/white"
         android:textSize="24sp"
-        tools:layout_editor_absoluteX="118dp"
-        tools:layout_editor_absoluteY="49dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="122dp"
-        tools:layout_editor_absoluteY="99dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="17dp"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="36dp"
         android:text="Current weight"
+        android:textColor="@color/white"
         android:textSize="17sp"
-        tools:layout_editor_absoluteX="138dp"
-        tools:layout_editor_absoluteY="328dp" />
+        app:layout_constraintStart_toStartOf="@+id/editTextText4"
+        app:layout_constraintTop_toBottomOf="@+id/editTextText6" />
 
     <EditText
         android:id="@+id/editTextText4"
         android:layout_width="149dp"
-        android:layout_height="46dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="9dp"
         android:ems="10"
         android:inputType="text"
         android:text="Input weight"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="361dp" />
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
         android:text="Desired weight"
+        android:textColor="@color/white"
         android:textSize="17sp"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="486dp" />
+        app:layout_constraintStart_toStartOf="@+id/editTextText5"
+        app:layout_constraintTop_toBottomOf="@+id/button3" />
 
     <EditText
         android:id="@+id/editTextText5"
         android:layout_width="147dp"
-        android:layout_height="44dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="9dp"
         android:ems="10"
         android:inputType="text"
         android:text="Input weight"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="528dp" />
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <EditText
         android:id="@+id/editTextText6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
         android:ems="10"
         android:inputType="text"
         android:text="Name"
-        tools:layout_editor_absoluteX="100dp"
-        tools:layout_editor_absoluteY="247dp" />
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="155dp"
         android:layout_height="61dp"
+        android:layout_marginTop="73dp"
+        android:layout_marginBottom="73dp"
         android:text="Save desired weight"
-        tools:layout_editor_absoluteX="128dp"
-        tools:layout_editor_absoluteY="582dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/button5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <Button
         android:id="@+id/button3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="65dp"
         android:text="Save current weight"
-        tools:layout_editor_absoluteX="132dp"
-        tools:layout_editor_absoluteY="416dp" />
+        app:layout_constraintStart_toStartOf="@+id/editTextText4"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <Button
         android:id="@+id/button4"
-        android:layout_width="91dp"
+        android:layout_width="0dp"
         android:layout_height="45dp"
+        android:layout_marginStart="27dp"
+        android:layout_marginEnd="19dp"
         android:text="Change current/desired weight"
-        tools:layout_editor_absoluteX="27dp"
-        tools:layout_editor_absoluteY="667dp" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/button5"
+        app:layout_constraintEnd_toStartOf="@+id/button5"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button5"
-        android:layout_width="136dp"
+        android:layout_width="0dp"
         android:layout_height="49dp"
+        android:layout_marginEnd="19dp"
         android:text="Change Pword/@"
-        tools:layout_editor_absoluteX="137dp"
-        tools:layout_editor_absoluteY="667dp" />
+        app:layout_constraintEnd_toStartOf="@+id/button6"
+        app:layout_constraintStart_toEndOf="@+id/button4"
+        app:layout_constraintTop_toTopOf="@+id/button6" />
 
     <Button
         android:id="@+id/button6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="152dp"
         android:text="Setting"
-        tools:layout_editor_absoluteX="292dp"
-        tools:layout_editor_absoluteY="667dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

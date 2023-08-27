@@ -1,64 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bluebackground">
+    android:background="@color/black">
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="92dp"
+        android:layout_marginTop="52dp"
         android:text="Personal Settings"
+        android:textColor="@color/white"
         android:textSize="24sp"
-        tools:layout_editor_absoluteX="92dp"
-        tools:layout_editor_absoluteY="52dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="61dp"
+        android:layout_marginEnd="18dp"
         android:text="Customization"
-        tools:layout_editor_absoluteX="121dp"
-        tools:layout_editor_absoluteY="145dp" />
+        app:layout_constraintEnd_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Button
         android:id="@+id/button7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="43dp"
+        android:layout_marginEnd="1dp"
         android:text="Notifications"
-        tools:layout_editor_absoluteX="131dp"
-        tools:layout_editor_absoluteY="236dp" />
+        app:layout_constraintEnd_toEndOf="@+id/button"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
     <Button
         android:id="@+id/button8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginBottom="42dp"
         android:text="Language"
-        tools:layout_editor_absoluteX="142dp"
-        tools:layout_editor_absoluteY="328dp" />
+        app:layout_constraintBottom_toTopOf="@+id/button9"
+        app:layout_constraintStart_toStartOf="@+id/button9" />
 
     <Button
         android:id="@+id/button9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Export Routine List"
-        tools:layout_editor_absoluteX="121dp"
-        tools:layout_editor_absoluteY="419dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="19dp"
         android:text="Accessibility"
-        tools:layout_editor_absoluteX="142dp"
-        tools:layout_editor_absoluteY="514dp" />
+        app:layout_constraintEnd_toEndOf="@+id/button9"
+        app:layout_constraintTop_toBottomOf="@+id/button9" />
 
     <Button
         android:id="@+id/button11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="56dp"
         android:text="Support"
-        tools:layout_editor_absoluteX="156dp"
-        tools:layout_editor_absoluteY="618dp" />
+        app:layout_constraintStart_toStartOf="@+id/button10"
+        app:layout_constraintTop_toBottomOf="@+id/button10" />
 </androidx.constraintlayout.widget.ConstraintLayout>
