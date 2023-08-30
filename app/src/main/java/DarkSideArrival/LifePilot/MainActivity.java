@@ -525,7 +525,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Calves Exercises",
             "Forearm Flexors and Grip Exercises",
             "Forearm Extensor Exercises",
-            "Cardio Exercises"};
+            "Cardio Exercises",
+            "Body Weight"};
 
     private String[] chestExercises = new String[]{"Bar Dip",
             "Bench Press",
@@ -754,6 +755,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Walking",
             "Yoga",
             "Sports"};
+    private String[] bodyweight = new String[]{"Jumping Jacks",
+            "Push-Ups"};
 
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String currentSel = spinner.getSelectedItem().toString();
@@ -804,6 +807,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(currentSel.equals("Cardio Exercises"))
         {
             workoutList.myWorkouts = cardioExercises;
+        }
+        else if(currentSel.equals("Body Weight"))
+        {
+            workoutList.myWorkouts = bodyweight;
         }
         workoutList.notifyDataSetChanged();
     }
