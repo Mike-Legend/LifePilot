@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.sign_in);
         }
 
+
         //Set User session data
         userRoutines = new ArrayList<>();
         userRoutineCheck = new ArrayList<>();
