@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.ObjectAnimator;
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import android.app.ActivityOptions;
@@ -39,6 +41,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,6 +84,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView WorkoutRecyclerView;
     WorkoutRecycler workoutList;
 
+    //Height and Weight Variables
+    private float userWeight;
+    private int  userHeightInches, userHeightFeet;
+
+
+
+
     //Google Sign in variables
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -115,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userGoals = new ArrayList<>();
         userExercisesArrayList = new ArrayList<ArrayList<Button>>();
         userGoalArrayList = new ArrayList<ArrayList<TextView>>();
+
+
     }
 
     @Override //Used for on click section in layout button attribute to switch layouts.
@@ -145,11 +157,83 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
             homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
             nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
-        } else if (id == R.id.analytics_button) {
-            //Adjusted to change activity
-            Intent userInt = new Intent(getApplicationContext(), Analytics.class);
-            startActivity(userInt);
-        } else if (id == R.id.Home_Button) {
+        }
+
+        else if (id == R.id.analytics_button)
+        {
+            setContentView(R.layout.data_screen);
+            ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
+            TextView weightVal = (TextView) findViewById(R.id.weightValue);
+            TextView heightValFeet = (TextView) findViewById(R.id.heightValue);
+            TextView heightValInches = (TextView) findViewById(R.id.userHeightInches);
+            TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
+            bmiBar.setProgress(Math.round(CalculateBMI()));
+            bmiVal.setText(Float.toString(CalculateBMI()));
+            heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
+            heightValInches.setText(Integer.toString(userHeightInches)+"\"");
+            weightVal.setText(Float.toString(userWeight));
+        }
+
+        else if(id == R.id.analyticsHomeButton)
+        {
+            setContentView(R.layout.activity_main);
+        }
+
+        else if (id == R.id.excerciseData)
+        {
+            //Initiating Spinner for workout breakdown.
+            Spinner breakdownSpinner = (Spinner) findViewById(R.id.exerciseSpinner);
+            setContentView(R.layout.exercise_data);
+        }
+
+        else if (id == R.id.breakDown)
+        {
+            //Initiating Spinner for Month Selection
+            Spinner monthSpinner = (Spinner) findViewById(R.id.monthSelect);
+            setContentView(R.layout.muscle_distribution);
+        }
+
+        else if(id == R.id.exerciseBack)
+        {
+            setContentView(R.layout.data_screen);
+            ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
+            TextView weightVal = (TextView) findViewById(R.id.weightValue);
+            TextView heightValFeet = (TextView) findViewById(R.id.heightValue);
+            TextView heightValInches = (TextView) findViewById(R.id.userHeightInches);
+            TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
+            bmiBar.setProgress(Math.round(CalculateBMI()));
+            bmiVal.setText(Float.toString(CalculateBMI()));
+            heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
+            heightValInches.setText(Integer.toString(userHeightInches)+"\"");
+            weightVal.setText(Float.toString(userWeight));
+        }
+
+        else if (id == R.id.exerciseHomeButton)
+        {
+            setContentView(R.layout.activity_main);
+        }
+
+        else if(id == R.id.muscleHomeButton)
+        {
+            setContentView(R.layout.activity_main);
+        }
+
+        else if (id == R.id.muscleBack)
+        {
+            setContentView(R.layout.data_screen);
+            ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
+            TextView weightVal = (TextView) findViewById(R.id.weightValue);
+            TextView heightValFeet = (TextView) findViewById(R.id.heightValue);
+            TextView heightValInches = (TextView) findViewById(R.id.userHeightInches);
+            TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
+            bmiBar.setProgress(Math.round(CalculateBMI()));
+            bmiVal.setText(Float.toString(CalculateBMI()));
+            heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
+            heightValInches.setText(Integer.toString(userHeightInches)+"\"");
+            weightVal.setText(Float.toString(userWeight));
+        }
+
+        else if (id == R.id.Home_Button) {
             Transition slide = new Slide(Gravity.LEFT);
             TransitionManager.go(homeAnimation, slide);
             //Next Buttons
@@ -806,6 +890,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             workoutList.myWorkouts = cardioExercises;
         }
         workoutList.notifyDataSetChanged();
+    }
+
+    //Calculate BMI (Imperial)
+    public float CalculateBMI()
+    {
+        float bmi;
+
+        if((userHeightFeet*12) + userHeightInches != 0 && userWeight != 0)
+        {
+            float userHeight = (userHeightFeet*12) + userHeightInches;
+            bmi = (userWeight/userHeight/userHeight)*703;
+            BigDecimal bmiD = new BigDecimal(bmi);
+            bmiD = bmiD.setScale(1, RoundingMode.HALF_UP);
+            bmi = bmiD.floatValue();
+        }
+
+        else
+        {
+            bmi = 0;
+        }
+
+        return bmi;
     }
 
     public void onNothingSelected(AdapterView<?> adapterView) {}
