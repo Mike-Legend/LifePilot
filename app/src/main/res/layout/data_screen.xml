@@ -26,7 +26,7 @@
         android:layout_marginTop="32dp"
         android:text="Weight:"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="22sp"
         app:layout_constraintStart_toStartOf="@+id/bmiBar"
         app:layout_constraintTop_toBottomOf="@+id/bannerText" />
 
@@ -38,7 +38,7 @@
         android:layout_marginTop="32dp"
         android:text="Height:"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="@+id/bmiBar"
         app:layout_constraintStart_toEndOf="@+id/weightText"
         app:layout_constraintTop_toBottomOf="@+id/bannerText" />
@@ -58,7 +58,7 @@
         android:id="@+id/bmiBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="300dp"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
         android:indeterminate="false"
         android:max="60"
@@ -143,7 +143,7 @@
         android:id="@+id/bmiNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:text="text"
         android:textColor="@color/white"
@@ -155,10 +155,10 @@
         android:id="@+id/weightValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="22sp"
         app:layout_constraintStart_toEndOf="@+id/weightText"
         app:layout_constraintTop_toBottomOf="@+id/bannerText" />
 
@@ -166,11 +166,11 @@
         android:id="@+id/heightValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:text="text"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="22sp"
         app:layout_constraintStart_toEndOf="@+id/heightText"
         app:layout_constraintTop_toBottomOf="@+id/bannerText" />
 
@@ -181,7 +181,7 @@
         android:layout_marginTop="32dp"
         android:text="text"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="22sp"
         app:layout_constraintStart_toEndOf="@+id/heightValue"
         app:layout_constraintTop_toBottomOf="@+id/bannerText" />
 

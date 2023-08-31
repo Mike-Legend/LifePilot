@@ -125,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userGoals = new ArrayList<>();
         userExercisesArrayList = new ArrayList<ArrayList<Button>>();
         userGoalArrayList = new ArrayList<ArrayList<TextView>>();
+
+
     }
 
     @Override //Used for on click section in layout button attribute to switch layouts.
@@ -194,6 +196,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(id == R.id.exerciseBack)
         {
             setContentView(R.layout.data_screen);
+            ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
+            TextView weightVal = (TextView) findViewById(R.id.weightValue);
+            TextView heightValFeet = (TextView) findViewById(R.id.heightValue);
+            TextView heightValInches = (TextView) findViewById(R.id.userHeightInches);
+            TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
+            bmiBar.setProgress(Math.round(CalculateBMI()));
+            bmiVal.setText(Float.toString(CalculateBMI()));
+            heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
+            heightValInches.setText(Integer.toString(userHeightInches)+"\"");
+            weightVal.setText(Float.toString(userWeight));
         }
 
         else if (id == R.id.exerciseHomeButton)
@@ -209,6 +221,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if (id == R.id.muscleBack)
         {
             setContentView(R.layout.data_screen);
+            ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
+            TextView weightVal = (TextView) findViewById(R.id.weightValue);
+            TextView heightValFeet = (TextView) findViewById(R.id.heightValue);
+            TextView heightValInches = (TextView) findViewById(R.id.userHeightInches);
+            TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
+            bmiBar.setProgress(Math.round(CalculateBMI()));
+            bmiVal.setText(Float.toString(CalculateBMI()));
+            heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
+            heightValInches.setText(Integer.toString(userHeightInches)+"\"");
+            weightVal.setText(Float.toString(userWeight));
         }
 
         else if (id == R.id.Home_Button) {
