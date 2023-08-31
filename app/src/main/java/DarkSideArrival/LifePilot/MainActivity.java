@@ -54,6 +54,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.identity.GetSignInIntentRequest;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -65,6 +66,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.protobuf.NullValue;
 import org.checkerframework.checker.units.qual.A;
 import org.w3c.dom.Text;
@@ -95,25 +102,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
     GoogleSignInAccount account;
+    private FirebaseAuth mAuth;
+    FirebaseUser user;
 
     @Override //Initial App Generation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.sign_in);
         //Google Sign In variables
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.server_client_id)).requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
+        mAuth = FirebaseAuth.getInstance();
+        user = mAuth.getCurrentUser(); //is null if user is not signed in
+        account = GoogleSignIn.getLastSignedInAccount(this); //is null if user is not signed in
 
-        account = GoogleSignIn.getLastSignedInAccount(this); //is null if user is already signed in
-
-        if (account != null) {
-            setContentView(R.layout.activity_main);
-            //Home screen animation to layout - ONLY from home screen, duplicate to home button onClick
-            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
-            //Welcome text change
-            TextView welcome = findViewById(R.id.welcome_text);
-            String name = account.getGivenName();
-            welcome.setText("Welcome, "+name+"!");
+        if (account != null && user != null) {
+            GoToHomeScreen();
         }else {
             setContentView(R.layout.sign_in);
         }
@@ -234,15 +238,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         else if (id == R.id.Home_Button) {
-            Transition slide = new Slide(Gravity.LEFT);
-            TransitionManager.go(homeAnimation, slide);
-            //Next Buttons
-            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
-            if (account != null){
-                TextView welcome = findViewById(R.id.welcome_text);
-                String name = account.getGivenName();
-                welcome.setText("Welcome, "+name+"!");
-            }
+            GoToHomeScreen();
         } else if (id == R.id.NewRoutineCreate_Button) {
             FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
             routinelistoverlay.setVisibility(View.VISIBLE);
@@ -518,16 +514,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             signOut();
             //setContentView(R.layout.experience_selection);
         } else {
-            setContentView(R.layout.activity_main);
-            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
-
-            if (account != null){
-                TextView welcome = findViewById(R.id.welcome_text);
-                String name = account.getGivenName();
-                welcome.setText("Welcome, "+name+"!");
-            }
+           GoToHomeScreen();
         }
     }
+
+
+    private void GoToHomeScreen(){
+        setContentView(R.layout.activity_main);
+        routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
+
+        if (account != null && user != null){
+            TextView welcome = findViewById(R.id.welcome_text);
+
+            String name = user.getDisplayName();
+            welcome.setText("Welcome, "+name+"!");
+        }
+    }
+
+
+
+
+
 
     //Google Sign in functions
     private static final int REQUEST_CODE_GOOGLE_SIGN_IN = 1200; /* unique request id */
@@ -537,6 +544,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     void signOut(){
+        FirebaseAuth.getInstance().signOut();
         gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -553,13 +561,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             try {
                 task.getResult(ApiException.class);
-                setContentView(R.layout.experience_selection);
                 account = GoogleSignIn.getLastSignedInAccount(this);
+
+                //Getting an ID token from Google and using it to authenticate with Firebase
+                String idToken = account.getIdToken();
+                if (idToken != null){
+                    AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
+                    mAuth.signInWithCredential(firebaseCredential)
+                            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>(){
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success
+                                        Toast.makeText(getApplicationContext(), "Authentication success!", Toast.LENGTH_SHORT).show();
+                                        user = mAuth.getCurrentUser();
+
+                                        // If new user, go to profile creation
+                                        boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
+                                        if (isNew){
+                                            setContentView(R.layout.experience_selection);
+                                        }else{
+                                            GoToHomeScreen();
+                                        }
+
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Toast.makeText(getApplicationContext(), "Firebase Authentication Failed", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
+
+
             } catch (ApiException e) {
                 Toast.makeText(getApplicationContext(), "Something went wrong!!", Toast.LENGTH_SHORT).show();
             }
         }
     }
+
+
+
+
 
 
     //load custom routines

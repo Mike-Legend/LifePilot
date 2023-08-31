@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "919443612001",
+    "project_id": "lifepilot-8bc56",
+    "storage_bucket": "lifepilot-8bc56.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919443612001:android:3ecafecbaf9b626f3d2520",
+        "android_client_info": {
+          "package_name": "DarkSideArrival.LifePilot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "919443612001-j74j9um4mpk0njqq0nmdl0vldss28ul8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwzh1QEV5-UoUfSGH8KBL-Fet8H-suWPI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "919443612001-962ufmeo8ej2udoljvcri0j3u1geidgu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
