@@ -81,6 +81,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView WorkoutRecyclerView;
     WorkoutRecycler workoutList;
 
+
+
+
+
+
     //Google Sign in variables
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -160,14 +165,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if (id == R.id.excerciseData)
         {
             //Initiating Spinner for workout breakdown.
-            Spinner spinner = (Spinner) findViewById(R.id.exerciseSpinner);
+            Spinner breakdownSpinner = (Spinner) findViewById(R.id.exerciseSpinner);
             setContentView(R.layout.exercise_data);
         }
 
         else if (id == R.id.breakDown)
         {
             //Initiating Spinner for Month Selection
-            Spinner spinner = (Spinner) findViewById(R.id.monthSelect);
+            Spinner monthSpinner = (Spinner) findViewById(R.id.monthSelect);
             setContentView(R.layout.muscle_distribution);
         }
 
