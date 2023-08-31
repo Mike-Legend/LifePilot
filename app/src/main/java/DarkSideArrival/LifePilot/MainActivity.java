@@ -878,8 +878,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if((userHeightFeet*12) + userHeightInches != 0 && userWeight != 0)
         {
             float userHeight = (userHeightFeet*12) + userHeightInches;
-            userHeight = userHeight/12;
-            bmi = (userWeight/(userHeight*userHeight))*703;
+            bmi = (userWeight/userHeight/userHeight)*703;
             BigDecimal bmiD = new BigDecimal(bmi);
             bmiD = bmiD.setScale(1, RoundingMode.HALF_UP);
             bmi = bmiD.floatValue();
