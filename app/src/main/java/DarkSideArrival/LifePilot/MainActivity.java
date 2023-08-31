@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.ObjectAnimator;
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import android.app.ActivityOptions;
@@ -81,7 +83,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView WorkoutRecyclerView;
     WorkoutRecycler workoutList;
 
-
+    //Height and Weight Variables
+    private float userHeight, userWeight;
 
 
 
@@ -853,6 +856,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             workoutList.myWorkouts = cardioExercises;
         }
         workoutList.notifyDataSetChanged();
+    }
+
+    //Calculate BMI (Imperial)
+    public float CalculateBMI()
+    {
+        float bmi;
+
+        if(userHeight != 0 && userWeight != 0)
+        {
+            bmi = 703*(userWeight/(userHeight*userHeight));
+            BigDecimal bmiD = new BigDecimal(bmi);
+            bmiD = bmiD.setScale(1, RoundingMode.HALF_UP);
+            bmi = bmiD.floatValue();
+        }
+
+        else
+        {
+            bmi = 0;
+        }
+
+        return bmi;
     }
 
     public void onNothingSelected(AdapterView<?> adapterView) {}
