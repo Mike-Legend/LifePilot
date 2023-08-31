@@ -41,6 +41,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -158,14 +159,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         else if (id == R.id.analytics_button)
         {
-            userWeight = (float) 128.2;
-            userHeightInches = 7;
-            userHeightFeet = 5;
             setContentView(R.layout.data_screen);
+            ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
             TextView weightVal = (TextView) findViewById(R.id.weightValue);
             TextView heightValFeet = (TextView) findViewById(R.id.heightValue);
             TextView heightValInches = (TextView) findViewById(R.id.userHeightInches);
             TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
+            bmiBar.setProgress(Math.round(CalculateBMI()));
             bmiVal.setText(Float.toString(CalculateBMI()));
             heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
             heightValInches.setText(Integer.toString(userHeightInches)+"\"");
