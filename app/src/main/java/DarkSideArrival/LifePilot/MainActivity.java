@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.content.IntentSender;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.animation.ObjectAnimator;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -30,11 +33,23 @@ import android.transition.Slide;
 import android.transition.Visibility;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.google.android.gms.auth.api.identity.GetSignInIntentRequest;
 import com.google.android.gms.auth.api.identity.Identity;
@@ -49,16 +64,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.protobuf.NullValue;
 import org.checkerframework.checker.units.qual.A;
+import org.w3c.dom.Text;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    private ArrayList<Button> userRoutines;
-    private ArrayList<CheckBox> userRoutineCheck;
-    private ArrayList<Button> userGoals;
+    //Routine and goal variables and arrays
+    private ArrayList<Button> userRoutines, userGoals;
+    private ArrayList<CheckBox> userRoutineCheck, userRoutineSelectCheck;
     private ArrayList<ArrayList<Button>> userExercisesArrayList;
-    private ArrayList<ArrayList<Button>> userGoalArrayList;
-    public int routineIDActive;
+    private ArrayList<ArrayList<TextView>> userGoalArrayList; //Future usage to add multiple goals to one routine
+    public int routineIDActive, goalIDActive;
     private Scene routineAnimation, homeAnimation, goalAnimation, nRoutineAnimation;
+
+    //Workout Spinner
+    Spinner spinner;
+    RecyclerView WorkoutRecyclerView;
+    WorkoutRecycler workoutList;
 
     //Google Sign in variables
     GoogleSignInOptions gso;
@@ -79,10 +100,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.activity_main);
             //Home screen animation to layout - ONLY from home screen, duplicate to home button onClick
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
+            //Welcome text change
+            TextView welcome = findViewById(R.id.welcome_text);
+            String name = account.getGivenName();
+            welcome.setText("Welcome, "+name+"!");
         }else {
             setContentView(R.layout.sign_in);
         }
-
 
 
         //Set User session data
@@ -90,19 +114,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userRoutineCheck = new ArrayList<>();
         userGoals = new ArrayList<>();
         userExercisesArrayList = new ArrayList<ArrayList<Button>>();
-        userGoalArrayList = new ArrayList<ArrayList<Button>>();
+        userGoalArrayList = new ArrayList<ArrayList<TextView>>();
     }
 
     @Override //Used for on click section in layout button attribute to switch layouts.
     public void onClick(View view) //add button with an else-if statement
     {
-
-        //TODO: animations work in progress
-        Animation SlideLeftIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_left);
-        Animation SlideRightIn = AnimationUtils.loadAnimation(this, R.anim.slide_in_right);
-        Animation SlideLeftOut = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
-        Animation SlideRightOut = AnimationUtils.loadAnimation(this, R.anim.slide_out_left);
-
         int id = view.getId();
         if(id == R.id.Goal_Button) {
             Transition slide = new Slide(Gravity.RIGHT);
@@ -137,6 +154,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TransitionManager.go(homeAnimation, slide);
             //Next Buttons
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
+            if (account != null){
+                TextView welcome = findViewById(R.id.welcome_text);
+                String name = account.getGivenName();
+                welcome.setText("Welcome, "+name+"!");
+            }
         } else if (id == R.id.NewRoutineCreate_Button) {
             FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
             routinelistoverlay.setVisibility(View.VISIBLE);
@@ -195,11 +217,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //if keyboard doesn't go away
             InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
+            buttontext.setText("");
             //added to goal list
             btn.setId(userGoals.size() + 100);
             userGoals.add(btn);
             //New Goal Array
-            userGoalArrayList.add(new ArrayList<Button>());
+            userGoalArrayList.add(new ArrayList<TextView>());
         } else if (id == R.id.AddExercises_Button) {
             //overlay trigger
             FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
@@ -207,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //button creation
             LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
             int checks = 0;
-            int[] eCheckIDs = new int[] {R.id.Exercise1Check, R.id.Exercise2Check, R.id.Exercise3Check, R.id.Exercise4Check};
+            int[] eCheckIDs = new int[] {1,2,3,4};
             //check amount, based off number of available exercises
             for(int i = 0; i < 4; i++) {
                 CheckBox echeck = findViewById(eCheckIDs[i]);
@@ -241,10 +264,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     echeck.setChecked(false);
                 }
             }
-        } else if (id == R.id.AddGoal_Button) {
+        } else if (id == R.id.AddGoal_Button) { //TODO: Readding goal bugged, diff goals unchecked bugged
             FrameLayout routinegoallistoverlay = findViewById(R.id.goaladdtoroutineoverlay);
             routinegoallistoverlay.setVisibility(View.GONE);
-
+            TextView goal = new TextView(this);
+            goal.setVisibility(View.GONE);
+            String g1 = "Goal: ";
+            String g2 = String.valueOf(userGoals.get(goalIDActive).getText());
+            goal.setText(g1 + g2);
+            for(int i = 0; i < userRoutineCheck.size(); i++) {
+                if(userRoutineCheck.get(i).isChecked()) {
+                    if(i + 1 > userGoalArrayList.size()) {
+                        userGoalArrayList.add(new ArrayList<TextView>());
+                    } else if(userGoalArrayList.get(i).size() > 0) {
+                        userGoalArrayList.get(i).remove(i);
+                    }
+                    userGoalArrayList.get(i).add(goal);
+                } //else if(userRoutineCheck.get(i).isChecked() == false) {
+                    //if(i + 1 > userGoalArrayList.size()) {
+                        //userGoalArrayList.add(new ArrayList<TextView>());
+                   //}
+                    //if(userGoalArrayList.get(i).size() > 0) {
+                        //userGoalArrayList.get(i).get(0).setText("");
+                    //}
+                //}
+            }
         } else if (id == R.id.ConfirmNewRoutine_Button) {
             //overlay trigger
             FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
@@ -276,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //if keyboard doesn't go away
             InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
+            buttontext.setText("");
             //added to routine list
             btn.setId(userRoutines.size());
             userRoutines.add(btn);
@@ -302,15 +347,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     titletext.setText(userRoutines.get(i).getText());
                 }
             }
+            //Check goals
+            if(userGoals.size() != 0) {
+                if(routineIDActive + 1 > userGoalArrayList.size()) {
+                    TextView goal = findViewById(R.id.GoalofRoutine_TopText);
+                    goal.setVisibility(View.GONE);
+                } else if(userGoalArrayList.get(routineIDActive) != null) {
+                    TextView goal = findViewById(R.id.GoalofRoutine_TopText);
+                    goal.setVisibility(View.VISIBLE);
+                    goal.setText(userGoalArrayList.get(routineIDActive).get(0).getText());
+                } else {
+                    TextView goal = findViewById(R.id.GoalofRoutine_TopText);
+                    goal.setVisibility(View.GONE);
+                }
+            } else {
+                TextView goal = findViewById(R.id.GoalofRoutine_TopText);
+                goal.setVisibility(View.GONE);
+            }
             //Generate Routine Exercises
             if(userExercisesArrayList.get(routineIDActive).size() != 0) {
                 LoadUserRoutineExercises();
             }
+
+            //Set workout spinner
+            spinner =  findViewById(R.id.exerciseSpin);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, workouts);
+            spinner.setAdapter(adapter);
+            spinner.setOnItemSelectedListener(this);
+
+            WorkoutRecyclerView = findViewById(R.id.workList);
+            WorkoutRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            workoutList = new WorkoutRecycler(chestExercises);
+            WorkoutRecyclerView.setAdapter(workoutList);
+            workoutList.notifyDataSetChanged();
+
             //button usage animations
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id > 99 && id < userGoals.size() + 101) {
             FrameLayout routinegoaloverlay = findViewById(R.id.goaladdtoroutineoverlay);
             routinegoaloverlay.setVisibility(View.VISIBLE);
+            goalIDActive = id - 100;
+            //empty check text
+            if(userRoutines.size() == 0) {
+                TextView rl = findViewById(R.id.NoGoal_TopText);
+                rl.setVisibility(View.VISIBLE);
+            } else {
+                TextView rl = findViewById(R.id.NoGoal_TopText);
+                rl.setVisibility(View.GONE);
+            }
+            //Generate goal name
             int goalIdActive = id;
             TextView titletext = findViewById(R.id.GoalToRoutine_TopText);
             for(int i = 0; i < userGoals.size(); i++) {
@@ -318,6 +403,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     titletext.setText(userGoals.get(i).getText());
                 }
             }
+            //list routines to add
             LinearLayout ll = findViewById(R.id.GoalRoutineListHere);
             Button temp;
             for(int i = 0; i < userRoutines.size(); i++) {
@@ -327,6 +413,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 ll.addView(temp);
             }
+            //list checkboxes to add
             LinearLayout ll2 = findViewById(R.id.GoalCheckRoutineListHere);
             CheckBox temp2;
             for(int i = 0; i < userRoutines.size(); i++) {
@@ -349,12 +436,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             setContentView(R.layout.activity_main);
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
+
+            if (account != null){
+                TextView welcome = findViewById(R.id.welcome_text);
+                String name = account.getGivenName();
+                welcome.setText("Welcome, "+name+"!");
+            }
         }
     }
 
-    private static final int REQUEST_CODE_GOOGLE_SIGN_IN = 1200; /* unique request id */
-
     //Google Sign in functions
+    private static final int REQUEST_CODE_GOOGLE_SIGN_IN = 1200; /* unique request id */
     void signIn(){
         Intent signInIntent = gsc.getSignInIntent();
         startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN);
@@ -378,6 +470,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 task.getResult(ApiException.class);
                 setContentView(R.layout.experience_selection);
+                account = GoogleSignIn.getLastSignedInAccount(this);
             } catch (ApiException e) {
                 Toast.makeText(getApplicationContext(), "Something went wrong!!", Toast.LENGTH_SHORT).show();
             }
@@ -419,4 +512,301 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ll.addView(temp);
         }
     }
+
+    //Workout lists
+    private String[] workouts = new String[]{"Chest Exercises",
+            "Shoulder Exercises",
+            "Bicep Exercises",
+            "Triceps Exercises",
+            "Leg Exercises",
+            "Back Exercises",
+            "Glute Exercises",
+            "Ab Exercises",
+            "Calves Exercises",
+            "Forearm Flexors and Grip Exercises",
+            "Forearm Extensor Exercises",
+            "Cardio Exercises"};
+
+    private String[] chestExercises = new String[]{"Bar Dip",
+            "Bench Press",
+            "Cable Chest Press",
+            "Close-Grip Bench Press",
+            "Close-Grip Feet-Up Bench Press",
+            "Decline Bench Press",
+            "Dumbbell Chest Fly",
+            "Dumbbell Chest Press",
+            "Dumbbell Decline Chest Press",
+            "Dumbbell Floor Press",
+            "Dumbbell Pullover",
+            "Feet-Up Bench Press",
+            "Floor Press",
+            "Incline Bench Press",
+            "Incline Dumbbell Press",
+            "Incline Push-Up",
+            "Kneeling Incline Push-Up",
+            "Kneeling Push-Up",
+            "Machine Chest Fly",
+            "Machine Chest Press",
+            "Pec Deck",
+            "Push-Up",
+            "Push-Up Against Wall",
+            "Push-Ups With Feet in Rings",
+            "Resistance Band Chest Fly",
+            "Smith Machine Bench Press",
+            "Smith Machine Incline Bench Press",
+            "Standing Cable Chest Fly",
+            "Standing Resistance Band Chest Fly"};
+    private String[] shoulderExercises = new String[]{"Band External Shoulder Rotation",
+            "Band Internal Shoulder Rotation",
+            "Band Pull-Apart",
+            "Barbell Front Raise",
+            "Barbell Rear Delt Row",
+            "Barbell Upright Row",
+            "Behind the Neck Press",
+            "Cable Lateral Raise",
+            "Cable Rear Delt Row",
+            "Dumbbell Front Raise",
+            "Dumbbell Horizontal Internal Shoulder Rotation",
+            "Dumbbell Horizontal External Shoulder Rotation",
+            "Dumbbell Lateral Raise",
+            "Dumbbell Rear Delt Row",
+            "Dumbbell Shoulder Press",
+            "Face Pull",
+            "Front Hold",
+            "Lying Dumbbell External Shoulder Rotation",
+            "Lying Dumbbell Internal Shoulder Rotation",
+            "Machine Lateral Raise",
+            "Machine Shoulder Press",
+            "Monkey Row",
+            "Overhead Press",
+            "Plate Front Raise",
+            "Power Jerk",
+            "Push Press",
+            "Reverse Dumbbell Flyes",
+            "Reverse Machine Fly",
+            "Seated Dumbbell Shoulder Press",
+            "Seated Barbell Overhead Press",
+            "Seated Smith Machine Shoulder Press",
+            "Snatch Grip Behind the Neck Press",
+            "Squat Jerk",
+            "Split Jerk"};
+    private String[] bicepExercises = new String[]{"Barbell Curl",
+            "Barbell Preacher Curl",
+            "Bodyweight Curl",
+            "Cable Curl With Bar",
+            "Cable Curl With Rope",
+            "Concentration Curl",
+            "Dumbbell Curl",
+            "Dumbbell Preacher Curl",
+            "Hammer Curl",
+            "Incline Dumbbell Curl",
+            "Machine Bicep Curl",
+            "Spider Curl"};
+    private String[] tricepsExercises = new String[]{"Barbell Standing Triceps Extension",
+            "Barbell Lying Triceps Extension",
+            "Bench Dip",
+            "Close-Grip Push-Up",
+            "Dumbbell Lying Triceps Extension",
+            "Dumbbell Standing Triceps Extension",
+            "Overhead Cable Triceps Extension",
+            "Tricep Bodyweight Extension",
+            "Tricep Pushdown With Bar",
+            "Tricep Pushdown With Rope"};
+    private String[] legExercises = new String[]{"Air Squat",
+            "Barbell Hack Squat",
+            "Barbell Lunge",
+            "Barbell Walking Lunge",
+            "Belt Squat",
+            "Body Weight Lunge",
+            "Box Squat",
+            "Bulgarian Split Squat",
+            "Chair Squat",
+            "Dumbbell Lunge",
+            "Dumbbell Squat",
+            "Front Squat",
+            "Goblet Squat",
+            "Hack Squat Machine",
+            "Half Air Squat",
+            "Hip Adduction Machine",
+            "Landmine Hack Squat",
+            "Landmine Squat",
+            "Leg Extension",
+            "Leg Press",
+            "Lying Leg Curl",
+            "Pause Squat",
+            "Romanian Deadlift",
+            "Safety Bar Squat",
+            "Seated Leg Curl",
+            "Shallow Body Weight Lunge",
+            "Side Lunges (Bodyweight)",
+            "Smith Machine Squat",
+            "Squat",
+            "Step Up"};
+    private String[] backExercises = new String[]{"Back Extension",
+            "Barbell Row",
+            "Barbell Shrug",
+            "Block Snatch",
+            "Cable Close Grip Seated Row",
+            "Cable Wide Grip Seated Row",
+            "Chin-Up",
+            "Clean",
+            "Clean and Jerk",
+            "Deadlift",
+            "Deficit Deadlift",
+            "Dumbbell Deadlift",
+            "Dumbbell Row",
+            "Dumbbell Shrug",
+            "Floor Back Extension",
+            "Good Morning",
+            "Hang Clean",
+            "Hang Power Clean",
+            "Hang Power Snatch",
+            "Hang Snatch",
+            "Inverted Row",
+            "Inverted Row with Underhand Grip",
+            "Kettlebell Swing",
+            "Lat Pulldown With Pronated Grip",
+            "Lat Pulldown With Supinated Grip",
+            "One-Handed Cable Row",
+            "One-Handed Lat Pulldown",
+            "Pause Deadlift",
+            "Pendlay Row",
+            "Power Clean",
+            "Power Snatch",
+            "Pull-Up",
+            "Rack Pull",
+            "Seal Row",
+            "Seated Machine Row",
+            "Snatch",
+            "Snatch Grip Deadlift",
+            "Stiff-Legged Deadlift",
+            "Straight Arm Lat Pulldown",
+            "Sumo Deadlift",
+            "T-Bar Row",
+            "Trap Bar Deadlift With High Handles",
+            "Trap Bar Deadlift With Low Handles"};
+    private String[] gluteExercises = new String[]{"Banded Side Kicks",
+            "Cable Pull Through",
+            "Clamshells",
+            "Dumbbell Romanian Deadlift",
+            "Dumbbell Frog Pumps",
+            "Fire Hydrants",
+            "Frog Pumps",
+            "Glute Bridge",
+            "Hip Abduction Against Band",
+            "Hip Abduction Machine",
+            "Hip Thrust",
+            "Hip Thrust Machine",
+            "Hip Thrust With Band Around Knees",
+            "Lateral Walk With Band",
+            "Machine Glute Kickbacks",
+            "One-Legged Glute Bridge",
+            "One-Legged Hip Thrust",
+            "Romanian Deadlift",
+            "Single Leg Romanian Deadlift",
+            "Standing Glute Kickback in Machine",
+            "Step Up"};
+    private String[] abExercises = new String[]{"Cable Crunch",
+            "Crunch",
+            "Dead Bug",
+            "Hanging Leg Raise",
+            "Hanging Knee Raise",
+            "Hanging Sit-Up",
+            "High to Low Wood Chop with Band",
+            "Horizontal Wood Chop with Band",
+            "Kneeling Ab Wheel Roll-Out",
+            "Kneeling Plank",
+            "Kneeling Side Plank",
+            "Lying Leg Raise",
+            "Lying Windshield Wiper",
+            "Lying Windshield Wiper with Bent Knees",
+            "Machine Crunch",
+            "Mountain Climbers",
+            "Oblique Crunch",
+            "Oblique Sit-Up",
+            "Plank",
+            "Side Plank",
+            "Sit-Up"};
+    private String[] calvesExercises = new String[]{"Eccentric Heel Drop" ,
+            "Heel Raise" ,
+            "Seated Calf Raise" ,
+            "Standing Calf Raise"};
+    private String[] forearmFlexExercises = new String[]{"Barbell Wrist Curl",
+            "Barbell Wrist Curl Behind the Back",
+            "Bar Hang",
+            "Dumbbell Wrist Curl",
+            "Farmers Walk",
+            "Fat Bar Deadlift",
+            "Gripper",
+            "One-Handed Bar Hang",
+            "Plate Pinch",
+            "Plate Wrist Curl",
+            "Towel Pull-Up"};
+    private String[] forearmExtExercises = new String[]{"Barbell Wrist Extension",
+            "Dumbbell Wrist Extension"};
+    private String[] cardioExercises = new String[]{"Rowing Machine",
+            "Stationary Bike",
+            "Treadmill",
+            "Elliptical",
+            "Stair Climber",
+            "Running",
+            "Jogging",
+            "Walking",
+            "Yoga",
+            "Sports"};
+
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String currentSel = spinner.getSelectedItem().toString();
+        if(currentSel.equals("Chest Exercises"))
+        {
+            workoutList.myWorkouts = chestExercises;
+        }
+        else if(currentSel.equals("Shoulder Exercises"))
+        {
+            workoutList.myWorkouts = shoulderExercises;
+        }
+        else if(currentSel.equals("Bicep Exercises"))
+        {
+            workoutList.myWorkouts = bicepExercises;
+        }
+        else if(currentSel.equals("Triceps Exercises"))
+        {
+            workoutList.myWorkouts = tricepsExercises;
+        }
+        else if(currentSel.equals("Leg Exercises"))
+        {
+            workoutList.myWorkouts = legExercises;
+        }
+        else if(currentSel.equals("Back Exercises"))
+        {
+            workoutList.myWorkouts = backExercises;
+        }
+        else if(currentSel.equals("Glute Exercises"))
+        {
+            workoutList.myWorkouts = gluteExercises;
+        }
+        else if(currentSel.equals("Ab Exercises"))
+        {
+            workoutList.myWorkouts = abExercises;
+        }
+        else if(currentSel.equals("Calves Exercises"))
+        {
+            workoutList.myWorkouts = calvesExercises;
+        }
+        else if(currentSel.equals("Forearm Flexors and Grip Exercises"))
+        {
+            workoutList.myWorkouts = forearmFlexExercises;
+        }
+        else if(currentSel.equals("Forearm Extensor Exercises"))
+        {
+            workoutList.myWorkouts = forearmExtExercises;
+        }
+        else if(currentSel.equals("Cardio Exercises"))
+        {
+            workoutList.myWorkouts = cardioExercises;
+        }
+        workoutList.notifyDataSetChanged();
+    }
+
+    public void onNothingSelected(AdapterView<?> adapterView) {}
 }
