@@ -145,11 +145,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
             homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
             nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
-        } else if (id == R.id.analytics_button) {
-            //Adjusted to change activity
-            Intent userInt = new Intent(getApplicationContext(), Analytics.class);
-            startActivity(userInt);
-        } else if (id == R.id.Home_Button) {
+        }
+
+        else if (id == R.id.analytics_button)
+        {
+            setContentView(R.layout.data_screen);
+        }
+
+        else if(id == R.id.analyticsHomeButton)
+        {
+            setContentView(R.layout.activity_main);
+        }
+
+        else if (id == R.id.excerciseData)
+        {
+            //Initiating Spinner for workout breakdown.
+            Spinner spinner = (Spinner) findViewById(R.id.exerciseSpinner);
+            setContentView(R.layout.exercise_data);
+        }
+
+        else if (id == R.id.breakDown)
+        {
+            //Initiating Spinner for Month Selection
+            Spinner spinner = (Spinner) findViewById(R.id.monthSelect);
+            setContentView(R.layout.muscle_distribution);
+        }
+
+        else if(id == R.id.exerciseBack)
+        {
+            setContentView(R.layout.data_screen);
+        }
+
+        else if (id == R.id.exerciseHomeButton)
+        {
+            setContentView(R.layout.activity_main);
+        }
+
+        else if(id == R.id.muscleHomeButton)
+        {
+            setContentView(R.layout.activity_main);
+        }
+
+        else if (id == R.id.muscleBack)
+        {
+            setContentView(R.layout.data_screen);
+        }
+
+        else if (id == R.id.Home_Button) {
             Transition slide = new Slide(Gravity.LEFT);
             TransitionManager.go(homeAnimation, slide);
             //Next Buttons
