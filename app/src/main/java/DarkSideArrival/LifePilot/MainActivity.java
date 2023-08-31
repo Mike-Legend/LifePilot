@@ -84,7 +84,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     WorkoutRecycler workoutList;
 
     //Height and Weight Variables
-    private float userHeight, userWeight;
+    private float userWeight;
+    private int  userHeightInches, userHeightFeet;
 
 
 
@@ -157,7 +158,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         else if (id == R.id.analytics_button)
         {
+            userWeight = (float) 128.2;
+            userHeightInches = 7;
+            userHeightFeet = 5;
             setContentView(R.layout.data_screen);
+            TextView weightVal = (TextView) findViewById(R.id.weightValue);
+            TextView heightValFeet = (TextView) findViewById(R.id.heightValue);
+            TextView heightValInches = (TextView) findViewById(R.id.userHeightInches);
+            TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
+            bmiVal.setText(Float.toString(CalculateBMI()));
+            heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
+            heightValInches.setText(Integer.toString(userHeightInches)+"\"");
+            weightVal.setText(Float.toString(userWeight));
         }
 
         else if(id == R.id.analyticsHomeButton)
@@ -863,9 +875,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         float bmi;
 
-        if(userHeight != 0 && userWeight != 0)
+        if((userHeightFeet*12) + userHeightInches != 0 && userWeight != 0)
         {
-            bmi = 703*(userWeight/(userHeight*userHeight));
+            float userHeight = (userHeightFeet*12) + userHeightInches;
+            userHeight = userHeight/12;
+            bmi = (userWeight/(userHeight*userHeight))*703;
             BigDecimal bmiD = new BigDecimal(bmi);
             bmiD = bmiD.setScale(1, RoundingMode.HALF_UP);
             bmi = bmiD.floatValue();
