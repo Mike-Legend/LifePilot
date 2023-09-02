@@ -88,9 +88,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private float userWeight;
     private int  userHeightInches, userHeightFeet;
 
-
-
-
     //Google Sign in variables
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
