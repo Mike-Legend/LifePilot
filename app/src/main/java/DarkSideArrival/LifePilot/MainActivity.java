@@ -130,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userExercisesArrayList = new ArrayList<ArrayList<Button>>();
         userGoalArrayList = new ArrayList<ArrayList<TextView>>();
 
-
     }
 
     @Override //Used for on click section in layout button attribute to switch layouts.
@@ -509,12 +508,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             LoadUserRoutines();
         } else if (id == R.id.googleSignIn) {
             signIn();
-            //setContentView(R.layout.experience_selection);
         } else if (id == R.id.temp_logout_button) {
             signOut();
-            //setContentView(R.layout.experience_selection);
+        } else if (id == R.id.still_learning_button || id == R.id.veteran_button) {
+            setContentView(R.layout.goal_selection);
         } else {
-           GoToHomeScreen();
+            GoToHomeScreen();
         }
     }
 
