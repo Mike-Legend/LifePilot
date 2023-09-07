@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
@@ -18,12 +19,14 @@ public class WorkoutRecycler extends RecyclerView.Adapter<WorkoutRecycler.ViewHo
     {
         public TextView textView;
         public Button button;
+        //public CheckBox checkbox;
         public ViewHolder(@NonNull View itemView)
         {
             super(itemView);
 
             textView = itemView.findViewById(R.id.workoutList);
             textView.setVisibility(View.GONE);
+            //checkbox = itemView.findViewById(R.id.recyclertestcheckbox);
             button = itemView.findViewById(R.id.recyclerworkoutbuttonadd);
 
             itemView.findViewById(R.id.recyclerworkoutbuttonadd).setOnClickListener(new View.OnClickListener() {

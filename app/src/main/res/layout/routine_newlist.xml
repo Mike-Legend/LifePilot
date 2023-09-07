@@ -288,7 +288,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:translationX="20dp"></LinearLayout>
+                        android:translationX="10dp"></LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/ButtonRoutineListHere"
@@ -296,13 +296,12 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:translationX="70dp">
+                        android:translationX="30dp">
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/workList"
                             android:layout_width="250dp"
-                            android:layout_height="match_parent" />
-
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
 
 

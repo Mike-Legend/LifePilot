@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Set User session data
         userRoutines = new ArrayList<>();
         userRoutineCheck = new ArrayList<>();
+        userRoutineSelectCheck = new ArrayList<>();
         userGoals = new ArrayList<>();
         userExercisesArrayList = new ArrayList<ArrayList<Button>>();
         userGoalArrayList = new ArrayList<ArrayList<TextView>>();
@@ -465,6 +466,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             WorkoutRecyclerView.setAdapter(workoutList);
             workoutList.notifyDataSetChanged();
 
+            //reset check list
+            userRoutineSelectCheck.clear();
+            for(int i = 0; i < workoutList.myWorkouts.length; i++) {
+                //Checkbox create
+                CheckBox temp2 = new CheckBox(getApplicationContext());
+                temp2.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
+                temp2.setScaleX(2);
+                temp2.setScaleY(2);
+                LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+                params2.setMargins(0, 10, 0, 0);
+                temp2.setLayoutParams(params2);
+                userRoutineSelectCheck.add(temp2);
+            }
+            CheckBox temp;
+            LinearLayout ll2 = findViewById(R.id.RoutineCheckRoutineListHere);
+            for(int i = 0; i < userRoutineSelectCheck.size(); i++) {
+                temp = (userRoutineSelectCheck.get(i));
+                if(temp.getParent() != null) {
+                    ((ViewGroup)temp.getParent()).removeView(temp);
+                }
+                ll2.addView(temp);
+            }
+
             //button usage animations
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id > 99 && id < userGoals.size() + 101) {
@@ -609,8 +633,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Calves Exercises",
             "Forearm Flexors and Grip Exercises",
             "Forearm Extensor Exercises",
-            "Cardio Exercises"};
-
+            "Cardio Exercises",
+            "Body Weight"};
     private String[] chestExercises = new String[]{"Bar Dip",
             "Bench Press",
             "Cable Chest Press",
@@ -838,6 +862,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Walking",
             "Yoga",
             "Sports"};
+    private String[] bodyweight = new String[]{"Jumping Jacks",
+            "Push-Ups"};
 
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String currentSel = spinner.getSelectedItem().toString();
@@ -888,6 +914,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(currentSel.equals("Cardio Exercises"))
         {
             workoutList.myWorkouts = cardioExercises;
+        }
+        else if(currentSel.equals("Body Weight"))
+        {
+            workoutList.myWorkouts = bodyweight;
         }
         workoutList.notifyDataSetChanged();
     }
