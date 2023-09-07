@@ -19,8 +19,12 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/royalPurple"
         android:text=""
-        android:textSize="20sp"
-        android:textColor="@color/white">
+        android:textColor="@color/white"
+        android:textSize="20sp"></Button>
 
-    </Button>
+<!--    <CheckBox-->
+<!--        android:id="@+id/recyclertestcheckbox"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content">-->
+<!--    </CheckBox>-->
 </LinearLayout>
