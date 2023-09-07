@@ -455,7 +455,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //Set workout spinner
             spinner =  findViewById(R.id.exerciseSpin);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, workouts);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, workouts);
             spinner.setAdapter(adapter);
             spinner.setOnItemSelectedListener(this);
 
