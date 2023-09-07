@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bmiVal.setText(Float.toString(CalculateBMI()));
             heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
             heightValInches.setText(Integer.toString(userHeightInches)+"\"");
-            weightVal.setText(Float.toString(userWeight));
+            weightVal.setText(Float.toString(userWeight)+" lbs");
         }
 
         else if(id == R.id.analyticsHomeButton)
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bmiVal.setText(Float.toString(CalculateBMI()));
             heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
             heightValInches.setText(Integer.toString(userHeightInches)+"\"");
-            weightVal.setText(Float.toString(userWeight));
+            weightVal.setText(Float.toString(userWeight)+" lbs");
         }
 
         else if (id == R.id.exerciseHomeButton)
@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             bmiVal.setText(Float.toString(CalculateBMI()));
             heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
             heightValInches.setText(Integer.toString(userHeightInches)+"\"");
-            weightVal.setText(Float.toString(userWeight));
+            weightVal.setText(Float.toString(userWeight)+" lbs");
         }
 
         else if (id == R.id.Home_Button) {
