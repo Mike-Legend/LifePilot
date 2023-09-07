@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.ObjectAnimator;
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -89,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private float userWeight;
     private int  userHeightInches, userHeightFeet;
 
+
+
+
     //Google Sign in variables
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -116,12 +118,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.sign_in);
         }
 
+
         //Set User session data
         userRoutines = new ArrayList<>();
         userRoutineCheck = new ArrayList<>();
         userGoals = new ArrayList<>();
         userExercisesArrayList = new ArrayList<ArrayList<Button>>();
         userGoalArrayList = new ArrayList<ArrayList<TextView>>();
+
+
     }
 
     @Override //Used for on click section in layout button attribute to switch layouts.
@@ -450,9 +455,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //Set workout spinner
             spinner =  findViewById(R.id.exerciseSpin);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, workouts);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, workouts);
             spinner.setAdapter(adapter);
-            spinner.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             spinner.setOnItemSelectedListener(this);
 
             WorkoutRecyclerView = findViewById(R.id.workList);
@@ -605,8 +609,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Calves Exercises",
             "Forearm Flexors and Grip Exercises",
             "Forearm Extensor Exercises",
-            "Cardio Exercises",
-            "Body Weight"};
+            "Cardio Exercises"};
 
     private String[] chestExercises = new String[]{"Bar Dip",
             "Bench Press",
@@ -835,12 +838,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Walking",
             "Yoga",
             "Sports"};
-    private String[] bodyweight = new String[]{"Jumping Jacks",
-            "Push-Ups"};
 
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        ((TextView) adapterView.getChildAt(0)).setTextColor(Color.WHITE);
-        ((TextView) adapterView.getChildAt(0)).setTextSize(25);
         String currentSel = spinner.getSelectedItem().toString();
         if(currentSel.equals("Chest Exercises"))
         {
@@ -889,10 +888,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(currentSel.equals("Cardio Exercises"))
         {
             workoutList.myWorkouts = cardioExercises;
-        }
-        else if(currentSel.equals("Body Weight"))
-        {
-            workoutList.myWorkouts = bodyweight;
         }
         workoutList.notifyDataSetChanged();
     }
