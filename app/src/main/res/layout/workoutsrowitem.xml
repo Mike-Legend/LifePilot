@@ -11,4 +11,14 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:textSize="34sp" />
+
+    <Button
+        android:id="@+id/recyclerworkoutbuttonadd"
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/royalPurple"
+        android:text=""
+        android:textColor="@color/white">
+
+    </Button>
 </LinearLayout>

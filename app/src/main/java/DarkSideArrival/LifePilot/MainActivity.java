@@ -115,15 +115,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.sign_in);
         }
 
-
         //Set User session data
         userRoutines = new ArrayList<>();
         userRoutineCheck = new ArrayList<>();
         userGoals = new ArrayList<>();
         userExercisesArrayList = new ArrayList<ArrayList<Button>>();
         userGoalArrayList = new ArrayList<ArrayList<TextView>>();
-
-
     }
 
     @Override //Used for on click section in layout button attribute to switch layouts.
