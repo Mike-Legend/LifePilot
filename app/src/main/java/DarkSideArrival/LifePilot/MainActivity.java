@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.ObjectAnimator;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -449,8 +450,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //Set workout spinner
             spinner =  findViewById(R.id.exerciseSpin);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, workouts);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, workouts);
             spinner.setAdapter(adapter);
+            spinner.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             spinner.setOnItemSelectedListener(this);
 
             WorkoutRecyclerView = findViewById(R.id.workList);
@@ -837,6 +839,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Push-Ups"};
 
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        ((TextView) adapterView.getChildAt(0)).setTextColor(Color.WHITE);
+        ((TextView) adapterView.getChildAt(0)).setTextSize(25);
         String currentSel = spinner.getSelectedItem().toString();
         if(currentSel.equals("Chest Exercises"))
         {
