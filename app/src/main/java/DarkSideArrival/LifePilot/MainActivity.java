@@ -540,21 +540,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             userData.put("Goal", "Lose Weight");
             db.collection("Users").document(user.getUid())
                     .update(userData);
-            GoToHomeScreen();
+            setContentView(R.layout.weight_height_input);
         } else if (id == R.id.gain_weight_button) {
             // Add "gain weight" to firebase
             Map<String, Object> userData = new HashMap<>();
             userData.put("Goal", "Gain Weight");
             db.collection("Users").document(user.getUid())
                     .update(userData);
-            GoToHomeScreen();
+            setContentView(R.layout.weight_height_input);
         } else if (id == R.id.maintain_weight_button) {
             // Add "maintain weight" to firebase
             Map<String, Object> userData = new HashMap<>();
             userData.put("Goal", "Maintain Weight");
             db.collection("Users").document(user.getUid())
                     .update(userData);
-            GoToHomeScreen();
+            setContentView(R.layout.weight_height_input);
         }  else {
             GoToHomeScreen();
         }
@@ -589,7 +589,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     Toast.makeText(getApplicationContext(), "Error, user document doesn't exist", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(getApplicationContext(), "Failed to find data in database", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Failed to connect to database", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
