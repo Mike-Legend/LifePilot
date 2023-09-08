@@ -1045,15 +1045,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return bmi;
     }
 
+    //Self-explanatory, but just in case, function for displaying values on data screen.
     public void ShowDataScreen()
     {
+        //Getting layout design IDs setup for use.
         ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
         TextView weightVal = (TextView) findViewById(R.id.weightValue);
         TextView heightValFeet = (TextView) findViewById(R.id.heightValue);
         TextView heightValInches = (TextView) findViewById(R.id.userHeightInches);
         TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
+
+        //Setting BMI bar value equal to BMI calculation.
         bmiBar.setProgress(Math.round(CalculateBMI()));
         bmiVal.setText(Float.toString(CalculateBMI()));
+
+        //Turning user height (inches) into feet' inches" format.
         float heightLeft = userHeight;
         int heightValueFeet = (int)(heightLeft/12);
         heightLeft = (heightLeft/12)-heightValueFeet;
@@ -1063,6 +1069,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         weightVal.setText(Float.toString(userWeight)+" lbs");
     }
 
+    //Function for setting weight and height from user input.
     public void SetWeightHeight()
     {
         TextView heightInput = (TextView) findViewById(R.id.height_input);
@@ -1071,6 +1078,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userHeight = Float.parseFloat(heightInput.getText().toString());
     }
 
+    //Function for Setting up Weight and Height input screen for display. Avoiding user leaving input boxes blank.
+    //Will display existing values for height and weight.
     public void WeightHeightInputSetup()
     {
         TextView heightInput = (TextView) findViewById(R.id.height_input);
@@ -1099,6 +1108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             weightInput.setText(0);
         }
     }
+
 
     public void onNothingSelected(AdapterView<?> adapterView) {}
 }
