@@ -1084,29 +1084,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         TextView heightInput = (TextView) findViewById(R.id.height_input);
         TextView weightInput = (TextView) findViewById(R.id.weight_input);
-        if(userHeight != 0 && userWeight != 0)
-        {
-            heightInput.setText(Float.toString(userHeight));
-            weightInput.setText(Float.toString(userWeight));
-        }
-
-        else if(userHeight == 0 && userWeight != 0)
-        {
-            heightInput.setText(0);
-            weightInput.setText(Float.toString(userWeight));
-        }
-
-        else if(userWeight == 0 && userHeight != 0)
-        {
-            heightInput.setText(Float.toString(userHeight));
-            weightInput.setText(0);
-        }
-
-        else
-        {
-            heightInput.setText(0);
-            weightInput.setText(0);
-        }
+        heightInput.setText(Float.toString(userHeight));
+        weightInput.setText(Float.toString(userWeight));
     }
 
 
