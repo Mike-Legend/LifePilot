@@ -16,8 +16,6 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -56,7 +54,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.identity.GetSignInIntentRequest;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -65,22 +62,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.protobuf.NullValue;
 import org.checkerframework.checker.units.qual.A;
 import org.w3c.dom.Text;
@@ -104,42 +88,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private float userWeight;
     private int  userHeightInches, userHeightFeet;
 
-
-
-
     //Google Sign in variables
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
     GoogleSignInAccount account;
-    private FirebaseAuth mAuth;
-    FirebaseUser user;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override //Initial App Generation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.sign_in);
         //Google Sign In variables
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestIdToken(getString(R.string.server_client_id)).requestEmail().build();
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
-        mAuth = FirebaseAuth.getInstance();
-        user = mAuth.getCurrentUser(); //is null if user is not signed in
-        account = GoogleSignIn.getLastSignedInAccount(this); //is null if user is not signed in
 
-        if (account != null && user != null) {
-            performAccountStartUp();
+        account = GoogleSignIn.getLastSignedInAccount(this); //is null if user is already signed in
+
+        if (account != null) {
+            setContentView(R.layout.activity_main);
+            //Home screen animation to layout - ONLY from home screen, duplicate to home button onClick
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
+            //Welcome text change
+            TextView welcome = findViewById(R.id.welcome_text);
+            String name = account.getGivenName();
+            welcome.setText("Welcome, "+name+"!");
         }else {
             setContentView(R.layout.sign_in);
         }
 
-
         //Set User session data
         userRoutines = new ArrayList<>();
         userRoutineCheck = new ArrayList<>();
+        userRoutineSelectCheck = new ArrayList<>();
         userGoals = new ArrayList<>();
         userExercisesArrayList = new ArrayList<ArrayList<Button>>();
         userGoalArrayList = new ArrayList<ArrayList<TextView>>();
-
     }
 
     @Override //Used for on click section in layout button attribute to switch layouts.
@@ -247,7 +229,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         else if (id == R.id.Home_Button) {
-            GoToHomeScreen();
+            Transition slide = new Slide(Gravity.LEFT);
+            TransitionManager.go(homeAnimation, slide);
+            //Next Buttons
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
+            if (account != null){
+                TextView welcome = findViewById(R.id.welcome_text);
+                String name = account.getGivenName();
+                welcome.setText("Welcome, "+name+"!");
+            }
         } else if (id == R.id.NewRoutineCreate_Button) {
             FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
             routinelistoverlay.setVisibility(View.VISIBLE);
@@ -460,7 +450,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //Set workout spinner
             spinner =  findViewById(R.id.exerciseSpin);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, workouts);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, workouts);
             spinner.setAdapter(adapter);
             spinner.setOnItemSelectedListener(this);
 
@@ -469,6 +459,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             workoutList = new WorkoutRecycler(chestExercises);
             WorkoutRecyclerView.setAdapter(workoutList);
             workoutList.notifyDataSetChanged();
+
+            //reset check list
+            userRoutineSelectCheck.clear();
+            for(int i = 0; i < workoutList.myWorkouts.length; i++) {
+                //Checkbox create
+                CheckBox temp2 = new CheckBox(getApplicationContext());
+                temp2.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
+                temp2.setScaleX(2);
+                temp2.setScaleY(2);
+                LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+                params2.setMargins(0, 10, 0, 0);
+                temp2.setLayoutParams(params2);
+                userRoutineSelectCheck.add(temp2);
+            }
+            CheckBox temp;
+            LinearLayout ll2 = findViewById(R.id.RoutineCheckRoutineListHere);
+            for(int i = 0; i < userRoutineSelectCheck.size(); i++) {
+                temp = (userRoutineSelectCheck.get(i));
+                if(temp.getParent() != null) {
+                    ((ViewGroup)temp.getParent()).removeView(temp);
+                }
+                ll2.addView(temp);
+            }
 
             //button usage animations
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
@@ -518,99 +531,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             LoadUserRoutines();
         } else if (id == R.id.googleSignIn) {
             signIn();
+            //setContentView(R.layout.experience_selection);
         } else if (id == R.id.temp_logout_button) {
             signOut();
-        } else if (id == R.id.still_learning_button) {
-            // Add "still learning" to firebase
-            Map<String, Object> userData = new HashMap<>();
-            userData.put("Experience", "Still Learning");
-            db.collection("Users").document(user.getUid())
-                    .update(userData);
-            setContentView(R.layout.goal_selection);
-        } else if (id == R.id.veteran_button) {
-            // Add "veteran" to firebase
-            Map<String, Object> userData = new HashMap<>();
-            userData.put("Experience", "Veteran");
-            db.collection("Users").document(user.getUid())
-                    .update(userData);
-            setContentView(R.layout.goal_selection);
-        } else if (id == R.id.lose_weight_button) {
-            // Add "lose weight" to firebase
-            Map<String, Object> userData = new HashMap<>();
-            userData.put("Goal", "Lose Weight");
-            db.collection("Users").document(user.getUid())
-                    .update(userData);
-            setContentView(R.layout.weight_height_input);
-        } else if (id == R.id.gain_weight_button) {
-            // Add "gain weight" to firebase
-            Map<String, Object> userData = new HashMap<>();
-            userData.put("Goal", "Gain Weight");
-            db.collection("Users").document(user.getUid())
-                    .update(userData);
-            setContentView(R.layout.weight_height_input);
-        } else if (id == R.id.maintain_weight_button) {
-            // Add "maintain weight" to firebase
-            Map<String, Object> userData = new HashMap<>();
-            userData.put("Goal", "Maintain Weight");
-            db.collection("Users").document(user.getUid())
-                    .update(userData);
-            setContentView(R.layout.weight_height_input);
-        }  else {
-            GoToHomeScreen();
+            //setContentView(R.layout.experience_selection);
+        } else {
+            setContentView(R.layout.activity_main);
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
+
+            if (account != null){
+                TextView welcome = findViewById(R.id.welcome_text);
+                String name = account.getGivenName();
+                welcome.setText("Welcome, "+name+"!");
+            }
         }
     }
-
-
-    private void GoToHomeScreen(){
-        setContentView(R.layout.activity_main);
-        routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
-
-        //Updating Home Screen text
-        if (account != null && user != null){
-            //Updating welcome text
-            TextView welcome_text = findViewById(R.id.welcome_text);
-            String name = user.getDisplayName();
-            welcome_text.setText("Welcome, "+name+"!");
-
-            //Updating goal and experience text
-            TextView goal_text = findViewById(R.id.goal_text);
-            TextView experience_text = findViewById(R.id.experience_text);
-            db.collection("Users").document(user.getUid())
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot document = task.getResult();
-                                if (document.exists()){
-                                    goal_text.setText("Goal: "+document.getData().get("Goal"));
-                                    experience_text.setText("Experience Level: "+document.getData().get("Experience"));
-                                }else{
-                                    Toast.makeText(getApplicationContext(), "Error, user document doesn't exist", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Failed to connect to database", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-        }
-    }
-
-
-
-
-
 
     //Google Sign in functions
     private static final int REQUEST_CODE_GOOGLE_SIGN_IN = 1200; /* unique request id */
     void signIn(){
-        //Start Sign in process
         Intent signInIntent = gsc.getSignInIntent();
         startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN);
     }
 
     void signOut(){
-        FirebaseAuth.getInstance().signOut();
         gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -619,50 +563,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    void performAccountStartUp(){
-        /*
-            This function:
-            -Will add the user to firebase if it's a new user
-            -Will take you to profile creation if you are a new user or somehow skipped it
-            -Otherwise, it will take you to home screen
-         */
-
-        //Checking if user's firebase document exists
-        db.collection("Users").document(user.getUid()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        //Checking if skipped profile creation
-                        if (!document.contains("Experience")){
-                            setContentView(R.layout.experience_selection);
-                        }else if (!document.contains("Goal")){
-                            setContentView(R.layout.goal_selection);
-                        }else{
-                            GoToHomeScreen();
-                        }
-                    } else {
-                        // Create a new user with a first and last name
-                        Map<String, Object> userData = new HashMap<>();
-                        userData.put("First Name", account.getGivenName());
-                        userData.put("Last Name", account.getFamilyName());
-
-                        // Add a new document with their Google ID
-                        db.collection("Users").document(user.getUid())
-                                .set(userData);
-
-                        // Go to profile creation
-                        setContentView(R.layout.experience_selection);
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "New User Detection Failed", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    //Signing in
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -671,36 +571,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             try {
                 task.getResult(ApiException.class);
+                setContentView(R.layout.experience_selection);
                 account = GoogleSignIn.getLastSignedInAccount(this);
-
-                //Getting an ID token from Google and using it to authenticate with Firebase
-                String idToken = account.getIdToken();
-                if (idToken != null){
-                    AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
-                    mAuth.signInWithCredential(firebaseCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>(){
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success
-                                user = mAuth.getCurrentUser();
-                                performAccountStartUp();
-
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Toast.makeText(getApplicationContext(), "Firebase Authentication Failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
             } catch (ApiException e) {
                 Toast.makeText(getApplicationContext(), "Something went wrong!!", Toast.LENGTH_SHORT).show();
             }
         }
     }
-
-
-
-
 
 
     //load custom routines
@@ -750,8 +627,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Calves Exercises",
             "Forearm Flexors and Grip Exercises",
             "Forearm Extensor Exercises",
-            "Cardio Exercises"};
-
+            "Cardio Exercises",
+            "Body Weight"};
     private String[] chestExercises = new String[]{"Bar Dip",
             "Bench Press",
             "Cable Chest Press",
@@ -979,6 +856,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Walking",
             "Yoga",
             "Sports"};
+    private String[] bodyweight = new String[]{"Jumping Jacks",
+            "Push-Ups"};
 
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String currentSel = spinner.getSelectedItem().toString();
@@ -1029,6 +908,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(currentSel.equals("Cardio Exercises"))
         {
             workoutList.myWorkouts = cardioExercises;
+        }
+        else if(currentSel.equals("Body Weight"))
+        {
+            workoutList.myWorkouts = bodyweight;
         }
         workoutList.notifyDataSetChanged();
     }

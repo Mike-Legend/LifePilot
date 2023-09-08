@@ -10,5 +10,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
+        android:textColor="@color/white"
         android:textSize="34sp" />
+
+    <Button
+        android:id="@+id/recyclerworkoutbuttonadd"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/royalPurple"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="20sp"></Button>
+
+<!--    <CheckBox-->
+<!--        android:id="@+id/recyclertestcheckbox"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content">-->
+<!--    </CheckBox>-->
 </LinearLayout>
