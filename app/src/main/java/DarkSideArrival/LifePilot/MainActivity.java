@@ -527,6 +527,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if (id == R.id.ExerciseSave_Button){
             //TODO: Sync to firebase
+            //all array information
             setContentView(R.layout.routine_list);
             LoadUserRoutines();
         } else if (id == R.id.googleSignIn) {
