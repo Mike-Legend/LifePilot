@@ -105,9 +105,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private float userWeight;
     private int  userHeightInches, userHeightFeet;
 
-
-
-
     //Google Sign in variables
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -132,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else {
             setContentView(R.layout.sign_in);
         }
-
 
         //Set User session data
         userRoutines = new ArrayList<>();
@@ -464,7 +460,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             spinner =  findViewById(R.id.exerciseSpin);
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, workouts);
             spinner.setAdapter(adapter);
-            spinner.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             spinner.setOnItemSelectedListener(this);
 
             WorkoutRecyclerView = findViewById(R.id.workList);
@@ -1009,8 +1004,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Push-Ups"};
 
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        ((TextView) adapterView.getChildAt(0)).setTextColor(Color.WHITE);
-        ((TextView) adapterView.getChildAt(0)).setTextSize(25);
         String currentSel = spinner.getSelectedItem().toString();
         if(currentSel.equals("Chest Exercises"))
         {
