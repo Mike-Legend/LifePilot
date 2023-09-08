@@ -88,9 +88,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private float userWeight;
     private int  userHeightInches, userHeightFeet;
 
-
-
-
     //Google Sign in variables
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
@@ -118,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.sign_in);
         }
 
-
         //Set User session data
         userRoutines = new ArrayList<>();
         userRoutineCheck = new ArrayList<>();
@@ -126,8 +122,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userGoals = new ArrayList<>();
         userExercisesArrayList = new ArrayList<ArrayList<Button>>();
         userGoalArrayList = new ArrayList<ArrayList<TextView>>();
-
-
     }
 
     @Override //Used for on click section in layout button attribute to switch layouts.
