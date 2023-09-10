@@ -323,6 +323,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 btn.setText(temp2.getText());
                 btn.setTextSize(24);
                 btn.setTextColor(Color.WHITE);
+                btn.setAllCaps(false);
                 btn.setClickable(true);
                 GradientDrawable gradDraw = new GradientDrawable();
                 gradDraw.setShape(GradientDrawable.RECTANGLE);
