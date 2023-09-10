@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.IntentSender;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -16,6 +17,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
@@ -73,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Routine and goal variables and arrays
     private ArrayList<Button> userRoutines, userGoals;
+    private List<ClipData.Item> currentSelectedItems = new ArrayList<>();
+    private List<ClipData.Item> items = new ArrayList<>();
     private ArrayList<CheckBox> userRoutineCheck, userRoutineSelectCheck;
     private ArrayList<ArrayList<Button>> userExercisesArrayList;
     private ArrayList<ArrayList<TextView>> userGoalArrayList; //Future usage to add multiple goals to one routine
@@ -306,23 +310,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //overlay trigger
             FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.GONE);
-            //button creation
+            //Uncheck exercises if on same screen
+            //temp.setChecked(false);
+        } else if (id == R.id.recyclertestcheckbox) {
+            //Check creation and link
+            CheckBox temp;
+            temp = findViewById(R.id.recyclertestcheckbox);
+            Button temp2 = findViewById(R.id.recyclerworkoutbuttonadd);
             LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
-            int checks = 0;
-            int[] eCheckIDs = new int[] {1,2,3,4};
-            //check amount, based off number of available exercises
-            for(int i = 0; i < 4; i++) {
-                CheckBox echeck = findViewById(eCheckIDs[i]);
-                if(echeck.isChecked()) {
-                    checks++;
-                }
-            }
-            //mass button create for selected exercises TODO: Change to select workout info later with array
-            for(int i = 0; i < checks; i++) {
+            if(temp.isChecked()) {
                 Button btn = new Button(this);
-                btn.setText("Temp Exercise");
+                btn.setText(temp2.getText());
                 btn.setTextSize(24);
                 btn.setTextColor(Color.WHITE);
+                btn.setAllCaps(false);
                 btn.setClickable(true);
                 GradientDrawable gradDraw = new GradientDrawable();
                 gradDraw.setShape(GradientDrawable.RECTANGLE);
@@ -335,13 +336,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 btn.setLayoutParams(params);
                 ll.addView(btn);
                 userExercisesArrayList.get(routineIDActive).add(btn);
-            }
-            //Uncheck exercises if on same screen
-            for(int i = 0; i < 4; i++) {
-                CheckBox echeck = findViewById(eCheckIDs[i]);
-                if(echeck.isChecked()) {
-                    echeck.setChecked(false);
-                }
+            } else {
+                //remove from array
             }
         } else if (id == R.id.AddGoal_Button) { //TODO: Readding goal bugged, diff goals unchecked bugged
             FrameLayout routinegoallistoverlay = findViewById(R.id.goaladdtoroutineoverlay);
@@ -460,28 +456,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             WorkoutRecyclerView.setAdapter(workoutList);
             workoutList.notifyDataSetChanged();
 
-            //reset check list
-            userRoutineSelectCheck.clear();
-            for(int i = 0; i < workoutList.myWorkouts.length; i++) {
-                //Checkbox create
-                CheckBox temp2 = new CheckBox(getApplicationContext());
-                temp2.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
-                temp2.setScaleX(2);
-                temp2.setScaleY(2);
-                LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
-                params2.setMargins(0, 10, 0, 0);
-                temp2.setLayoutParams(params2);
-                userRoutineSelectCheck.add(temp2);
-            }
-            CheckBox temp;
-            LinearLayout ll2 = findViewById(R.id.RoutineCheckRoutineListHere);
-            for(int i = 0; i < userRoutineSelectCheck.size(); i++) {
-                temp = (userRoutineSelectCheck.get(i));
-                if(temp.getParent() != null) {
-                    ((ViewGroup)temp.getParent()).removeView(temp);
-                }
-                ll2.addView(temp);
-            }
+            //reset check list - may be unused
+            //userRoutineSelectCheck.clear();
 
             //button usage animations
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
@@ -527,8 +503,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         } else if (id == R.id.ExerciseSave_Button){
             //TODO: Sync to firebase
+            //all array information
             setContentView(R.layout.routine_list);
             LoadUserRoutines();
+        } else if (id == R.id.calendar_button) {
+            setContentView(R.layout.calendar_screen);
         } else if (id == R.id.googleSignIn) {
             signIn();
             //setContentView(R.layout.experience_selection);
