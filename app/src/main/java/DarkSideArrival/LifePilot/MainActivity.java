@@ -538,6 +538,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //all array information
             setContentView(R.layout.routine_list);
             LoadUserRoutines();
+        } else if (id == R.id.calendar_button) {
+            setContentView(R.layout.calendar_screen);
         } else if (id == R.id.googleSignIn) {
             signIn();
         } else if (id == R.id.temp_logout_button) {
