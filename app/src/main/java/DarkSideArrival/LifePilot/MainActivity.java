@@ -343,6 +343,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 btn.setLayoutParams(params);
                 ll.addView(btn);
                 userExercisesArrayList.get(routineIDActive).add(btn);
+            } else {
+                //remove from array
             }
         } else if (id == R.id.AddGoal_Button) { //TODO: Readding goal bugged, diff goals unchecked bugged
             FrameLayout routinegoallistoverlay = findViewById(R.id.goaladdtoroutineoverlay);
