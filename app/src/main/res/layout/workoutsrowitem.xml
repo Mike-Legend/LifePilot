@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:orientation="vertical">
-
 
     <TextView
         android:id="@+id/workoutList"
@@ -17,14 +17,26 @@
         android:id="@+id/recyclerworkoutbuttonadd"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="0dp"
+        android:clickable="true"
+        android:layout_toEndOf="@+id/recyclertestcheckbox"
         android:backgroundTint="@color/royalPurple"
         android:text=""
         android:textColor="@color/white"
         android:textSize="20sp"></Button>
 
-<!--    <CheckBox-->
-<!--        android:id="@+id/recyclertestcheckbox"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content">-->
-<!--    </CheckBox>-->
-</LinearLayout>
+    <CheckBox
+        android:id="@+id/recyclertestcheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="0dp"
+        android:buttonTint="@color/white"
+        android:onClick="onClick"
+        android:clickable="true"
+        android:scaleX="2"
+        android:scaleY="2"></CheckBox>
+
+</RelativeLayout>
