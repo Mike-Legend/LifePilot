@@ -339,7 +339,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     ll.addView(btn);
                     userExercisesArrayList.get(routineIDActive).add(btn);
                 }
-
             }
 
             //empty array for new selects
@@ -531,6 +530,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 ll2.addView(temp2);
             }
+        } else if (id == R.id.PreMadeRoutine1_Button) { //TODO: Finish premade routine lists
+            setContentView(R.layout.routine_newlist);
+            //hide add exercise button
+            //change routine title name
+            //remove goal
+            //load premade exercise array
+            //make save, a save to routine array list and sync
+        } else if (id == R.id.PreMadeRoutine2_Button) {
+            setContentView(R.layout.routine_newlist);
+        } else if (id == R.id.PreMadeRoutine3_Button) {
+            setContentView(R.layout.routine_newlist);
+        } else if (id == R.id.PreMadeRoutine4_Button) {
+            setContentView(R.layout.routine_newlist);
+        } else if (id == R.id.PreMadeRoutine5_Button) {
+            setContentView(R.layout.routine_newlist);
+        } else if (id == R.id.PreMadeRoutine6_Button) {
+            setContentView(R.layout.routine_newlist);
         } else if (id == R.id.ExerciseSave_Button){
             //TODO: Sync to firebase
             //all array information
@@ -560,7 +576,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     View.OnClickListener getOnClickForDynamicButtons(final Button btn) {
         return new View.OnClickListener() {
             public void onClick(View v) {
-                setContentView(R.layout.activity_main);
+                //setContentView(R.layout.activity_main);
             }
         };
     }
