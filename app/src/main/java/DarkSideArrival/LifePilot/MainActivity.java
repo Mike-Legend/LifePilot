@@ -311,41 +311,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.GONE);
 
-
-            WorkoutRecyclerView = findViewById(R.id.workList);
-            WorkoutRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            //workoutList = new WorkoutRecycler(chestExercises);
-
-            WorkoutRecycler exerciseAdapter = new WorkoutRecycler(chestExercises) {
-                //@Override
-                public void onItemCheck(String string) {
-                    currentSelectedItems.add(string);
-                }
-                //@Override
-                public void onItemUncheck(String string) {
-                    currentSelectedItems.remove(string);
-                }
-            };
-            WorkoutRecyclerView.setAdapter(exerciseAdapter);
-            exerciseAdapter.notifyDataSetChanged();
-                //Check creation and link
-                //CheckBox temp;
-                //temp = findViewById(R.id.recyclertestcheckbox);
-                //Button temp2 = findViewById(R.id.recyclerworkoutbuttonadd);
-                LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
-                for(int i = 0; i < currentSelectedItems.size(); i++) {
-                    Button btn = new Button(this);
-                    btn.setText(currentSelectedItems.get(i));
-                    btn.setTextSize(24);
-                    btn.setTextColor(Color.WHITE);
-                    btn.setAllCaps(false);
-                    btn.setClickable(true);
-                    GradientDrawable gradDraw = new GradientDrawable();
-                    gradDraw.setShape(GradientDrawable.RECTANGLE);
-                    gradDraw.setCornerRadius(100);
-                    gradDraw.setColor(getResources().getColor(R.color.royalPurple));
-                    btn.setBackground(gradDraw);
-                    btn.setPadding(0,0,0,8);
+            LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
+            for(int i = 0; i < currentSelectedItems.size(); i++) {
+                Button btn = new Button(this);
+                btn.setText(currentSelectedItems.get(i));
+                btn.setTextSize(24);
+                btn.setTextColor(Color.WHITE);
+                btn.setAllCaps(false);
+                btn.setClickable(true);
+                btn.setOnClickListener(getOnClickForDynamicButtons(btn));
+                GradientDrawable gradDraw = new GradientDrawable();
+                gradDraw.setShape(GradientDrawable.RECTANGLE);
+                gradDraw.setCornerRadius(90);
+                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                btn.setBackground(gradDraw);
+                btn.setPadding(20,0,20,8);
+                if(btn.getText().length() > 23) {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                    userExercisesArrayList.get(routineIDActive).add(btn);
+                } else {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
                     params.setMargins(0, 30, 0, 0);
                     btn.setLayoutParams(params);
@@ -353,41 +340,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     userExercisesArrayList.get(routineIDActive).add(btn);
                 }
 
-                //remove from array
+            }
 
-            //Uncheck exercises if on same screen
-            //temp.setChecked(false);
-        }
-//        else if (id == R.id.recyclertestcheckbox) {
-//            //Check creation and link
-//            CheckBox temp;
-//            temp = findViewById(R.id.recyclertestcheckbox);
-//            Button temp2 = findViewById(R.id.recyclerworkoutbuttonadd);
-//            LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
-//            if(temp.isChecked()) {
-//                Button btn = new Button(this);
-//                btn.setText(temp2.getText());
-//                btn.setTextSize(24);
-//                btn.setTextColor(Color.WHITE);
-//                btn.setAllCaps(false);
-//                btn.setClickable(true);
-//                GradientDrawable gradDraw = new GradientDrawable();
-//                gradDraw.setShape(GradientDrawable.RECTANGLE);
-//                gradDraw.setCornerRadius(100);
-//                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
-//                btn.setBackground(gradDraw);
-//                btn.setPadding(0,0,0,8);
-//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
-//                params.setMargins(0, 30, 0, 0);
-//                btn.setLayoutParams(params);
-//                ll.addView(btn);
-//                userExercisesArrayList.get(routineIDActive).add(btn);
-//            } else {
-//                //remove from array
-//
-//            }
-        //}
-        else if (id == R.id.AddGoal_Button) { //TODO: Readding goal bugged, diff goals unchecked bugged
+            //empty array for new selects
+            currentSelectedItems.clear();
+
+            //RESET Recycler
+            WorkoutRecyclerView = findViewById(R.id.workList);
+            WorkoutRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            //workoutList = new WorkoutRecycler(chestExercises);
+            workoutList = new WorkoutRecycler(chestExercises, currentSelectedItems, new WorkoutRecycler.OnItemCheckListener() {
+                @Override
+                public void onItemCheck(String string) {
+                    currentSelectedItems.add(string);
+                }
+                @Override
+                public void onItemUncheck(String string) {
+                    currentSelectedItems.remove(string);
+                }
+            });
+            WorkoutRecyclerView.setAdapter(workoutList);
+            workoutList.notifyDataSetChanged();
+        } else if (id == R.id.AddGoal_Button) { //TODO: Readding goal bugged, diff goals unchecked bugged
             FrameLayout routinegoallistoverlay = findViewById(R.id.goaladdtoroutineoverlay);
             routinegoallistoverlay.setVisibility(View.GONE);
             TextView goal = new TextView(this);
@@ -498,14 +472,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             spinner.setAdapter(adapter);
             spinner.setOnItemSelectedListener(this);
 
+            //Set Recycler
             WorkoutRecyclerView = findViewById(R.id.workList);
             WorkoutRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            workoutList = new WorkoutRecycler(chestExercises);
+            //workoutList = new WorkoutRecycler(chestExercises);
+            workoutList = new WorkoutRecycler(chestExercises, currentSelectedItems, new WorkoutRecycler.OnItemCheckListener() {
+                @Override
+                public void onItemCheck(String string) {
+                    currentSelectedItems.add(string);
+                }
+                @Override
+                public void onItemUncheck(String string) {
+                    currentSelectedItems.remove(string);
+                }
+            });
             WorkoutRecyclerView.setAdapter(workoutList);
             workoutList.notifyDataSetChanged();
-
-            //reset check list - may be unused
-            //userRoutineSelectCheck.clear();
 
             //button usage animations
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
@@ -572,6 +554,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 welcome.setText("Welcome, "+name+"!");
             }
         }
+    }
+
+    //Set for dynamic buttons to exercise info
+    View.OnClickListener getOnClickForDynamicButtons(final Button btn) {
+        return new View.OnClickListener() {
+            public void onClick(View v) {
+                setContentView(R.layout.activity_main);
+            }
+        };
     }
 
     //Google Sign in functions

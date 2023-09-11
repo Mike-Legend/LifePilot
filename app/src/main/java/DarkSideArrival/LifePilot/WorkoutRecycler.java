@@ -12,14 +12,25 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WorkoutRecycler extends RecyclerView.Adapter<WorkoutRecycler.ViewHolder>
 {
     public String[] myWorkouts;
+    public ArrayList<String> string;
 
-    public WorkoutRecycler(String[] myWorkouts)
+    interface OnItemCheckListener {
+        void onItemCheck(String string);
+        void onItemUncheck(String string);
+    }
+
+    @NonNull
+    private OnItemCheckListener onItemClick;
+    public WorkoutRecycler(String[] myWorkouts, ArrayList<String> string, @NonNull OnItemCheckListener onItemCheckListener)
     {
+        this.string = string;
+        this.onItemClick = onItemCheckListener;
         this.myWorkouts = myWorkouts;
     }
 
@@ -31,10 +42,10 @@ public class WorkoutRecycler extends RecyclerView.Adapter<WorkoutRecycler.ViewHo
         public ViewHolder(@NonNull View itemView)
         {
             super(itemView);
-
             textView = itemView.findViewById(R.id.workoutList);
             textView.setVisibility(View.GONE);
             checkbox = itemView.findViewById(R.id.recyclertestcheckbox);
+            checkbox.setClickable(false);
             button = itemView.findViewById(R.id.recyclerworkoutbuttonadd);
 
             itemView.findViewById(R.id.recyclerworkoutbuttonadd).setOnClickListener(new View.OnClickListener() {
@@ -57,17 +68,16 @@ public class WorkoutRecycler extends RecyclerView.Adapter<WorkoutRecycler.ViewHo
         return new ViewHolder(view);
     }
 
-    interface OnItemCheckListener {
-        void onItemCheck(String string);
-        void onItemUncheck(String string);
-    }
-    @NonNull
-    private OnItemCheckListener onItemClick;
-
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position)
     {
         viewHolder.button.setText(myWorkouts[position]);
+        if(string.contains(myWorkouts[position])) {
+            viewHolder.checkbox.setChecked(true);
+        } else {
+            viewHolder.checkbox.setChecked(false);
+        }
+
         if (viewHolder instanceof ViewHolder) {
             final String currentExercise = myWorkouts[position];
 
