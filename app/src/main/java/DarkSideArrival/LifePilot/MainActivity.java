@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -152,11 +153,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(userRoutines.size() != 0) {
                 LoadUserRoutines();
             }
+
+            SwipeInterface swipeInterface = new SwipeInterface() {
+                @Override
+                public void bottom2top() {}
+                @Override
+                public void left2right() {}
+                @Override
+                public void right2left(View v) {
+                    userRoutines.clear();
+                }
+                @Override
+                public void top2bottom() {}
+            };
+            ActivitySwipeDetector swipe = new ActivitySwipeDetector(swipeInterface);
+            LinearLayout swipe_layout = (LinearLayout) findViewById(R.id.RoutineButtonAddsHere);
+            swipe_layout.setOnTouchListener(swipe);
+
             //setup next button animations
             goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
             homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
             nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
         }
+
 
         else if (id == R.id.analytics_button)
         {
@@ -490,6 +509,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //button usage animations
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
+
+
+
         } else if (id > 99 && id < userGoals.size() + 101) {
             FrameLayout routinegoaloverlay = findViewById(R.id.goaladdtoroutineoverlay);
             routinegoaloverlay.setVisibility(View.VISIBLE);
