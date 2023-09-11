@@ -44,6 +44,9 @@ public class WorkoutRecycler extends RecyclerView.Adapter<WorkoutRecycler.ViewHo
                 }
             });
         }
+        public void setOnClickListener(View.OnClickListener onClickListener) {
+            itemView.setOnClickListener(onClickListener);
+        }
     }
 
     @NonNull
@@ -54,10 +57,33 @@ public class WorkoutRecycler extends RecyclerView.Adapter<WorkoutRecycler.ViewHo
         return new ViewHolder(view);
     }
 
+    interface OnItemCheckListener {
+        void onItemCheck(String string);
+        void onItemUncheck(String string);
+    }
+    @NonNull
+    private OnItemCheckListener onItemClick;
+
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int position)
     {
         viewHolder.button.setText(myWorkouts[position]);
+        if (viewHolder instanceof ViewHolder) {
+            final String currentExercise = myWorkouts[position];
+
+            ((ViewHolder) viewHolder).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((ViewHolder) viewHolder).checkbox.setChecked(
+                            !((ViewHolder) viewHolder).checkbox.isChecked());
+                    if (((ViewHolder) viewHolder).checkbox.isChecked()) {
+                        onItemClick.onItemCheck(currentExercise);
+                    } else {
+                        onItemClick.onItemUncheck(currentExercise);
+                    }
+                }
+            });
+        }
     }
 
     @Override

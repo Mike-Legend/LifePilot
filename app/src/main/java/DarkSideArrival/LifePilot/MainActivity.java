@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Routine and goal variables and arrays
     private ArrayList<Button> userRoutines, userGoals;
-    private List<ClipData.Item> currentSelectedItems = new ArrayList<>();
+    private ArrayList<String> currentSelectedItems = new ArrayList<>();
     private List<ClipData.Item> items = new ArrayList<>();
     private ArrayList<CheckBox> userRoutineCheck, userRoutineSelectCheck;
     private ArrayList<ArrayList<Button>> userExercisesArrayList;
@@ -310,37 +310,84 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //overlay trigger
             FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.GONE);
-            //Uncheck exercises if on same screen
-            //temp.setChecked(false);
-        } else if (id == R.id.recyclertestcheckbox) {
-            //Check creation and link
-            CheckBox temp;
-            temp = findViewById(R.id.recyclertestcheckbox);
-            Button temp2 = findViewById(R.id.recyclerworkoutbuttonadd);
-            LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
-            if(temp.isChecked()) {
-                Button btn = new Button(this);
-                btn.setText(temp2.getText());
-                btn.setTextSize(24);
-                btn.setTextColor(Color.WHITE);
-                btn.setAllCaps(false);
-                btn.setClickable(true);
-                GradientDrawable gradDraw = new GradientDrawable();
-                gradDraw.setShape(GradientDrawable.RECTANGLE);
-                gradDraw.setCornerRadius(100);
-                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
-                btn.setBackground(gradDraw);
-                btn.setPadding(0,0,0,8);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
-                params.setMargins(0, 30, 0, 0);
-                btn.setLayoutParams(params);
-                ll.addView(btn);
-                userExercisesArrayList.get(routineIDActive).add(btn);
-            } else {
+
+
+            WorkoutRecyclerView = findViewById(R.id.workList);
+            WorkoutRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            //workoutList = new WorkoutRecycler(chestExercises);
+
+            WorkoutRecycler exerciseAdapter = new WorkoutRecycler(chestExercises) {
+                //@Override
+                public void onItemCheck(String string) {
+                    currentSelectedItems.add(string);
+                }
+                //@Override
+                public void onItemUncheck(String string) {
+                    currentSelectedItems.remove(string);
+                }
+            };
+            WorkoutRecyclerView.setAdapter(exerciseAdapter);
+            exerciseAdapter.notifyDataSetChanged();
+                //Check creation and link
+                //CheckBox temp;
+                //temp = findViewById(R.id.recyclertestcheckbox);
+                //Button temp2 = findViewById(R.id.recyclerworkoutbuttonadd);
+                LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
+                for(int i = 0; i < currentSelectedItems.size(); i++) {
+                    Button btn = new Button(this);
+                    btn.setText(currentSelectedItems.get(i));
+                    btn.setTextSize(24);
+                    btn.setTextColor(Color.WHITE);
+                    btn.setAllCaps(false);
+                    btn.setClickable(true);
+                    GradientDrawable gradDraw = new GradientDrawable();
+                    gradDraw.setShape(GradientDrawable.RECTANGLE);
+                    gradDraw.setCornerRadius(100);
+                    gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                    btn.setBackground(gradDraw);
+                    btn.setPadding(0,0,0,8);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                    userExercisesArrayList.get(routineIDActive).add(btn);
+                }
+
                 //remove from array
 
-            }
-        } else if (id == R.id.AddGoal_Button) { //TODO: Readding goal bugged, diff goals unchecked bugged
+            //Uncheck exercises if on same screen
+            //temp.setChecked(false);
+        }
+//        else if (id == R.id.recyclertestcheckbox) {
+//            //Check creation and link
+//            CheckBox temp;
+//            temp = findViewById(R.id.recyclertestcheckbox);
+//            Button temp2 = findViewById(R.id.recyclerworkoutbuttonadd);
+//            LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
+//            if(temp.isChecked()) {
+//                Button btn = new Button(this);
+//                btn.setText(temp2.getText());
+//                btn.setTextSize(24);
+//                btn.setTextColor(Color.WHITE);
+//                btn.setAllCaps(false);
+//                btn.setClickable(true);
+//                GradientDrawable gradDraw = new GradientDrawable();
+//                gradDraw.setShape(GradientDrawable.RECTANGLE);
+//                gradDraw.setCornerRadius(100);
+//                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+//                btn.setBackground(gradDraw);
+//                btn.setPadding(0,0,0,8);
+//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+//                params.setMargins(0, 30, 0, 0);
+//                btn.setLayoutParams(params);
+//                ll.addView(btn);
+//                userExercisesArrayList.get(routineIDActive).add(btn);
+//            } else {
+//                //remove from array
+//
+//            }
+        //}
+        else if (id == R.id.AddGoal_Button) { //TODO: Readding goal bugged, diff goals unchecked bugged
             FrameLayout routinegoallistoverlay = findViewById(R.id.goaladdtoroutineoverlay);
             routinegoallistoverlay.setVisibility(View.GONE);
             TextView goal = new TextView(this);
