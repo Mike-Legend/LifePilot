@@ -102,11 +102,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     GoogleSignInClient gsc;
     GoogleSignInAccount account;
 
-    //Dynamic Screen Variables
-    private TextView workoutTitle;
-    private TextView workoutDesc;
-    private ImageView workoutImage;
-
     @Override //Initial App Generation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -627,10 +622,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     void DynamicScreenWorkouts(String string) {
         setContentView(R.layout.activity_dynamic_workout_screen);
         String exercise = string;
-        workoutTitle = findViewById(R.id.workoutTitle);
+        TextView workoutTitle = findViewById(R.id.workoutTitle);
         workoutTitle.setText(exercise);
-        workoutDesc = findViewById(R.id.workoutDesc);
-        workoutImage = findViewById(R.id.workoutPic);
+        TextView workoutDesc = findViewById(R.id.workoutDesc);
+        ImageView workoutImage = findViewById(R.id.workoutPic);
         InputStream textFile = getResources().openRawResource(R.raw.workoutdesc);
         BufferedReader textReader = new BufferedReader(new InputStreamReader(textFile));
         try
