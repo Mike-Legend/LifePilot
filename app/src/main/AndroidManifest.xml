@@ -15,9 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LifePilot"
         tools:targetApi="31">
-        <activity
-            android:name=".DynamicWorkoutScreenActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".DynamicWorkoutScreenActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".MainActivity"
             android:exported="false" />

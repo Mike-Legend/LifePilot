@@ -1,6 +1,7 @@
 package DarkSideArrival.LifePilot;
 
 import android.content.ClipData;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,12 @@ public class WorkoutRecycler extends RecyclerView.Adapter<WorkoutRecycler.ViewHo
 {
     public String[] myWorkouts;
     public ArrayList<String> string;
+    static private int recycleid;
 
     interface OnItemCheckListener {
         void onItemCheck(String string);
         void onItemUncheck(String string);
+        void onButtonClick();
     }
 
     @NonNull
@@ -52,6 +55,7 @@ public class WorkoutRecycler extends RecyclerView.Adapter<WorkoutRecycler.ViewHo
                 @Override
                 public void onClick(View v) {
                 //goes to new workout screen here
+                    //recycleid = v.getId();
                 }
             });
         }
@@ -91,6 +95,11 @@ public class WorkoutRecycler extends RecyclerView.Adapter<WorkoutRecycler.ViewHo
                     } else {
                         onItemClick.onItemUncheck(currentExercise);
                     }
+                    int id = v.getId();
+                    if(id == ((ViewHolder) viewHolder).button.getId()) {
+                        onItemClick.onButtonClick();
+                        //viewHolder.button.setText("Done");
+                    };
                 }
             });
         }

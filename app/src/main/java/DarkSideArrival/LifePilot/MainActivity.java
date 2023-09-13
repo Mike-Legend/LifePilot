@@ -14,6 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.ObjectAnimator;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -97,6 +102,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     GoogleSignInClient gsc;
     GoogleSignInAccount account;
 
+    //Dynamic Screen Variables
+    private TextView workoutTitle;
+    private TextView workoutDesc;
+    private ImageView workoutImage;
+
     @Override //Initial App Generation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Set User session data
         userRoutines = new ArrayList<>();
         userRoutineCheck = new ArrayList<>();
-        userRoutineSelectCheck = new ArrayList<>();
         userGoals = new ArrayList<>();
         userExercisesArrayList = new ArrayList<ArrayList<Button>>();
         userGoalArrayList = new ArrayList<ArrayList<TextView>>();
@@ -146,6 +155,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(userRoutines.size() != 0) {
                 LoadUserRoutines();
             }
+        }  else if (id == R.id.GoalBack_Button) {
+            setContentView(R.layout.activity_dynamic_workout_screen);
+
+            String exercise = getIntent().getStringExtra("name");
+            workoutTitle = findViewById(R.id.workoutTitle);
+            workoutTitle.setText(exercise);
+
+            workoutDesc = findViewById(R.id.workoutDesc);
+
+            workoutImage = findViewById(R.id.workoutPic);
+
+            InputStream textFile = getResources().openRawResource(R.raw.workoutdesc);
+            BufferedReader textReader = new BufferedReader(new InputStreamReader(textFile));
+
+            try
+            {
+                String textLine = textReader.readLine();
+
+                while(textLine != null)
+                {
+                    String [] columns = textLine.split("\\|");
+                    String exerciseName = columns[0];
+
+                    if(exerciseName.equals(exercise))
+                    {
+                        String exerciseDesc = columns[1];
+                        workoutDesc.setText(exerciseDesc);
+                        break;
+                    }
+                    textLine = textReader.readLine();
+                }
+                textReader.close();
+            }
+            catch(IOException E)
+            {
+                E.printStackTrace();
+            }
+
+            String imageName = exercise.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
+            int resourceId = getResources().getIdentifier(imageName, "raw", getBaseContext().getPackageName());
+            workoutImage.setImageResource(resourceId);
+
+            //Intent intent = new Intent(this, DynamicWorkoutScreenActivity.class);
+            //intent.putExtra("name", "Gripper");
+            //startActivity(intent);
+
+
         } else if (id == R.id.routinesButton) {
             Transition slide = new Slide(Gravity.RIGHT);
             TransitionManager.go(routineAnimation, slide);
@@ -153,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 LoadUserRoutines();
             }
 
-            //Swipe layout code, not good enough for this
+            //Swipe layout code, maybe used for deletion of array elements
 //            SwipeInterface swipeInterface = new SwipeInterface() {
 //                @Override
 //                public void bottom2top() {}
@@ -365,16 +421,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //RESET Recycler
             WorkoutRecyclerView = findViewById(R.id.workList);
             WorkoutRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            //workoutList = new WorkoutRecycler(chestExercises);
             workoutList = new WorkoutRecycler(chestExercises, currentSelectedItems, new WorkoutRecycler.OnItemCheckListener() {
                 @Override
-                public void onItemCheck(String string) {
-                    currentSelectedItems.add(string);
+                public void onItemCheck(String string) {currentSelectedItems.add(string);
                 }
                 @Override
-                public void onItemUncheck(String string) {
-                    currentSelectedItems.remove(string);
+                public void onItemUncheck(String string) {currentSelectedItems.remove(string);
                 }
+                @Override
+                public void onButtonClick() {setContentView(R.layout.activity_dynamic_workout_screen);}
             });
             WorkoutRecyclerView.setAdapter(workoutList);
             workoutList.notifyDataSetChanged();
@@ -502,6 +557,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onItemUncheck(String string) {
                     currentSelectedItems.remove(string);
                 }
+                @Override
+                public void onButtonClick() {setContentView(R.layout.activity_dynamic_workout_screen);}
             });
             WorkoutRecyclerView.setAdapter(workoutList);
             workoutList.notifyDataSetChanged();
@@ -918,9 +975,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String currentSel = spinner.getSelectedItem().toString();
         if(currentSel.equals("Chest Exercises"))
         {
-            Intent intent = new Intent(this, DynamicWorkoutScreenActivity.class);
-            intent.putExtra("name", "Gripper");
-            startActivity(intent);
             workoutList.myWorkouts = chestExercises;
         }
         else if(currentSel.equals("Shoulder Exercises"))
