@@ -460,10 +460,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 routineoverlay.setVisibility(View.VISIBLE);
                 GenerateSpinnerWorkouts();
                 GenerateWorkoutRecycler();
+                //setup next button animations
+                goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_goals, this);
+                homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.activity_main, this);
+                routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
             } else {
                 setContentView(R.layout.routine_newlist);
                 id = routineIDActive;
                 GenerateRoutineSelectScreen(id);
+                //setup next button animations
+                goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_goals, this);
+                homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.activity_main, this);
+                routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
             }
         } else if (id > 99 && id < userGoals.size() + 101) {
             FrameLayout routinegoaloverlay = findViewById(R.id.goaladdtoroutineoverlay);
