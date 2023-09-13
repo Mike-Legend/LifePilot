@@ -986,6 +986,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String currentSel = spinner.getSelectedItem().toString();
         if(currentSel.equals("Chest Exercises"))
         {
+            Intent intent = new Intent(this, DynamicWorkoutScreenActivity.class);
+            intent.putExtra("name", "Gripper");
+            startActivity(intent);
             workoutList.myWorkouts = chestExercises;
         }
         else if(currentSel.equals("Shoulder Exercises"))
