@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.animation.ObjectAnimator;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
