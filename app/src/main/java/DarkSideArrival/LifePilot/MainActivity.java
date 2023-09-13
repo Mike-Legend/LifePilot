@@ -77,8 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Routine and goal variables and arrays
     private ArrayList<Button> userRoutines, userGoals;
     private ArrayList<String> currentSelectedItems = new ArrayList<>();
-    private List<ClipData.Item> items = new ArrayList<>();
-    private ArrayList<CheckBox> userRoutineCheck, userRoutineSelectCheck;
+    private ArrayList<CheckBox> userRoutineCheck;
     private ArrayList<ArrayList<Button>> userExercisesArrayList;
     private ArrayList<ArrayList<TextView>> userGoalArrayList; //Future usage to add multiple goals to one routine
     public int routineIDActive, goalIDActive;
