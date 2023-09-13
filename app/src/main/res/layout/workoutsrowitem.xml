@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
@@ -20,12 +21,13 @@
         android:layout_alignParentEnd="true"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="0dp"
-        android:clickable="true"
         android:layout_toEndOf="@+id/recyclertestcheckbox"
         android:backgroundTint="@color/royalPurple"
+        android:clickable="true"
         android:text=""
         android:textColor="@color/white"
-        android:textSize="20sp"></Button>
+        android:textSize="20sp"
+        app:cornerRadius="90dp"></Button>
 
     <CheckBox
         android:id="@+id/recyclertestcheckbox"
@@ -34,8 +36,7 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="0dp"
         android:buttonTint="@color/white"
-        android:onClick="onClick"
-        android:clickable="true"
+        android:checked="false"
         android:scaleX="2"
         android:scaleY="2"></CheckBox>
 

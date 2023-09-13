@@ -8,6 +8,7 @@
     <color name="gray">#7A7A7A</color>
     <color name="electricPurple">#BE00DC</color>
     <color name="jetBlack">#363636</color>
+    <color name="deleteRed">#9E0C05</color>
     <color name="transparent">#00000000</color>
     <color name="backgroundPrimary">#FF0CC0DF</color>
 </resources>

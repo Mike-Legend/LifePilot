@@ -60,7 +60,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/GoalBack_Button"
+        android:id="@+id/RoutineBack_Button"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
@@ -82,7 +82,7 @@
         android:backgroundTint="@color/royalPurple"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/GoalBack_Button"
+        app:layout_constraintEnd_toStartOf="@+id/RoutineBack_Button"
         app:layout_constraintStart_toEndOf="@+id/Home_Button" />
 
     <Button
@@ -108,7 +108,7 @@
         android:backgroundTint="@color/royalPurple"
         android:text="+ Calander"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/GoalBack_Button"
+        app:layout_constraintBottom_toTopOf="@+id/RoutineBack_Button"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ScrollView

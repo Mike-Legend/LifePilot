@@ -9,10 +9,16 @@ import android.content.Intent;
 import android.content.IntentSender;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.ObjectAnimator;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -75,9 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Routine and goal variables and arrays
     private ArrayList<Button> userRoutines, userGoals;
-    private List<ClipData.Item> currentSelectedItems = new ArrayList<>();
-    private List<ClipData.Item> items = new ArrayList<>();
-    private ArrayList<CheckBox> userRoutineCheck, userRoutineSelectCheck;
+    private ArrayList<String> currentSelectedItems = new ArrayList<>();
+    private ArrayList<CheckBox> userRoutineCheck;
     private ArrayList<ArrayList<Button>> userExercisesArrayList;
     private ArrayList<ArrayList<TextView>> userGoalArrayList; //Future usage to add multiple goals to one routine
     public int routineIDActive, goalIDActive;
@@ -122,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Set User session data
         userRoutines = new ArrayList<>();
         userRoutineCheck = new ArrayList<>();
-        userRoutineSelectCheck = new ArrayList<>();
         userGoals = new ArrayList<>();
         userExercisesArrayList = new ArrayList<ArrayList<Button>>();
         userGoalArrayList = new ArrayList<ArrayList<TextView>>();
@@ -146,17 +150,50 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(userRoutines.size() != 0) {
                 LoadUserRoutines();
             }
-        } else if (id == R.id.routinesButton) {
-            Transition slide = new Slide(Gravity.RIGHT);
+            //setup next button animations
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
+            nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
+        } else if (id == R.id.RoutineBack_Button) {
+            //setContentView(R.layout.routine_list);
+            Transition slide = new Slide(Gravity.LEFT);
             TransitionManager.go(routineAnimation, slide);
-            if(userRoutines.size() != 0) {
+            if (userRoutines.size() != 0) {
                 LoadUserRoutines();
             }
             //setup next button animations
             goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
             homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
             nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
+        } else if (id == R.id.routinesButton) {
+            Transition slide = new Slide(Gravity.RIGHT);
+            TransitionManager.go(routineAnimation, slide);
+            if(userRoutines.size() != 0) {
+                LoadUserRoutines();
+            }
+
+            //Swipe layout code, maybe used for deletion of array elements
+//            SwipeInterface swipeInterface = new SwipeInterface() {
+//                @Override
+//                public void bottom2top() {}
+//                @Override
+//                public void left2right() {}
+//                @Override
+//                public void right2left(View v) {
+//                }
+//                @Override
+//                public void top2bottom() {}
+//            };
+//            ActivitySwipeDetector swipe = new ActivitySwipeDetector(swipeInterface);
+//            LinearLayout swipe_layout = (LinearLayout) findViewById(R.id.RoutineButtonAddsHere);
+//            swipe_layout.setOnTouchListener(swipe);
+
+            //setup next button animations
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
+            nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
         }
+
 
         else if (id == R.id.analytics_button)
         {
@@ -254,18 +291,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.CancelNewRoutine_Button) {
             FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
             routinelistoverlay.setVisibility(View.GONE);
-            //if keyboard doesn't go away
-            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
+            KeyboardVanish(view);
         } else if (id == R.id.CancelGoal_Button) {
             FrameLayout routinegoallistoverlay = findViewById(R.id.goaladdtoroutineoverlay);
             routinegoallistoverlay.setVisibility(View.GONE);
         } else if (id == R.id.CancelNewGoal_Button) {
             FrameLayout routinegoallistoverlay = findViewById(R.id.routinegoallistoverlay);
             routinegoallistoverlay.setVisibility(View.GONE);
-            //if keyboard doesn't go away
-            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
+            KeyboardVanish(view);
         } else if (id == R.id.CancelExercises_Button) {
             FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.GONE);
@@ -297,9 +330,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             params.setMargins(0, 30, 0, 0);
             btn.setLayoutParams(params);
             ll.addView(btn);
-            //if keyboard doesn't go away
-            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
+            KeyboardVanish(view);
             buttontext.setText("");
             //added to goal list
             btn.setId(userGoals.size() + 100);
@@ -310,35 +341,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //overlay trigger
             FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.GONE);
-            //Uncheck exercises if on same screen
-            //temp.setChecked(false);
-        } else if (id == R.id.recyclertestcheckbox) {
-            //Check creation and link
-            CheckBox temp;
-            temp = findViewById(R.id.recyclertestcheckbox);
-            Button temp2 = findViewById(R.id.recyclerworkoutbuttonadd);
+
             LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
-            if(temp.isChecked()) {
+            for(int i = 0; i < currentSelectedItems.size(); i++) {
                 Button btn = new Button(this);
-                btn.setText(temp2.getText());
+                btn.setText(currentSelectedItems.get(i));
                 btn.setTextSize(24);
                 btn.setTextColor(Color.WHITE);
                 btn.setAllCaps(false);
                 btn.setClickable(true);
+                btn.setOnClickListener(getOnClickForDynamicButtons(btn));
                 GradientDrawable gradDraw = new GradientDrawable();
                 gradDraw.setShape(GradientDrawable.RECTANGLE);
-                gradDraw.setCornerRadius(100);
+                gradDraw.setCornerRadius(90);
                 gradDraw.setColor(getResources().getColor(R.color.royalPurple));
                 btn.setBackground(gradDraw);
-                btn.setPadding(0,0,0,8);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
-                params.setMargins(0, 30, 0, 0);
-                btn.setLayoutParams(params);
-                ll.addView(btn);
-                userExercisesArrayList.get(routineIDActive).add(btn);
-            } else {
-                //remove from array
+                btn.setPadding(20,0,20,8);
+                if(btn.getText().length() > 23) {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                    userExercisesArrayList.get(routineIDActive).add(btn);
+                } else {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                    userExercisesArrayList.get(routineIDActive).add(btn);
+                }
             }
+            //empty array for new selects
+            currentSelectedItems.clear();
+            //RESET Recycler
+            GenerateWorkoutRecycler();
         } else if (id == R.id.AddGoal_Button) { //TODO: Readding goal bugged, diff goals unchecked bugged
             FrameLayout routinegoallistoverlay = findViewById(R.id.goaladdtoroutineoverlay);
             routinegoallistoverlay.setVisibility(View.GONE);
@@ -392,9 +428,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             params.setMargins(0, 30, 0, 0);
             btn.setLayoutParams(params);
             ll.addView(btn);
-            //if keyboard doesn't go away
-            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
+            KeyboardVanish(view);
             buttontext.setText("");
             //added to routine list
             btn.setId(userRoutines.size());
@@ -414,53 +448,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id < userRoutines.size() || id == userRoutines.size()) {
             Transition slide = new Slide(Gravity.RIGHT);
             TransitionManager.go(nRoutineAnimation, slide);
-            //Generate Name and routine separation
-            routineIDActive = id;
-            TextView titletext = findViewById(R.id.NewRoutineSet_TopText);
-            for(int i = 0; i < userRoutines.size(); i++) {
-                if(userRoutines.get(i).getId() == id) {
-                    titletext.setText(userRoutines.get(i).getText());
-                }
-            }
-            //Check goals
-            if(userGoals.size() != 0) {
-                if(routineIDActive + 1 > userGoalArrayList.size()) {
-                    TextView goal = findViewById(R.id.GoalofRoutine_TopText);
-                    goal.setVisibility(View.GONE);
-                } else if(userGoalArrayList.get(routineIDActive) != null) {
-                    TextView goal = findViewById(R.id.GoalofRoutine_TopText);
-                    goal.setVisibility(View.VISIBLE);
-                    goal.setText(userGoalArrayList.get(routineIDActive).get(0).getText());
-                } else {
-                    TextView goal = findViewById(R.id.GoalofRoutine_TopText);
-                    goal.setVisibility(View.GONE);
-                }
+            GenerateRoutineSelectScreen(id);
+            //setup next button animations
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
+            nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
+        } else if (id == R.id.RoutineDynamicbackButton) {
+            if(dynamicChecker == 0) {
+                setContentView(R.layout.routine_newlist);
+                FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
+                routineoverlay.setVisibility(View.VISIBLE);
+                GenerateSpinnerWorkouts();
+                GenerateWorkoutRecycler();
+                //setup next button animations
+                goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_goals, this);
+                homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.activity_main, this);
+                routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
             } else {
-                TextView goal = findViewById(R.id.GoalofRoutine_TopText);
-                goal.setVisibility(View.GONE);
+                setContentView(R.layout.routine_newlist);
+                id = routineIDActive;
+                GenerateRoutineSelectScreen(id);
+                //setup next button animations
+                goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_goals, this);
+                homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.activity_main, this);
+                routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
             }
-            //Generate Routine Exercises
-            if(userExercisesArrayList.get(routineIDActive).size() != 0) {
-                LoadUserRoutineExercises();
-            }
-
-            //Set workout spinner
-            spinner =  findViewById(R.id.exerciseSpin);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, workouts);
-            spinner.setAdapter(adapter);
-            spinner.setOnItemSelectedListener(this);
-
-            WorkoutRecyclerView = findViewById(R.id.workList);
-            WorkoutRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            workoutList = new WorkoutRecycler(chestExercises);
-            WorkoutRecyclerView.setAdapter(workoutList);
-            workoutList.notifyDataSetChanged();
-
-            //reset check list - may be unused
-            //userRoutineSelectCheck.clear();
-
-            //button usage animations
-            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id > 99 && id < userGoals.size() + 101) {
             FrameLayout routinegoaloverlay = findViewById(R.id.goaladdtoroutineoverlay);
             routinegoaloverlay.setVisibility(View.VISIBLE);
@@ -501,6 +513,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 ll2.addView(temp2);
             }
+        } else if (id == R.id.PreMadeRoutine1_Button) { //TODO: Finish premade routine lists
+            setContentView(R.layout.routine_newlist);
+            //hide add exercise button
+            //change routine title name
+            //remove goal
+            //load premade exercise array
+            //make save, a save to routine array list and sync
+        } else if (id == R.id.PreMadeRoutine2_Button) {
+            setContentView(R.layout.routine_newlist);
+        } else if (id == R.id.PreMadeRoutine3_Button) {
+            setContentView(R.layout.routine_newlist);
+        } else if (id == R.id.PreMadeRoutine4_Button) {
+            setContentView(R.layout.routine_newlist);
+        } else if (id == R.id.PreMadeRoutine5_Button) {
+            setContentView(R.layout.routine_newlist);
+        } else if (id == R.id.PreMadeRoutine6_Button) {
+            setContentView(R.layout.routine_newlist);
         } else if (id == R.id.ExerciseSave_Button){
             //TODO: Sync to firebase
             //all array information
@@ -524,6 +553,124 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 welcome.setText("Welcome, "+name+"!");
             }
         }
+    }
+
+    void GenerateRoutineSelectScreen(int id) {
+        //Generate Name and routine separation
+        routineIDActive = id;
+        TextView titletext = findViewById(R.id.NewRoutineSet_TopText);
+        for(int i = 0; i < userRoutines.size(); i++) {
+            if(userRoutines.get(i).getId() == id) {
+                titletext.setText(userRoutines.get(i).getText());
+            }
+        }
+        //Check goals
+        if(userGoals.size() != 0) {
+            if(routineIDActive + 1 > userGoalArrayList.size()) {
+                TextView goal = findViewById(R.id.GoalofRoutine_TopText);
+                goal.setVisibility(View.GONE);
+            } else if(userGoalArrayList.get(routineIDActive) != null) {
+                TextView goal = findViewById(R.id.GoalofRoutine_TopText);
+                goal.setVisibility(View.VISIBLE);
+                goal.setText(userGoalArrayList.get(routineIDActive).get(0).getText());
+            } else {
+                TextView goal = findViewById(R.id.GoalofRoutine_TopText);
+                goal.setVisibility(View.GONE);
+            }
+        } else {
+            TextView goal = findViewById(R.id.GoalofRoutine_TopText);
+            goal.setVisibility(View.GONE);
+        }
+        //Generate Routine Exercises
+        if(userExercisesArrayList.get(routineIDActive).size() != 0) {
+            LoadUserRoutineExercises();
+        }
+        GenerateSpinnerWorkouts();
+        GenerateWorkoutRecycler();
+        //button usage animations
+        routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
+    }
+
+    void KeyboardVanish(View view) {
+        //if keyboard doesn't go away
+        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getApplicationWindowToken(),0);
+    }
+
+    void GenerateSpinnerWorkouts() {
+        //Set workout spinner
+        spinner =  findViewById(R.id.exerciseSpin);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, workouts);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+    }
+
+    void GenerateWorkoutRecycler() {
+        //Set Recycler
+        WorkoutRecyclerView = findViewById(R.id.workList);
+        WorkoutRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        workoutList = new WorkoutRecycler(chestExercises, currentSelectedItems, new WorkoutRecycler.OnItemCheckListener() {
+            @Override
+            public void onItemCheck(String string) {
+                currentSelectedItems.add(string);
+            }
+            @Override
+            public void onItemUncheck(String string) {
+                currentSelectedItems.remove(string);
+            }
+            @Override
+            public void onButtonClick(String string) {
+                DynamicScreenWorkouts(string);
+            }
+        });
+        WorkoutRecyclerView.setAdapter(workoutList);
+        workoutList.notifyDataSetChanged();
+    }
+
+    void DynamicScreenWorkouts(String string) {
+        setContentView(R.layout.activity_dynamic_workout_screen);
+        String exercise = string;
+        TextView workoutTitle = findViewById(R.id.workoutTitle);
+        workoutTitle.setText(exercise);
+        TextView workoutDesc = findViewById(R.id.workoutDesc);
+        ImageView workoutImage = findViewById(R.id.workoutPic);
+        InputStream textFile = getResources().openRawResource(R.raw.workoutdesc);
+        BufferedReader textReader = new BufferedReader(new InputStreamReader(textFile));
+        try
+        {
+            String textLine = textReader.readLine();
+            while(textLine != null)
+            {
+                String [] columns = textLine.split("\\|");
+                String exerciseName = columns[0];
+                if(exerciseName.equals(exercise))
+                {
+                    String exerciseDesc = columns[1];
+                    workoutDesc.setText(exerciseDesc);
+                    break;
+                }
+                textLine = textReader.readLine();
+            }
+            textReader.close();
+        }
+        catch(IOException E)
+        {
+            E.printStackTrace();
+        }
+        String imageName = exercise.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
+        int resourceId = getResources().getIdentifier(imageName, "raw", getBaseContext().getPackageName());
+        workoutImage.setImageResource(resourceId);
+    }
+
+    //Set for dynamic buttons to exercise info
+    private int dynamicChecker;
+    View.OnClickListener getOnClickForDynamicButtons(final Button btn) {
+        return new View.OnClickListener() {
+            public void onClick(View v) {
+                dynamicChecker = 1;
+                DynamicScreenWorkouts((String)btn.getText());
+            }
+        };
     }
 
     //Google Sign in functions
@@ -842,9 +989,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String currentSel = spinner.getSelectedItem().toString();
         if(currentSel.equals("Chest Exercises"))
         {
-            Intent intent = new Intent(this, DynamicWorkoutScreenActivity.class);
-            intent.putExtra("name", "Gripper");
-            startActivity(intent);
             workoutList.myWorkouts = chestExercises;
         }
         else if(currentSel.equals("Shoulder Exercises"))
