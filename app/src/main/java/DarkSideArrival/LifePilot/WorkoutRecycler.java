@@ -20,12 +20,11 @@ public class WorkoutRecycler extends RecyclerView.Adapter<WorkoutRecycler.ViewHo
 {
     public String[] myWorkouts;
     public ArrayList<String> string;
-    static private int recycleid;
 
     interface OnItemCheckListener {
         void onItemCheck(String string);
         void onItemUncheck(String string);
-        void onButtonClick();
+        void onButtonClick(String string);
     }
 
     @NonNull
@@ -84,22 +83,22 @@ public class WorkoutRecycler extends RecyclerView.Adapter<WorkoutRecycler.ViewHo
 
         if (viewHolder instanceof ViewHolder) {
             final String currentExercise = myWorkouts[position];
-
-            ((ViewHolder) viewHolder).setOnClickListener(new View.OnClickListener() {
+            (viewHolder).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((ViewHolder) viewHolder).checkbox.setChecked(
-                            !((ViewHolder) viewHolder).checkbox.isChecked());
-                    if (((ViewHolder) viewHolder).checkbox.isChecked()) {
+                    (viewHolder).checkbox.setChecked(
+                            !(viewHolder).checkbox.isChecked());
+                    if ((viewHolder).checkbox.isChecked()) {
                         onItemClick.onItemCheck(currentExercise);
                     } else {
                         onItemClick.onItemUncheck(currentExercise);
                     }
-                    int id = v.getId();
-                    if(id == ((ViewHolder) viewHolder).button.getId()) {
-                        onItemClick.onButtonClick();
-                        //viewHolder.button.setText("Done");
-                    };
+                }
+            });
+            (viewHolder).button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClick.onButtonClick(currentExercise);
                 }
             });
         }
