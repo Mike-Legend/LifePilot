@@ -154,21 +154,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 LoadUserRoutines();
             }
 
-            SwipeInterface swipeInterface = new SwipeInterface() {
-                @Override
-                public void bottom2top() {}
-                @Override
-                public void left2right() {}
-                @Override
-                public void right2left(View v) {
-                    userRoutines.clear();
-                }
-                @Override
-                public void top2bottom() {}
-            };
-            ActivitySwipeDetector swipe = new ActivitySwipeDetector(swipeInterface);
-            LinearLayout swipe_layout = (LinearLayout) findViewById(R.id.RoutineButtonAddsHere);
-            swipe_layout.setOnTouchListener(swipe);
+            //Swipe layout code, not good enough for this
+//            SwipeInterface swipeInterface = new SwipeInterface() {
+//                @Override
+//                public void bottom2top() {}
+//                @Override
+//                public void left2right() {}
+//                @Override
+//                public void right2left(View v) {
+//                }
+//                @Override
+//                public void top2bottom() {}
+//            };
+//            ActivitySwipeDetector swipe = new ActivitySwipeDetector(swipeInterface);
+//            LinearLayout swipe_layout = (LinearLayout) findViewById(R.id.RoutineButtonAddsHere);
+//            swipe_layout.setOnTouchListener(swipe);
 
             //setup next button animations
             goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
