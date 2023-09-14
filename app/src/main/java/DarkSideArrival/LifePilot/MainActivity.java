@@ -1074,6 +1074,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         TextView heightInput = (TextView) findViewById(R.id.height_input);
         TextView weightInput = (TextView) findViewById(R.id.weight_input);
+        String userHeightStr = heightInput.getText().toString().trim();
+        String userWeightStr = weightInput.getText().toString().trim();
+        boolean valid = true;
+        Float heightValTest;
+        Float weightValTest;
+
+        try
+        {
+            heightValTest = Float.parseFloat(userHeightStr);
+            weightValTest = Float.parseFloat(userWeightStr);
+        }
+
+        catch (NumberFormatException e)
+        {
+            valid = false;
+        }
+
+        if(valid == false)
+        {
+            heightInput.setText(Float.toString(userHeight));
+            weightInput.setText(Float.toString(userWeight));
+        }
+
         userWeight = Float.parseFloat(weightInput.getText().toString());
         userHeight = Float.parseFloat(heightInput.getText().toString());
     }
