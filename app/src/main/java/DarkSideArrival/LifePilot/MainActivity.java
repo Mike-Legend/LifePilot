@@ -493,6 +493,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.RoutineDynamicbackButton) {
             if(dynamicChecker == 0) {
                 setContentView(R.layout.routine_newlist);
+                id = routineIDActive;
+                GenerateRoutineSelectScreen(id);
                 FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
                 routineoverlay.setVisibility(View.VISIBLE);
                 GenerateSpinnerWorkouts();
@@ -502,6 +504,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.activity_main, this);
                 routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
             } else {
+                dynamicChecker = 0;
                 setContentView(R.layout.routine_newlist);
                 id = routineIDActive;
                 GenerateRoutineSelectScreen(id);
