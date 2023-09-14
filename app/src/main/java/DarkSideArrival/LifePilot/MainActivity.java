@@ -77,6 +77,8 @@ import com.google.protobuf.NullValue;
 import org.checkerframework.checker.units.qual.A;
 import org.w3c.dom.Text;
 
+import pl.droidsonroids.gif.GifImageView;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     //Routine and goal variables and arrays
@@ -633,7 +635,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView workoutTitle = findViewById(R.id.workoutTitle);
         workoutTitle.setText(exercise);
         TextView workoutDesc = findViewById(R.id.workoutDesc);
-        ImageView workoutImage = findViewById(R.id.workoutPic);
+        GifImageView workoutImage = findViewById(R.id.workoutPic);
         InputStream textFile = getResources().openRawResource(R.raw.workoutdesc);
         BufferedReader textReader = new BufferedReader(new InputStreamReader(textFile));
         try
@@ -866,7 +868,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Safety Bar Squat",
             "Seated Leg Curl",
             "Shallow Body Weight Lunge",
-            "Side Lunges (Bodyweight)",
+            "Side Lunges Bodyweight",
             "Smith Machine Squat",
             "Squat",
             "Step Up"};
