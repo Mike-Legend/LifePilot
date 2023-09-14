@@ -48,6 +48,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -518,13 +519,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 ll2.addView(temp2);
             }
-        } else if (id == R.id.PreMadeRoutine1_Button) { //TODO: Finish premade routine lists
+        } else if (id == R.id.PreMadeRoutine3_Button) { //TODO: Finish premade routine lists
             setContentView(R.layout.routine_newlist);
-            //hide add exercise button
-            //change routine title name
-            //remove goal
+            Button newExercise = findViewById(R.id.NewExerciseAdd_Button);
+            newExercise.setVisibility(View.GONE);
+            TextView topText = findViewById(R.id.NewRoutineSet_TopText);
+            topText.setText("Leg Day");
+            TextView goalText = findViewById(R.id.GoalofRoutine_TopText);
+            goalText.setVisibility(View.GONE);
             //load premade exercise array
+
+
             //make save, a save to routine array list and sync
+
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.activity_main, this);
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id == R.id.PreMadeRoutine2_Button) {
             setContentView(R.layout.routine_newlist);
         } else if (id == R.id.PreMadeRoutine3_Button) {
