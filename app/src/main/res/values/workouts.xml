@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="workOuts">
-    <item>Push-Ups</item>
-    <item>Sit-Ups</item>
-    <item>Crunches</item>
-    <item>Burpees</item>
+        <item>Exercises</item>
+        <item>Bicep Exercises</item>
+        <item>Triceps Exercises</item>
+        <item>Leg Exercises</item>
+        <item>Back Exercises</item>
+        <item>Glute Exercises</item>
+        <item>Ab Exercises</item>
+        <item>Calves Exercises</item>
+        <item>Forearm Flexors and Grip Exercises</item>
+        <item>Forearm Extensor Exercises</item>
+        <item>Cardio Exercises</item>
 </string-array>
 </resources>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bluebackground">
+    android:background="@drawable/gradientblackbackground">
 
     <TextView
         android:id="@+id/bannerText"
@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:text="Statistics/Analytics"
+        android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Weight:"
-        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textSize="22sp"
         app:layout_constraintStart_toStartOf="@+id/bmiBar"
         app:layout_constraintTop_toBottomOf="@+id/bannerText" />
 
@@ -35,7 +37,8 @@
         android:layout_marginStart="48dp"
         android:layout_marginTop="32dp"
         android:text="Height:"
-        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="@+id/bmiBar"
         app:layout_constraintStart_toEndOf="@+id/weightText"
         app:layout_constraintTop_toBottomOf="@+id/bannerText" />
@@ -46,6 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="BMI:"
+        android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@+id/weightText"
         app:layout_constraintTop_toBottomOf="@+id/weightText" />
@@ -54,8 +58,11 @@
         android:id="@+id/bmiBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="300dp"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:layout_marginTop="16dp"
+        android:indeterminate="false"
+        android:max="60"
+        android:progressTint="@color/royalPurple"
         android:scrollbarSize="4dp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,8 +73,11 @@
         android:id="@+id/excerciseData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="48dp"
+        android:backgroundTint="@color/royalPurple"
+        android:onClick="onClick"
         android:text="Excercise Data"
+        android:textColor="@color/white"
         android:textSize="28sp"
         app:iconSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -79,9 +89,12 @@
         android:id="@+id/breakDown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/royalPurple"
+        android:onClick="onClick"
         android:text="Breakdown"
+        android:textColor="@color/white"
         android:textSize="28sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/excerciseData" />
@@ -92,7 +105,9 @@
         android:layout_width="200dp"
         android:layout_height="150dp"
         android:layout_marginTop="32dp"
+        android:progressTint="@color/royalPurple"
         android:rotation="115"
+        android:secondaryProgressTint="@color/royalPurple"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bmiBar" />
@@ -103,9 +118,71 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Workouts This Month:"
+        android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/progressBar2"
         app:layout_constraintStart_toStartOf="@+id/progressBar2"
         app:layout_constraintTop_toBottomOf="@+id/progressBar2" />
+
+    <Button
+        android:id="@+id/analyticsHomeButton"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/transparent"
+        android:foreground="@drawable/homebutton"
+        android:onClick="onClick"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/bmiNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="text"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/bmiText"
+        app:layout_constraintTop_toBottomOf="@+id/weightText" />
+
+    <TextView
+        android:id="@+id/weightValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintStart_toEndOf="@+id/weightText"
+        app:layout_constraintTop_toBottomOf="@+id/bannerText" />
+
+    <TextView
+        android:id="@+id/heightValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="text"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintStart_toEndOf="@+id/heightText"
+        app:layout_constraintTop_toBottomOf="@+id/bannerText" />
+
+    <TextView
+        android:id="@+id/userHeightInches"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="text"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintStart_toEndOf="@+id/heightValue"
+        app:layout_constraintTop_toBottomOf="@+id/bannerText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
