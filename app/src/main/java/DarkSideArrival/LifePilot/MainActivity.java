@@ -185,29 +185,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(userRoutines.size() != 0) {
                 LoadUserRoutines();
             }
-
-            //Swipe layout code, maybe used for deletion of array elements
-//            SwipeInterface swipeInterface = new SwipeInterface() {
-//                @Override
-//                public void bottom2top() {}
-//                @Override
-//                public void left2right() {}
-//                @Override
-//                public void right2left(View v) {
-//                }
-//                @Override
-//                public void top2bottom() {}
-//            };
-//            ActivitySwipeDetector swipe = new ActivitySwipeDetector(swipeInterface);
-//            LinearLayout swipe_layout = (LinearLayout) findViewById(R.id.RoutineButtonAddsHere);
-//            swipe_layout.setOnTouchListener(swipe);
-
             //setup next button animations
             goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
             homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
             nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
-        }
+        } else if (id == R.id.EditRoutineList_Button) {
+            //overlay trigger
+            FrameLayout routineedit = findViewById(R.id.routinelistoverlayedit);
+            routineedit.setVisibility(View.VISIBLE);
+            //hold to move order
 
+            //click to select for deletion
+
+        } else if (id == R.id.CancelEditRoutine_Button) {
+            //overlay trigger
+            FrameLayout routineedit = findViewById(R.id.routinelistoverlayedit);
+            routineedit.setVisibility(View.GONE);
+        } else if (id == R.id.DeleteRoutines_Button) {
+            //overlay trigger
+            FrameLayout routineedit = findViewById(R.id.routinelistoverlayedit);
+            routineedit.setVisibility(View.GONE);
+        }
 
         else if (id == R.id.analytics_button)
         {
@@ -537,7 +535,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id == R.id.PreMadeRoutine2_Button) {
             setContentView(R.layout.routine_newlist);
-        } else if (id == R.id.PreMadeRoutine3_Button) {
+        } else if (id == R.id.PreMadeRoutine1_Button) {
             setContentView(R.layout.routine_newlist);
         } else if (id == R.id.PreMadeRoutine4_Button) {
             setContentView(R.layout.routine_newlist);
