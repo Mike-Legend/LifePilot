@@ -23,6 +23,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -104,6 +105,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<ArrayList<TextView>> userGoalArrayList; //Future usage to add multiple goals to one routine
     public int routineIDActive, goalIDActive;
     private Scene routineAnimation, homeAnimation, goalAnimation, nRoutineAnimation;
+
+    //Arrays Containing Workout Logs For Each Muscle Group
+    private ArrayList<LocalDateTime> chestExercisesLog = new ArrayList<>(), shoulderExercisesLog = new ArrayList<>(), bicepExercisesLog = new ArrayList<>(),
+    tricepsExercisesLog = new ArrayList<>(), legExercisesLog = new ArrayList<>(), backExercisesLog = new ArrayList<>(), gluteExercisesLog = new ArrayList<>(), abExercisesLog = new ArrayList<>(),
+    calvesExercisesLog = new ArrayList<>(), forearmFlexorsGripExercisesLog = new ArrayList<>(), forearmExtensorExercisesLog = new ArrayList<>(), cardioExercisesLog = new ArrayList<>(),
+    bodyWeightLog = new ArrayList<>(), bodyWeightChangeLog = new ArrayList<>();
 
     //Workout Spinner
     Spinner spinner;
