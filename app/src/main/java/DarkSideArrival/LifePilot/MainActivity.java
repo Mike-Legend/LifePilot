@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Scene routineAnimation, homeAnimation, goalAnimation, nRoutineAnimation;
 
     //Arrays Containing Workout Logs For Each Muscle Group
+    //SDK 26>= Cannot utilize LocalDateTime functions, as such, the tracking charts will not be a function for them.
     private ArrayList<LocalDateTime> chestExercisesLog = new ArrayList<>(), shoulderExercisesLog = new ArrayList<>(), bicepExercisesLog = new ArrayList<>(),
     tricepsExercisesLog = new ArrayList<>(), legExercisesLog = new ArrayList<>(), backExercisesLog = new ArrayList<>(), gluteExercisesLog = new ArrayList<>(), abExercisesLog = new ArrayList<>(),
     calvesExercisesLog = new ArrayList<>(), forearmFlexorsGripExercisesLog = new ArrayList<>(), forearmExtensorExercisesLog = new ArrayList<>(), cardioExercisesLog = new ArrayList<>(),
@@ -124,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         BodyWeightLog()
         {
             weightSnapShot =  userWeight;
+
+            //SDK 26>= Cannot utilize LocalDateTime functions.
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             {
                 timeLog = LocalDateTime.now();
@@ -131,6 +134,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             else
             {
+                //I can  almost guarantee I might forget to put the version if check on something that uses the timeLog in calculation and crash the app on any version lower than 26.
+                //Hopefully not.
                 timeLog = null;
             }
         }
@@ -138,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Creating Array of body weight logs to store logs.
     private ArrayList<BodyWeightLog> bodyWeightChangeLog = new ArrayList<>();
+
 
     //Workout Spinner
     Spinner spinner;
@@ -1338,9 +1344,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         userWeight = Float.parseFloat(weightInput.getText().toString());
         userHeight = Float.parseFloat(heightInput.getText().toString());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        if(valid == true && userWeight > 50.5)
         {
-            bodyWeightChangeLog.add(new BodyWeightLog());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                bodyWeightChangeLog.add(new BodyWeightLog());
+            }
         }
     }
 
