@@ -623,13 +623,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             WeightHeightInputSetup();
         }
 
-        else if (id == R.id.profile_button)
-        {
-            setContentView(R.layout.weight_height_input);
-            WeightHeightInputSetup();
-        }
-
-
         else {
             GoToHomeScreen();
         }
