@@ -456,12 +456,18 @@
                 app:layout_constraintTop_toBottomOf="@id/EditRoutineList_TextInfo">
 
                 <LinearLayout
-                    android:id="@+id/PlaceEditRoutineList"
                     android:layout_width="330dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center">
 
+                    <com.jmedeisis.draglinearlayout.DragLinearLayout
+                        android:id="@+id/PlaceEditRoutineList"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </com.jmedeisis.draglinearlayout.DragLinearLayout>
                 </LinearLayout>
             </ScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>

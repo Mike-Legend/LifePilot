@@ -94,6 +94,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.protobuf.NullValue;
 import com.google.protobuf.Struct;
+import com.jmedeisis.draglinearlayout.DragLinearLayout;
 
 import org.checkerframework.checker.units.qual.A;
 import org.w3c.dom.Text;
@@ -240,12 +241,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 FrameLayout routineedit = findViewById(R.id.routinelistoverlayedit);
                 routineedit.setVisibility(View.VISIBLE);
                 //place routines to edit
-                LinearLayout ll = findViewById(R.id.PlaceEditRoutineList);
+                DragLinearLayout dragLinearLayout = findViewById(R.id.PlaceEditRoutineList);
                 for (int i = 0; i < userRoutines.size(); i++) {
                     if(userRoutines.get(i).getParent() != null) {
                         ((ViewGroup)userRoutines.get(i).getParent()).removeView(userRoutines.get(i));
                     }
-                    ll.addView(userRoutines.get(i));
+                    dragLinearLayout.addView(userRoutines.get(i));
                 }
                 editChecker = 1;
                 goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
