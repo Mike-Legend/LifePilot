@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
@@ -100,7 +101,7 @@ import org.w3c.dom.Text;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     //Routine and goal variables and arrays
-    private ArrayList<Button> userRoutines, userGoals;
+    private ArrayList<Button> userRoutines, userGoals, routineDeleteList;
     private ArrayList<String> currentSelectedItems = new ArrayList<>();
     private ArrayList<CheckBox> userRoutineCheck;
     private ArrayList<ArrayList<Button>> userExercisesArrayList;
@@ -177,7 +178,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.sign_in);
         }
 
-        //Set User session data
+        //User deletion arrays (do not store)
+        routineDeleteList = new ArrayList<>();
+
+        //Set User session data (load from firebase)
         userRoutines = new ArrayList<>();
         userRoutineCheck = new ArrayList<>();
         userGoals = new ArrayList<>();
@@ -230,20 +234,86 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
         } else if (id == R.id.EditRoutineList_Button) {
             //overlay trigger
-            FrameLayout routineedit = findViewById(R.id.routinelistoverlayedit);
-            routineedit.setVisibility(View.VISIBLE);
-            //hold to move order
-
-            //click to select for deletion
-
+            if(userRoutines.size() != 0) {
+                setContentView(R.layout.routine_list);
+                LoadUserRoutines();
+                FrameLayout routineedit = findViewById(R.id.routinelistoverlayedit);
+                routineedit.setVisibility(View.VISIBLE);
+                //place routines to edit
+                LinearLayout ll = findViewById(R.id.PlaceEditRoutineList);
+                for (int i = 0; i < userRoutines.size(); i++) {
+                    if(userRoutines.get(i).getParent() != null) {
+                        ((ViewGroup)userRoutines.get(i).getParent()).removeView(userRoutines.get(i));
+                    }
+                    ll.addView(userRoutines.get(i));
+                }
+                editChecker = 1;
+                goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
+                homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
+                nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
+            } else {
+                //no routine available to edit message
+            }
+        } else if (id < userRoutines.size() && editChecker == 1) {
+            //if selected
+            GradientDrawable gradDraw = new GradientDrawable();
+            gradDraw.setShape(GradientDrawable.RECTANGLE);
+            gradDraw.setCornerRadius(100);
+            gradDraw.setColor(getResources().getColor(R.color.deleteRed));
+            if (routineDeleteList.contains(userRoutines.get(id))) {
+                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                userRoutines.get(id).setBackground(gradDraw);
+                //remove from array
+                routineDeleteList.remove(userRoutines.get(id));
+            } else {
+                userRoutines.get(id).setBackground(gradDraw);
+                //add to array
+                routineDeleteList.add(userRoutines.get(id));
+            }
         } else if (id == R.id.CancelEditRoutine_Button) {
+            //reset info
+            editChecker = 0;
+            GradientDrawable gradDraw = new GradientDrawable();
+            gradDraw.setShape(GradientDrawable.RECTANGLE);
+            gradDraw.setCornerRadius(100);
+            gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+            for(int i = 0; i < userRoutines.size(); i++) {
+                for(int j = 0; j < routineDeleteList.size(); j++) {
+                    if(userRoutines.get(i).getId() == routineDeleteList.get(j).getId()) {
+                        userRoutines.get(i).setBackground(gradDraw);
+                    }
+                }
+            }
+            routineDeleteList.clear();
             //overlay trigger
             FrameLayout routineedit = findViewById(R.id.routinelistoverlayedit);
             routineedit.setVisibility(View.GONE);
+            LoadUserRoutines();
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
+            nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
         } else if (id == R.id.DeleteRoutines_Button) {
+            //delete info
+            editChecker = 0;
+            for(int i = 0; i < userRoutines.size(); i++) {
+                for(int j = 0; j < routineDeleteList.size(); j++) {
+                    if(userRoutines.get(i).getId() == routineDeleteList.get(j).getId()) {
+                        userRoutines.remove(i);
+                    }
+                }
+            }
+            //reset id for array sorting
+            for(int i = 0; i < userRoutines.size(); i++) {
+                userRoutines.get(i).setId(i);
+            }
+            routineDeleteList.clear();
             //overlay trigger
             FrameLayout routineedit = findViewById(R.id.routinelistoverlayedit);
             routineedit.setVisibility(View.GONE);
+            LoadUserRoutines();
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
+            nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
         }
 
         else if (id == R.id.analytics_button)
@@ -780,7 +850,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //Set for dynamic buttons to exercise info
-    private int dynamicChecker;
+    private int dynamicChecker, editChecker;
     View.OnClickListener getOnClickForDynamicButtons(final Button btn) {
         return new View.OnClickListener() {
             public void onClick(View v) {
