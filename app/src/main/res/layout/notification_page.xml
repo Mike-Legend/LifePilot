@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@drawable/gradientblackbackground">
 
     <TextView
         android:id="@+id/textView12"
@@ -15,7 +15,7 @@
         android:layout_marginBottom="32dp"
         android:text="Notifications"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/imageView3"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
         app:layout_constraintTop_toTopOf="parent" />

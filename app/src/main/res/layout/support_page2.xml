@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@drawable/gradientblackbackground">
 
     <TextView
         android:id="@+id/textView19"
@@ -14,7 +14,8 @@
         android:layout_marginBottom="75dp"
         android:text="Support"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="30sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/imageView5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,7 +39,7 @@
         android:layout_marginBottom="9dp"
         android:text="How can we help you?"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/textView21"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,6 +52,7 @@
         android:layout_marginBottom="23dp"
         android:text="Frequently asked questions."
         android:textColor="@color/white"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/multiAutoCompleteTextView"
         app:layout_constraintStart_toStartOf="@+id/textView20"
         app:layout_constraintTop_toBottomOf="@+id/textView20" />
@@ -97,7 +99,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="39dp"
         android:layout_marginBottom="162dp"
+        android:backgroundTint="@color/royalPurple"
         android:text="Sign out"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/multiAutoCompleteTextView3" />

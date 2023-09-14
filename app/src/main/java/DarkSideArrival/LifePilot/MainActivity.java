@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Height and Weight Variables
     private float userWeight;
-    private int  userHeightInches, userHeightFeet;
+    private int userHeightInches, userHeightFeet;
 
     //Google Sign in variables
     GoogleSignInOptions gso;
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (account != null && user != null) {
             performAccountStartUp();
-        }else {
+        } else {
             setContentView(R.layout.sign_in);
         }
 
@@ -151,18 +151,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) //add button with an else-if statement
     {
         int id = view.getId();
-        if(id == R.id.Goal_Button) {
+        if (id == R.id.Goal_Button) {
             Transition slide = new Slide(Gravity.RIGHT);
             TransitionManager.go(goalAnimation, slide);
             //Generate Goals
-            if(userGoals.size() != 0) {
+            if (userGoals.size() != 0) {
                 LoadUserGoals();
             }
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionGoalLayout), R.layout.routine_list, this);
         } else if (id == R.id.GoalBack_Button) {
             Transition slide = new Slide(Gravity.LEFT);
             TransitionManager.go(routineAnimation, slide);
-            if(userRoutines.size() != 0) {
+            if (userRoutines.size() != 0) {
                 LoadUserRoutines();
             }
             //setup next button animations
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.routinesButton) {
             Transition slide = new Slide(Gravity.RIGHT);
             TransitionManager.go(routineAnimation, slide);
-            if(userRoutines.size() != 0) {
+            if (userRoutines.size() != 0) {
                 LoadUserRoutines();
             }
 
@@ -207,11 +207,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
             homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
             nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
-        }
-
-
-        else if (id == R.id.analytics_button)
-        {
+        } else if (id == R.id.analytics_button) {
             setContentView(R.layout.data_screen);
             ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
             TextView weightVal = (TextView) findViewById(R.id.weightValue);
@@ -220,32 +216,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
             bmiBar.setProgress(Math.round(CalculateBMI()));
             bmiVal.setText(Float.toString(CalculateBMI()));
-            heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
-            heightValInches.setText(Integer.toString(userHeightInches)+"\"");
+            heightValFeet.setText(Integer.toString(userHeightFeet) + "\'");
+            heightValInches.setText(Integer.toString(userHeightInches) + "\"");
             weightVal.setText(Float.toString(userWeight));
-        }
-
-        else if(id == R.id.analyticsHomeButton)
-        {
+        } else if (id == R.id.analyticsHomeButton) {
             setContentView(R.layout.activity_main);
-        }
-
-        else if (id == R.id.excerciseData)
-        {
+        } else if (id == R.id.excerciseData) {
             //Initiating Spinner for workout breakdown.
             Spinner breakdownSpinner = (Spinner) findViewById(R.id.exerciseSpinner);
             setContentView(R.layout.exercise_data);
-        }
-
-        else if (id == R.id.breakDown)
-        {
+        } else if (id == R.id.breakDown) {
             //Initiating Spinner for Month Selection
             Spinner monthSpinner = (Spinner) findViewById(R.id.monthSelect);
             setContentView(R.layout.muscle_distribution);
-        }
-
-        else if(id == R.id.exerciseBack)
-        {
+        } else if (id == R.id.exerciseBack) {
             setContentView(R.layout.data_screen);
             ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
             TextView weightVal = (TextView) findViewById(R.id.weightValue);
@@ -254,23 +238,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
             bmiBar.setProgress(Math.round(CalculateBMI()));
             bmiVal.setText(Float.toString(CalculateBMI()));
-            heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
-            heightValInches.setText(Integer.toString(userHeightInches)+"\"");
+            heightValFeet.setText(Integer.toString(userHeightFeet) + "\'");
+            heightValInches.setText(Integer.toString(userHeightInches) + "\"");
             weightVal.setText(Float.toString(userWeight));
-        }
-
-        else if (id == R.id.exerciseHomeButton)
-        {
+        } else if (id == R.id.exerciseHomeButton) {
             setContentView(R.layout.activity_main);
-        }
-
-        else if(id == R.id.muscleHomeButton)
-        {
+        } else if (id == R.id.muscleHomeButton) {
             setContentView(R.layout.activity_main);
-        }
-
-        else if (id == R.id.muscleBack)
-        {
+        } else if (id == R.id.muscleBack) {
             setContentView(R.layout.data_screen);
             ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
             TextView weightVal = (TextView) findViewById(R.id.weightValue);
@@ -279,12 +254,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
             bmiBar.setProgress(Math.round(CalculateBMI()));
             bmiVal.setText(Float.toString(CalculateBMI()));
-            heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
-            heightValInches.setText(Integer.toString(userHeightInches)+"\"");
+            heightValFeet.setText(Integer.toString(userHeightFeet) + "\'");
+            heightValInches.setText(Integer.toString(userHeightInches) + "\"");
             weightVal.setText(Float.toString(userWeight));
-        }
-
-        else if (id == R.id.Home_Button) {
+        } else if (id == R.id.Home_Button) {
             GoToHomeScreen();
         } else if (id == R.id.NewRoutineCreate_Button) {
             FrameLayout routinelistoverlay = findViewById(R.id.routinelistoverlay);
@@ -318,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Button btn = new Button(this);
             btn.setAllCaps(false);
             TextView buttontext = findViewById(R.id.GoalNameEditText);
-            if(buttontext.getText().length() == 0) {
+            if (buttontext.getText().length() == 0) {
                 btn.setText("New Goal");
             } else {
                 btn.setText(buttontext.getText());
@@ -332,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             gradDraw.setCornerRadius(100);
             gradDraw.setColor(getResources().getColor(R.color.royalPurple));
             btn.setBackground(gradDraw);
-            btn.setPadding(0,0,0,8);
+            btn.setPadding(0, 0, 0, 8);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
             params.setMargins(0, 30, 0, 0);
             btn.setLayoutParams(params);
@@ -350,7 +323,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             routineoverlay.setVisibility(View.GONE);
 
             LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
-            for(int i = 0; i < currentSelectedItems.size(); i++) {
+            for (int i = 0; i < currentSelectedItems.size(); i++) {
                 Button btn = new Button(this);
                 btn.setText(currentSelectedItems.get(i));
                 btn.setTextSize(24);
@@ -363,8 +336,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 gradDraw.setCornerRadius(90);
                 gradDraw.setColor(getResources().getColor(R.color.royalPurple));
                 btn.setBackground(gradDraw);
-                btn.setPadding(20,0,20,8);
-                if(btn.getText().length() > 23) {
+                btn.setPadding(20, 0, 20, 8);
+                if (btn.getText().length() > 23) {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240);
                     params.setMargins(0, 30, 0, 0);
                     btn.setLayoutParams(params);
@@ -390,21 +363,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String g1 = "Goal: ";
             String g2 = String.valueOf(userGoals.get(goalIDActive).getText());
             goal.setText(g1 + g2);
-            for(int i = 0; i < userRoutineCheck.size(); i++) {
-                if(userRoutineCheck.get(i).isChecked()) {
-                    if(i + 1 > userGoalArrayList.size()) {
+            for (int i = 0; i < userRoutineCheck.size(); i++) {
+                if (userRoutineCheck.get(i).isChecked()) {
+                    if (i + 1 > userGoalArrayList.size()) {
                         userGoalArrayList.add(new ArrayList<TextView>());
-                    } else if(userGoalArrayList.get(i).size() > 0) {
+                    } else if (userGoalArrayList.get(i).size() > 0) {
                         userGoalArrayList.get(i).remove(i);
                     }
                     userGoalArrayList.get(i).add(goal);
                 } //else if(userRoutineCheck.get(i).isChecked() == false) {
-                    //if(i + 1 > userGoalArrayList.size()) {
-                        //userGoalArrayList.add(new ArrayList<TextView>());
-                   //}
-                    //if(userGoalArrayList.get(i).size() > 0) {
-                        //userGoalArrayList.get(i).get(0).setText("");
-                    //}
+                //if(i + 1 > userGoalArrayList.size()) {
+                //userGoalArrayList.add(new ArrayList<TextView>());
+                //}
+                //if(userGoalArrayList.get(i).size() > 0) {
+                //userGoalArrayList.get(i).get(0).setText("");
+                //}
                 //}
             }
         } else if (id == R.id.ConfirmNewRoutine_Button) {
@@ -416,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Button btn = new Button(this);
             btn.setAllCaps(false);
             TextView buttontext = findViewById(R.id.RoutineNameEditText);
-            if(buttontext.getText().length() == 0) {
+            if (buttontext.getText().length() == 0) {
                 btn.setText("New Routine");
             } else {
                 btn.setText(buttontext.getText());
@@ -430,7 +403,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             gradDraw.setCornerRadius(100);
             gradDraw.setColor(getResources().getColor(R.color.royalPurple));
             btn.setBackground(gradDraw);
-            btn.setPadding(0,0,0,8);
+            btn.setPadding(0, 0, 0, 8);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
             params.setMargins(0, 30, 0, 0);
             btn.setLayoutParams(params);
@@ -461,7 +434,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
             nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
         } else if (id == R.id.RoutineDynamicbackButton) {
-            if(dynamicChecker == 0) {
+            if (dynamicChecker == 0) {
                 setContentView(R.layout.routine_newlist);
                 FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
                 routineoverlay.setVisibility(View.VISIBLE);
@@ -485,7 +458,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             routinegoaloverlay.setVisibility(View.VISIBLE);
             goalIDActive = id - 100;
             //empty check text
-            if(userRoutines.size() == 0) {
+            if (userRoutines.size() == 0) {
                 TextView rl = findViewById(R.id.NoGoal_TopText);
                 rl.setVisibility(View.VISIBLE);
             } else {
@@ -495,28 +468,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Generate goal name
             int goalIdActive = id;
             TextView titletext = findViewById(R.id.GoalToRoutine_TopText);
-            for(int i = 0; i < userGoals.size(); i++) {
-                if(userGoals.get(i).getId() == id) {
+            for (int i = 0; i < userGoals.size(); i++) {
+                if (userGoals.get(i).getId() == id) {
                     titletext.setText(userGoals.get(i).getText());
                 }
             }
             //list routines to add
             LinearLayout ll = findViewById(R.id.GoalRoutineListHere);
             Button temp;
-            for(int i = 0; i < userRoutines.size(); i++) {
+            for (int i = 0; i < userRoutines.size(); i++) {
                 temp = (userRoutines.get(i));
-                if(temp.getParent() != null) {
-                    ((ViewGroup)temp.getParent()).removeView(temp);
+                if (temp.getParent() != null) {
+                    ((ViewGroup) temp.getParent()).removeView(temp);
                 }
                 ll.addView(temp);
             }
             //list checkboxes to add
             LinearLayout ll2 = findViewById(R.id.GoalCheckRoutineListHere);
             CheckBox temp2;
-            for(int i = 0; i < userRoutines.size(); i++) {
+            for (int i = 0; i < userRoutines.size(); i++) {
                 temp2 = (userRoutineCheck.get(i));
-                if(temp2.getParent() != null) {
-                    ((ViewGroup)temp2.getParent()).removeView(temp2);
+                if (temp2.getParent() != null) {
+                    ((ViewGroup) temp2.getParent()).removeView(temp2);
                 }
                 ll2.addView(temp2);
             }
@@ -537,7 +510,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.routine_newlist);
         } else if (id == R.id.PreMadeRoutine6_Button) {
             setContentView(R.layout.routine_newlist);
-        } else if (id == R.id.ExerciseSave_Button){
+        } else if (id == R.id.ExerciseSave_Button) {
             //TODO: Sync to firebase
             //all array information
             setContentView(R.layout.routine_list);
@@ -550,7 +523,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.temp_logout_button) {
             signOut();
             //setContentView(R.layout.experience_selection);
-        }  else if (id == R.id.still_learning_button) {
+        } else if (id == R.id.still_learning_button) {
             // Add "still learning" to firebase
             Map<String, Object> userData = new HashMap<>();
             userData.put("Experience", "Still Learning");
@@ -585,7 +558,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             db.collection("Users").document(user.getUid())
                     .update(userData);
             setContentView(R.layout.weight_height_input);
-        }  else {
+            //onClick to profile page
+        } else if (id == R.id.profile_button) {
+            setContentView(R.layout.profile_page);
+            //onClick to setting page from profile
+        } else if (id == R.id.button6) {
+            setContentView(R.layout.setting_page);
+            //onClick to support from setting page
+        } else if (id == R.id.Support) {
+        setContentView(R.layout.support_page1);
+    }
+        else {
             GoToHomeScreen();
         }
     }
