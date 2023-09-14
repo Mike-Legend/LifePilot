@@ -34,6 +34,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.transition.Scene;
@@ -92,6 +93,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.protobuf.NullValue;
+import com.google.protobuf.Struct;
+
 import org.checkerframework.checker.units.qual.A;
 import org.w3c.dom.Text;
 
@@ -110,7 +113,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<LocalDateTime> chestExercisesLog = new ArrayList<>(), shoulderExercisesLog = new ArrayList<>(), bicepExercisesLog = new ArrayList<>(),
     tricepsExercisesLog = new ArrayList<>(), legExercisesLog = new ArrayList<>(), backExercisesLog = new ArrayList<>(), gluteExercisesLog = new ArrayList<>(), abExercisesLog = new ArrayList<>(),
     calvesExercisesLog = new ArrayList<>(), forearmFlexorsGripExercisesLog = new ArrayList<>(), forearmExtensorExercisesLog = new ArrayList<>(), cardioExercisesLog = new ArrayList<>(),
-    bodyWeightLog = new ArrayList<>(), bodyWeightChangeLog = new ArrayList<>();
+    bodyWeightLog = new ArrayList<>();
+
+    //Creating Class to store weight and time combination for weight tracker.
+    public class BodyWeightLog
+    {
+        float weightSnapShot;
+        LocalDateTime timeLog;
+
+        BodyWeightLog()
+        {
+            weightSnapShot =  userWeight;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                timeLog = LocalDateTime.now();
+            }
+
+            else
+            {
+                timeLog = null;
+            }
+        }
+    }
+
+    //Creating Array of body weight logs to store logs.
+    private ArrayList<BodyWeightLog> bodyWeightChangeLog = new ArrayList<>();
 
     //Workout Spinner
     Spinner spinner;
@@ -267,6 +294,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             setContentView(R.layout.data_screen);
             ShowDataScreen();
+        }
+
+        else if(id == R.id.log_Save)
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                SetHeightWeightAndLog();
+            }
+
+            else
+            {
+                SetWeightHeight();
+            }
+
+            GoToHomeScreen();
         }
 
         else if (id == R.id.Home_Button) {
@@ -1265,6 +1307,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         weightInput.setText(Float.toString(userWeight));
     }
 
+    //Function for Saving Weight and Height Changes and logging the new weight and date/time of change.
+    public void SetHeightWeightAndLog()
+    {
+        TextView heightInput = (TextView) findViewById(R.id.height_input);
+        TextView weightInput = (TextView) findViewById(R.id.weight_input);
+        String userHeightStr = heightInput.getText().toString().trim();
+        String userWeightStr = weightInput.getText().toString().trim();
+        boolean valid = true;
+        Float heightValTest;
+        Float weightValTest;
+
+        try
+        {
+            heightValTest = Float.parseFloat(userHeightStr);
+            weightValTest = Float.parseFloat(userWeightStr);
+        }
+
+        catch (NumberFormatException e)
+        {
+            valid = false;
+        }
+
+        if(valid == false)
+        {
+            heightInput.setText(Float.toString(userHeight));
+            weightInput.setText(Float.toString(userWeight));
+        }
+
+        userWeight = Float.parseFloat(weightInput.getText().toString());
+        userHeight = Float.parseFloat(heightInput.getText().toString());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            bodyWeightChangeLog.add(new BodyWeightLog());
+        }
+    }
 
     public void onNothingSelected(AdapterView<?> adapterView) {}
 }
