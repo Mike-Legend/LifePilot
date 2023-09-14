@@ -23,6 +23,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.transition.Scene;
@@ -91,6 +93,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.protobuf.NullValue;
+import com.google.protobuf.Struct;
+
 import org.checkerframework.checker.units.qual.A;
 import org.w3c.dom.Text;
 
@@ -105,14 +109,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public int routineIDActive, goalIDActive;
     private Scene routineAnimation, homeAnimation, goalAnimation, nRoutineAnimation;
 
+    //Arrays Containing Workout Logs For Each Muscle Group
+    //SDK 26>= Cannot utilize LocalDateTime functions, as such, the tracking charts will not be a function for them.
+    private ArrayList<LocalDateTime> chestExercisesLog = new ArrayList<>(), shoulderExercisesLog = new ArrayList<>(), bicepExercisesLog = new ArrayList<>(),
+    tricepsExercisesLog = new ArrayList<>(), legExercisesLog = new ArrayList<>(), backExercisesLog = new ArrayList<>(), gluteExercisesLog = new ArrayList<>(), abExercisesLog = new ArrayList<>(),
+    calvesExercisesLog = new ArrayList<>(), forearmFlexorsGripExercisesLog = new ArrayList<>(), forearmExtensorExercisesLog = new ArrayList<>(), cardioExercisesLog = new ArrayList<>(),
+    bodyWeightLog = new ArrayList<>();
+
+    //Creating Class to store weight and time combination for weight tracker.
+    public class BodyWeightLog
+    {
+        float weightSnapShot;
+        LocalDateTime timeLog;
+
+        BodyWeightLog()
+        {
+            weightSnapShot =  userWeight;
+
+            //SDK 26>= Cannot utilize LocalDateTime functions.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                timeLog = LocalDateTime.now();
+            }
+
+            else
+            {
+                //I can  almost guarantee I might forget to put the version if check on something that uses the timeLog in calculation and crash the app on any version lower than 26.
+                //Hopefully not.
+                timeLog = null;
+            }
+        }
+    }
+
+    //Creating Array of body weight logs to store logs.
+    private ArrayList<BodyWeightLog> bodyWeightChangeLog = new ArrayList<>();
+
+
     //Workout Spinner
     Spinner spinner;
     RecyclerView WorkoutRecyclerView;
     WorkoutRecycler workoutList;
 
     //Height and Weight Variables
-    private float userWeight;
-    private int  userHeightInches, userHeightFeet;
+    private float userWeight, userHeight;
 
     //Google Sign in variables
     GoogleSignInOptions gso;
@@ -213,21 +252,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if (id == R.id.analytics_button)
         {
             setContentView(R.layout.data_screen);
-            ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
-            TextView weightVal = (TextView) findViewById(R.id.weightValue);
-            TextView heightValFeet = (TextView) findViewById(R.id.heightValue);
-            TextView heightValInches = (TextView) findViewById(R.id.userHeightInches);
-            TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
-            bmiBar.setProgress(Math.round(CalculateBMI()));
-            bmiVal.setText(Float.toString(CalculateBMI()));
-            heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
-            heightValInches.setText(Integer.toString(userHeightInches)+"\"");
-            weightVal.setText(Float.toString(userWeight));
+           ShowDataScreen();
         }
 
         else if(id == R.id.analyticsHomeButton)
         {
-            setContentView(R.layout.activity_main);
+            GoToHomeScreen();
         }
 
         else if (id == R.id.excerciseData)
@@ -244,44 +274,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.muscle_distribution);
         }
 
+        else if (id == R.id.weight_height_save_button)
+        {
+                SetWeightHeight();
+                GoToHomeScreen();
+        }
+
         else if(id == R.id.exerciseBack)
         {
             setContentView(R.layout.data_screen);
-            ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
-            TextView weightVal = (TextView) findViewById(R.id.weightValue);
-            TextView heightValFeet = (TextView) findViewById(R.id.heightValue);
-            TextView heightValInches = (TextView) findViewById(R.id.userHeightInches);
-            TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
-            bmiBar.setProgress(Math.round(CalculateBMI()));
-            bmiVal.setText(Float.toString(CalculateBMI()));
-            heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
-            heightValInches.setText(Integer.toString(userHeightInches)+"\"");
-            weightVal.setText(Float.toString(userWeight));
+           ShowDataScreen();
         }
 
         else if (id == R.id.exerciseHomeButton)
         {
-            setContentView(R.layout.activity_main);
+            GoToHomeScreen();
         }
 
         else if(id == R.id.muscleHomeButton)
         {
-            setContentView(R.layout.activity_main);
+            GoToHomeScreen();
         }
 
         else if (id == R.id.muscleBack)
         {
             setContentView(R.layout.data_screen);
-            ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
-            TextView weightVal = (TextView) findViewById(R.id.weightValue);
-            TextView heightValFeet = (TextView) findViewById(R.id.heightValue);
-            TextView heightValInches = (TextView) findViewById(R.id.userHeightInches);
-            TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
-            bmiBar.setProgress(Math.round(CalculateBMI()));
-            bmiVal.setText(Float.toString(CalculateBMI()));
-            heightValFeet.setText(Integer.toString(userHeightFeet)+"\'");
-            heightValInches.setText(Integer.toString(userHeightInches)+"\"");
-            weightVal.setText(Float.toString(userWeight));
+            ShowDataScreen();
+        }
+
+        else if(id == R.id.log_Save)
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                SetHeightWeightAndLog();
+            }
+
+            else
+            {
+                SetWeightHeight();
+            }
+
+            GoToHomeScreen();
         }
 
         else if (id == R.id.Home_Button) {
@@ -571,6 +604,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             db.collection("Users").document(user.getUid())
                     .update(userData);
             setContentView(R.layout.weight_height_input);
+            WeightHeightInputSetup();
         } else if (id == R.id.gain_weight_button) {
             // Add "gain weight" to firebase
             Map<String, Object> userData = new HashMap<>();
@@ -578,6 +612,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             db.collection("Users").document(user.getUid())
                     .update(userData);
             setContentView(R.layout.weight_height_input);
+            WeightHeightInputSetup();
         } else if (id == R.id.maintain_weight_button) {
             // Add "maintain weight" to firebase
             Map<String, Object> userData = new HashMap<>();
@@ -585,7 +620,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             db.collection("Users").document(user.getUid())
                     .update(userData);
             setContentView(R.layout.weight_height_input);
-        }  else {
+            WeightHeightInputSetup();
+        }
+
+        else {
             GoToHomeScreen();
         }
     }
@@ -1186,10 +1224,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         float bmi;
 
-        if((userHeightFeet*12) + userHeightInches != 0 && userWeight != 0)
+        if(userHeight != 0 && userWeight != 0)
         {
-            float userHeight = (userHeightFeet*12) + userHeightInches;
-            bmi = (userWeight/userHeight/userHeight)*703;
+            bmi = 703 * (userWeight/(userHeight*userHeight));
             BigDecimal bmiD = new BigDecimal(bmi);
             bmiD = bmiD.setScale(1, RoundingMode.HALF_UP);
             bmi = bmiD.floatValue();
@@ -1201,6 +1238,112 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         return bmi;
+    }
+
+    //Self-explanatory, but just in case, function for displaying values on data screen.
+    public void ShowDataScreen()
+    {
+        //Getting layout design IDs setup for use.
+        ProgressBar bmiBar = (ProgressBar) findViewById(R.id.bmiBar);
+        TextView weightVal = (TextView) findViewById(R.id.weightValue);
+        TextView heightValFeet = (TextView) findViewById(R.id.heightValue);
+        TextView heightValInches = (TextView) findViewById(R.id.userHeightInches);
+        TextView bmiVal = (TextView) findViewById(R.id.bmiNumber);
+
+        //Setting BMI bar value equal to BMI calculation.
+        bmiBar.setProgress(Math.round(CalculateBMI()));
+        bmiVal.setText(Float.toString(CalculateBMI()));
+
+        //Turning user height (inches) into feet' inches" format.
+        float heightLeft = userHeight;
+        int heightValueFeet = (int)(heightLeft/12);
+        heightLeft = (heightLeft/12)-heightValueFeet;
+        int heightValueInches = (int)(heightLeft*12);
+        heightValFeet.setText(Integer.toString(heightValueFeet)+"\'");
+        heightValInches.setText(Integer.toString(heightValueInches)+"\"");
+        weightVal.setText(Float.toString(userWeight)+" lbs");
+    }
+
+    //Function for setting weight and height from user input.
+    public void SetWeightHeight()
+    {
+        TextView heightInput = (TextView) findViewById(R.id.height_input);
+        TextView weightInput = (TextView) findViewById(R.id.weight_input);
+        String userHeightStr = heightInput.getText().toString().trim();
+        String userWeightStr = weightInput.getText().toString().trim();
+        boolean valid = true;
+        Float heightValTest;
+        Float weightValTest;
+
+        try
+        {
+            heightValTest = Float.parseFloat(userHeightStr);
+            weightValTest = Float.parseFloat(userWeightStr);
+        }
+
+        catch (NumberFormatException e)
+        {
+            valid = false;
+        }
+
+        if(valid == false)
+        {
+            heightInput.setText(Float.toString(userHeight));
+            weightInput.setText(Float.toString(userWeight));
+        }
+
+        userWeight = Float.parseFloat(weightInput.getText().toString());
+        userHeight = Float.parseFloat(heightInput.getText().toString());
+    }
+
+    //Function for Setting up Weight and Height input screen for display. Avoiding user leaving input boxes blank.
+    //Will display existing values for height and weight.
+    public void WeightHeightInputSetup()
+    {
+        TextView heightInput = (TextView) findViewById(R.id.height_input);
+        TextView weightInput = (TextView) findViewById(R.id.weight_input);
+        heightInput.setText(Float.toString(userHeight));
+        weightInput.setText(Float.toString(userWeight));
+    }
+
+    //Function for Saving Weight and Height Changes and logging the new weight and date/time of change.
+    public void SetHeightWeightAndLog()
+    {
+        TextView heightInput = (TextView) findViewById(R.id.height_input);
+        TextView weightInput = (TextView) findViewById(R.id.weight_input);
+        String userHeightStr = heightInput.getText().toString().trim();
+        String userWeightStr = weightInput.getText().toString().trim();
+        boolean valid = true;
+        Float heightValTest;
+        Float weightValTest;
+
+        try
+        {
+            heightValTest = Float.parseFloat(userHeightStr);
+            weightValTest = Float.parseFloat(userWeightStr);
+        }
+
+        catch (NumberFormatException e)
+        {
+            valid = false;
+        }
+
+        if(valid == false)
+        {
+            heightInput.setText(Float.toString(userHeight));
+            weightInput.setText(Float.toString(userWeight));
+        }
+
+        userWeight = Float.parseFloat(weightInput.getText().toString());
+        userHeight = Float.parseFloat(heightInput.getText().toString());
+
+        if(valid == true && userWeight > 50.5)
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
+                bodyWeightChangeLog.add(new BodyWeightLog());
+            }
+        }
     }
 
     public void onNothingSelected(AdapterView<?> adapterView) {}

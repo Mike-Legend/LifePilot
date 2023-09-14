@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="workOuts">
-        <item>Exercises</item>
+        <item>Chest Exercises</item>
+        <item>Shoulder Exercises</item>
         <item>Bicep Exercises</item>
         <item>Triceps Exercises</item>
         <item>Leg Exercises</item>
@@ -12,5 +13,6 @@
         <item>Forearm Flexors and Grip Exercises</item>
         <item>Forearm Extensor Exercises</item>
         <item>Cardio Exercises</item>
+        <item>Body Weight</item>
 </string-array>
 </resources>
