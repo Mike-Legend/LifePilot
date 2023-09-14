@@ -248,6 +248,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     dragLinearLayout.addView(userRoutines.get(i));
                 }
+
+
                 editChecker = 1;
                 goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
                 homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
