@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         else if(id == R.id.analyticsHomeButton)
         {
-            setContentView(R.layout.activity_main);
+            GoToHomeScreen();
         }
 
         else if (id == R.id.excerciseData)
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if (id == R.id.weight_height_save_button)
         {
                 SetWeightHeight();
-                setContentView(R.layout.activity_main);
+                GoToHomeScreen();
         }
 
         else if(id == R.id.exerciseBack)
@@ -248,12 +248,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         else if (id == R.id.exerciseHomeButton)
         {
-            setContentView(R.layout.activity_main);
+            GoToHomeScreen();
         }
 
         else if(id == R.id.muscleHomeButton)
         {
-            setContentView(R.layout.activity_main);
+            GoToHomeScreen();
         }
 
         else if (id == R.id.muscleBack)
