@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/Customize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="61dp"
@@ -29,27 +29,27 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/Notify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="43dp"
         android:layout_marginEnd="1dp"
         android:text="Notifications"
-        app:layout_constraintEnd_toEndOf="@+id/button"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintEnd_toEndOf="@+id/Customize"
+        app:layout_constraintTop_toBottomOf="@+id/Customize" />
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/Language"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
         android:layout_marginBottom="42dp"
         android:text="Language"
-        app:layout_constraintBottom_toTopOf="@+id/button9"
-        app:layout_constraintStart_toStartOf="@+id/button9" />
+        app:layout_constraintBottom_toTopOf="@+id/Export"
+        app:layout_constraintStart_toStartOf="@+id/Export" />
 
     <Button
-        android:id="@+id/button9"
+        android:id="@+id/Export"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Export Routine List"
@@ -59,22 +59,22 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button10"
+        android:id="@+id/Access"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="19dp"
         android:text="Accessibility"
-        app:layout_constraintEnd_toEndOf="@+id/button9"
-        app:layout_constraintTop_toBottomOf="@+id/button9" />
+        app:layout_constraintEnd_toEndOf="@+id/Export"
+        app:layout_constraintTop_toBottomOf="@+id/Export" />
 
     <Button
-        android:id="@+id/button11"
+        android:id="@+id/Support"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
         android:layout_marginTop="56dp"
         android:text="Support"
-        app:layout_constraintStart_toStartOf="@+id/button10"
-        app:layout_constraintTop_toBottomOf="@+id/button10" />
+        app:layout_constraintStart_toStartOf="@+id/Access"
+        app:layout_constraintTop_toBottomOf="@+id/Access" />
 </androidx.constraintlayout.widget.ConstraintLayout>
