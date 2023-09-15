@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "DarkSideArrival.LifePilot"
+rootProject.name = "darksidearrivals.lifepilot"
 include(":app")

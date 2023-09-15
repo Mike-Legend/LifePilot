@@ -1,4 +1,4 @@
-package DarkSideArrival.LifePilot;
+package darksidearrivals.lifepilot;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
