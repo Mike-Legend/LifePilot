@@ -1,4 +1,4 @@
-package DarkSideArrival.LifePilot;
+package darksidearrivals.lifepilot;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -260,12 +260,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 for(int j = 0; j < routineDeleteList.size(); j++) {
                     if(userRoutines.get(i).getId() == routineDeleteList.get(j).getId()) {
                         userRoutines.remove(i);
+                        if(userExercisesArrayList.get(i).size() != 0) {
+                            userExercisesArrayList.get(i).clear();
+                            userExercisesArrayList.remove(i);
+                        }
                     }
                 }
             }
             //reset id for array sorting
             for(int i = 0; i < userRoutines.size(); i++) {
                 userRoutines.get(i).setId(i);
+                if(userExercisesArrayList.get(i).size() != 0) {
+                    for(int j = 0; j < userExercisesArrayList.size(); j++) {
+                        userExercisesArrayList.get(j).set(j, userExercisesArrayList.get(j).get(j));
+                    }
+                }
             }
             routineDeleteList.clear();
             //overlay trigger

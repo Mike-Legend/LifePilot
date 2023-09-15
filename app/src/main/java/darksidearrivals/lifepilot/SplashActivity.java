@@ -1,4 +1,4 @@
-package DarkSideArrival.LifePilot;
+package darksidearrivals.lifepilot;
 
 import androidx.appcompat.app.AppCompatActivity;
 

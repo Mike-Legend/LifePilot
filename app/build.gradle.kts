@@ -5,11 +5,11 @@ plugins {
 
 android {
 
-    namespace = "DarkSideArrival.LifePilot"
+    namespace = "darksidearrivals.lifepilot"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "DarkSideArrival.LifePilot"
+        applicationId = "darksidearrivals.lifepilot"
         minSdk = 24
         targetSdk = 33
         versionCode = 1

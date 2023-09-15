@@ -1,4 +1,4 @@
-package DarkSideArrival.LifePilot;
+package darksidearrivals.lifepilot;
 
 import org.junit.Test;
 
