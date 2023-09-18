@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -45,6 +46,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.jmedeisis.draglinearlayout.DragLinearLayout;
+import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -622,6 +624,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.ExerciseSave_Button){
             //TODO: Sync to firebase
             //all array information
+            /*Map<String, Object> userArray = new HashMap<>();
+            ArrayList<String> userStringRoutines = new ArrayList<>();
+            for (int i=0; i<userRoutines.size(); i++){
+
+                 userStringRoutines.add(userRoutines.get(i).toString());
+            }
+
+            userArray.put("Routines", Arrays.asList(userStringRoutines.get(0)));
+            db.collection("Users").document(user.getUid())
+                    .update(userArray);*/
             setContentView(R.layout.routine_list);
             LoadUserRoutines();
         } else if (id == R.id.calendar_button) {
@@ -682,6 +694,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
 
+        /*Uaccount.getPhotoUrl();
+        mIcon_val = BitmapFactory.decodeStream(onlinePic. .getInputStream());*/
+
         //Updating Home Screen text
         if (account != null && user != null){
             //Updating welcome text
@@ -689,9 +704,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String name = user.getDisplayName();
             welcome_text.setText("Welcome, "+name+"!");
 
+
+            ImageView profileButton = findViewById(R.id.profile_pic);
+            /*Uri onlinePic = account.getPhotoUrl();
+            profileButton.setImageURI(onlinePic);*/
+            Picasso.get().load(account.getPhotoUrl()).into(profileButton);
+            //Picasso.with(this).load(personPhoto).into(R.id.imageview);
+
             //Updating goal and experience text
             TextView goal_text = findViewById(R.id.goal_text);
-            TextView experience_text = findViewById(R.id.experience_text);
             db.collection("Users").document(user.getUid())
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -701,7 +722,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()){
                                     goal_text.setText("Goal: "+document.getData().get("Goal"));
-                                    experience_text.setText("Experience Level: "+document.getData().get("Experience"));
                                 }else{
                                     Toast.makeText(getApplicationContext(), "Error, user document doesn't exist", Toast.LENGTH_SHORT).show();
                                 }
