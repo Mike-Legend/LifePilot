@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -45,6 +46,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.jmedeisis.draglinearlayout.DragLinearLayout;
+import com.squareup.picasso.Picasso;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -622,6 +624,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.ExerciseSave_Button){
             //TODO: Sync to firebase
             //all array information
+            /*Map<String, Object> userArray = new HashMap<>();
+            ArrayList<String> userStringRoutines = new ArrayList<>();
+            for (int i=0; i<userRoutines.size(); i++){
+
+                 userStringRoutines.add(userRoutines.get(i).toString());
+            }
+
+            userArray.put("Routines", Arrays.asList(userStringRoutines.get(0)));
+            db.collection("Users").document(user.getUid())
+                    .update(userArray);*/
             setContentView(R.layout.routine_list);
             LoadUserRoutines();
         } else if (id == R.id.calendar_button) {
@@ -689,9 +701,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String name = user.getDisplayName();
             welcome_text.setText("Welcome, "+name+"!");
 
-            //Updating goal and experience text
+            //Adding Profile Picture
+            ImageView profileButton = findViewById(R.id.profile_pic);
+            Picasso.get().load(account.getPhotoUrl()).into(profileButton);
+
+            //Updating goal text from Firebase
             TextView goal_text = findViewById(R.id.goal_text);
-            TextView experience_text = findViewById(R.id.experience_text);
             db.collection("Users").document(user.getUid())
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -701,7 +716,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()){
                                     goal_text.setText("Goal: "+document.getData().get("Goal"));
-                                    experience_text.setText("Experience Level: "+document.getData().get("Experience"));
                                 }else{
                                     Toast.makeText(getApplicationContext(), "Error, user document doesn't exist", Toast.LENGTH_SHORT).show();
                                 }
@@ -852,8 +866,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /*
             This function:
             -Will add the user to firebase if it's a new user
-            -Will take you to profile creation if you are a new user or somehow skipped it
-            -Otherwise, it will take you to home screen
+            -Will take you to profile creation if you're a new user or somehow skipped it
+            -Otherwise, it will pull your information from Firebase and take you to home screen
          */
 
         //Checking if user's firebase document exists
@@ -868,7 +882,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             setContentView(R.layout.experience_selection);
                         }else if (!document.contains("Goal")){
                             setContentView(R.layout.goal_selection);
+                        }else if (!document.contains("Weight") || !document.contains("Height")){
+                            setContentView(R.layout.weight_height_input);
                         }else{
+                            //Returning User, Sync with Firebase
+                            db.collection("Users").document(user.getUid())
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                DocumentSnapshot document = task.getResult();
+                                                if (document.exists()){
+                                                    double weight = ((double) document.getData().get("Weight"));
+                                                    double height = ((double) document.getData().get("Height"));
+                                                    userWeight = (float) weight;
+                                                    userHeight = (float) height;
+                                                }else{
+                                                    Toast.makeText(getApplicationContext(), "Error, user document doesn't exist", Toast.LENGTH_SHORT).show();
+                                                }
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "Failed to connect to database", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                             GoToHomeScreen();
                         }
                     } else {
@@ -1343,6 +1380,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         userWeight = Float.parseFloat(weightInput.getText().toString());
         userHeight = Float.parseFloat(heightInput.getText().toString());
+
+        //Saving userWeight/Height to Firebase
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("Weight", userWeight);
+        userData.put("Height", userHeight);
+        db.collection("Users").document(user.getUid())
+                .update(userData);
+
     }
 
     //Function for Setting up Weight and Height input screen for display. Avoiding user leaving input boxes blank.
