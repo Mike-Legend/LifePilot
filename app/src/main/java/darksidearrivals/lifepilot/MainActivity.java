@@ -10,6 +10,7 @@ import android.transition.Scene;
 import android.transition.Slide;
 import android.transition.Transition;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -524,6 +526,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             userRoutineCheck.add(temp2);
             //New Exercise Array
             userExercisesArrayList.add(new ArrayList<Button>());
+            SyncUserRoutines();
         } else if (id < userRoutines.size() || id == userRoutines.size()) {
             Transition slide = new Slide(Gravity.RIGHT);
             TransitionManager.go(nRoutineAnimation, slide);
@@ -623,18 +626,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.routine_newlist);
         } else if (id == R.id.ExerciseSave_Button){
             //TODO: Sync to firebase
-            //all array information
-            /*Map<String, Object> userArray = new HashMap<>();
-            ArrayList<String> userStringRoutines = new ArrayList<>();
-            for (int i=0; i<userRoutines.size(); i++){
+            SyncUserRoutines();
 
-                 userStringRoutines.add(userRoutines.get(i).toString());
-            }
+            Transition slide = new Slide(Gravity.LEFT);
+            TransitionManager.go(routineAnimation, slide);
 
-            userArray.put("Routines", Arrays.asList(userStringRoutines.get(0)));
-            db.collection("Users").document(user.getUid())
-                    .update(userArray);*/
-            setContentView(R.layout.routine_list);
+            //setup next button animations
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
+            nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
+           // setContentView(R.layout.routine_list);
             LoadUserRoutines();
         } else if (id == R.id.calendar_button) {
             setContentView(R.layout.calendar_screen);
@@ -690,6 +691,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+
     private void GoToHomeScreen(){
         setContentView(R.layout.activity_main);
         routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionHomeLayout), R.layout.routine_list, this);
@@ -727,6 +729,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
     void GenerateRoutineSelectScreen(int id) {
+        Log.d("TEST", "1");
         //Generate Name and routine separation
         routineIDActive = id;
         TextView titletext = findViewById(R.id.NewRoutineSet_TopText);
@@ -735,6 +738,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 titletext.setText(userRoutines.get(i).getText());
             }
         }
+        Log.d("TEST", "2");
         //Check goals
         if(userGoals.size() != 0) {
             if(routineIDActive + 1 > userGoalArrayList.size()) {
@@ -752,10 +756,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             TextView goal = findViewById(R.id.GoalofRoutine_TopText);
             goal.setVisibility(View.GONE);
         }
+        Log.d("TEST", "3");
         //Generate Routine Exercises
         if(userExercisesArrayList.get(routineIDActive).size() != 0) {
             LoadUserRoutineExercises();
         }
+        Log.d("TEST", "4");
         GenerateSpinnerWorkouts();
         GenerateWorkoutRecycler();
         //button usage animations
@@ -894,10 +900,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
                                                 if (document.exists()){
+                                                    //Getting user weight and height
                                                     double weight = ((double) document.getData().get("Weight"));
                                                     double height = ((double) document.getData().get("Height"));
                                                     userWeight = (float) weight;
                                                     userHeight = (float) height;
+
+                                                    //Getting user routines
+                                                    if (document.getData().get("Routines") != null) {
+                                                        ArrayList<String> routineNames = (ArrayList<String>) document.getData().get("Routines");
+                                                        for (int i=0; i<routineNames.size(); i++){
+                                                            //button creation
+                                                            //LinearLayout ll = findViewById(R.id.RoutineButtonAddsHere);
+                                                            Button btn = new Button(MainActivity.this);
+                                                            btn.setAllCaps(false);
+                                                            btn.setText(routineNames.get(i));
+                                                            btn.setTextSize(24);
+                                                            btn.setTextColor(Color.WHITE);
+                                                            btn.setClickable(true);
+                                                            btn.setOnClickListener(MainActivity.this::onClick);
+                                                            GradientDrawable gradDraw = new GradientDrawable();
+                                                            gradDraw.setShape(GradientDrawable.RECTANGLE);
+                                                            gradDraw.setCornerRadius(100);
+                                                            gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                                                            btn.setBackground(gradDraw);
+                                                            btn.setPadding(0,0,0,8);
+                                                            btn.setId(i);
+                                                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+                                                            params.setMargins(0, 30, 0, 0);
+                                                            btn.setLayoutParams(params);
+                                                            //added to routine list
+                                                            userRoutines.add(btn);
+                                                            //New Exercise Array
+                                                            userExercisesArrayList.add(new ArrayList<Button>());
+                                                        }
+                                                    }
+
                                                 }else{
                                                     Toast.makeText(getApplicationContext(), "Error, user document doesn't exist", Toast.LENGTH_SHORT).show();
                                                 }
@@ -926,6 +964,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
+    }
+
+    private void SyncUserRoutines() {
+        //Saving button info from UserRoutines to firebase
+        Map<String, Object> userArray = new HashMap<>();
+        ArrayList<String> userStringRoutines = new ArrayList<>();
+        for (int i=0; i<userRoutines.size(); i++){
+            userStringRoutines.add(userRoutines.get(i).getId(),userRoutines.get(i).getText().toString());
+        }
+        userArray.put("Routines", userStringRoutines);
+        db.collection("Users").document(user.getUid())
+                .update(userArray);
     }
 
     //Signing in
@@ -995,6 +1045,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void LoadUserRoutineExercises() {
         LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
         Button temp;
+        Log.d("TEST", "1047");
         for(int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
             temp = (userExercisesArrayList.get(routineIDActive).get(i));
             if(temp.getParent() != null) {
@@ -1002,6 +1053,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             ll.addView(temp);
         }
+        Log.d("TEST", "1055");
     }
 
     //Workout lists
