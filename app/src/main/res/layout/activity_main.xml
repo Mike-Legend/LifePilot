@@ -12,7 +12,6 @@
         android:layout_width="490dp"
         android:layout_height="937dp"
         android:contentDescription="@string/logoDescription"
-        android:onClick="onClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.506"
