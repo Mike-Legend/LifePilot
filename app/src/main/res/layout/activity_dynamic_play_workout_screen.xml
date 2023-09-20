@@ -79,15 +79,19 @@
             android:textColorHint="@color/white" />
 
         <Button
-            android:id="@+id/NextWorkout"
+            android:id="@+id/PlayNextWorkout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:backgroundTint="@color/royalPurple"
             android:text="Next" />
 
         <Button
-            android:id="@+id/RoutineDynamicbackButton"
+            android:id="@+id/PlayBackButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/royalPurple"
             android:clickable="true"
             android:onClick="onClick"
             android:text="Back" />
@@ -95,6 +99,9 @@
         <Button
             android:id="@+id/HomeButton"
             android:layout_width="match_parent"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:backgroundTint="@color/royalPurple"
             android:layout_height="wrap_content"
             android:text="Button" />
 
