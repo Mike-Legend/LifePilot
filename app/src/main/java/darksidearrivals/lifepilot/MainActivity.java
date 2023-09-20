@@ -647,10 +647,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             /*Map<String, Object> userArray = new HashMap<>();
             ArrayList<String> userStringRoutines = new ArrayList<>();
             for (int i=0; i<userRoutines.size(); i++){
-
                  userStringRoutines.add(userRoutines.get(i).toString());
             }
-
             userArray.put("Routines", Arrays.asList(userStringRoutines.get(0)));
             db.collection("Users").document(user.getUid())
                     .update(userArray);*/
