@@ -16,6 +16,9 @@
         android:theme="@style/Theme.LifePilot"
         tools:targetApi="31">
         <activity
+            android:name=".Activity_Play_Workout_Screen"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
