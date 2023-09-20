@@ -96,7 +96,7 @@
             android:id="@+id/HomeButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Home" />
+            android:text="Button" />
 
     </LinearLayout>
 </ScrollView>
