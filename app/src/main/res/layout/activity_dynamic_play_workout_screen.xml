@@ -42,6 +42,48 @@
             android:textColor="@color/white"
             android:textSize="20sp" />
 
+        <TextView
+            android:id="@+id/Sets"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Sets"
+            android:textColor="@color/white" />
+
+        <EditText
+            android:id="@+id/SetNumber"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Number Of Sets"
+            android:inputType="number"
+            android:textColorHint="@color/white" />
+
+        <TextView
+            android:id="@+id/Reps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Reps"
+            android:textColor="@color/white" />
+
+        <EditText
+            android:id="@+id/RepNumber"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Number of Reps"
+            android:inputType="number"
+            android:textColorHint="@color/white" />
+
+        <Button
+            android:id="@+id/NextWorkout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Next" />
+
         <Button
             android:id="@+id/RoutineDynamicbackButton"
             android:layout_width="match_parent"
@@ -49,6 +91,12 @@
             android:clickable="true"
             android:onClick="onClick"
             android:text="Back" />
+
+        <Button
+            android:id="@+id/HomeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Home" />
 
     </LinearLayout>
 </ScrollView>
