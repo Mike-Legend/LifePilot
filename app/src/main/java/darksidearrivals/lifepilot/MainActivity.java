@@ -656,6 +656,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .update(userArray);*/
             setContentView(R.layout.routine_list);
             LoadUserRoutines();
+        } else if (id == R.id.StartRoutine_Button) {
+            setContentView(R.layout.activity_dynamic_play_workout_screen);
+            //TODO: Call dynamic arrays
+        } else if (id == R.id.PlayBackButton) {
+            //if at start, cant go back
+        } else if (id == R.id.PlayNextWorkout) {
+            //if reach end, have a completion screen or notice
+            //then go back to routine screen
         } else if (id == R.id.calendar_button) {
             setContentView(R.layout.calendar_screen);
         } else if (id == R.id.googleSignIn) {
