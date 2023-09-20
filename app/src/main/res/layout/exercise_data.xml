@@ -52,9 +52,9 @@
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/monthlyWeightMonitor"
-        android:layout_width="350dp"
-        android:layout_height="125dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="388dp"
+        android:layout_height="182dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +64,7 @@
         android:id="@+id/weightLineText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:text="Weight (Monthly)"
         android:textColor="@color/white"
         android:textSize="22sp"

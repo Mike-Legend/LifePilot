@@ -31,6 +31,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.EntryXComparator;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -56,6 +63,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,7 +114,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //Creating Array of body weight logs to store logs.
+    //Needs to be saved and tracked in FireBase for weight chart to reflect data across app sessions.
     private ArrayList<BodyWeightLog> bodyWeightChangeLog = new ArrayList<>();
+
+    //Setting Up Variables for Weight Chart
+    ArrayList weightEntries;
+    LineData weightChartData;
+    LineDataSet weightDataSet;
+
 
 
     //Workout Spinner
@@ -304,6 +320,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Initiating Spinner for workout breakdown.
             Spinner breakdownSpinner = (Spinner) findViewById(R.id.exerciseSpinner);
             setContentView(R.layout.exercise_data);
+            WeightChart();
         }
 
         else if (id == R.id.breakDown)
@@ -680,6 +697,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             userData.put("Goal", "Maintain Weight");
             db.collection("Users").document(user.getUid())
                     .update(userData);
+            setContentView(R.layout.weight_height_input);
+            WeightHeightInputSetup();
+        }
+
+        //Thrown in weight button to get to input screen to log weight/height to "enable" weight graph.
+        else if (id == R.id.weightButton)
+        {
             setContentView(R.layout.weight_height_input);
             WeightHeightInputSetup();
         }
@@ -1438,7 +1462,78 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 bodyWeightChangeLog.add(new BodyWeightLog());
             }
         }
+
+        //Saving userWeight/Height to Firebase
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("Weight", userWeight);
+        userData.put("Height", userHeight);
+        db.collection("Users").document(user.getUid())
+            .update(userData);
     }
+
+    //Function to construct weight tracking chart when data screen is displayed.
+    public void WeightChart()
+    {
+        //If OS version allows for localdatetime functions.
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            //If there are weight logs, attempt to create weight chart.
+            if (bodyWeightChangeLog.size() != 0)
+            {
+                LineChart weightTracker = findViewById(R.id.monthlyWeightMonitor);
+                for (int i = 0; i < bodyWeightChangeLog.size(); i++)
+                {
+                    weightEntries = new ArrayList<>();
+                    weightEntries.add(new Entry(bodyWeightChangeLog.get(i).timeLog.getDayOfMonth(), bodyWeightChangeLog.get(i).weightSnapShot));
+                    //For each log, create a new entry with x position at the int of day of month and y at calorie value.
+                    weightEntries.add(new Entry(4, 128));
+                    weightEntries.add(new Entry(5, 133));
+                    weightEntries.add(new Entry(10, 111));
+                    weightEntries.add(new Entry(7, 122));
+                    weightEntries.add(new Entry(21, 143));
+                    weightEntries.add(new Entry(25, 150));
+                    weightEntries.add(new Entry(1, 128));
+                    weightEntries.add(new Entry(3, 130));
+                    //Force Feeding Data for showcasing purposes, as WeightChangeLog is not synced to FireBase,
+                    //Thus, does not contain enough data for showcasing. Still requires at least one entry in array,
+                    //To fall into this code.
+
+                    //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                    Collections.sort(weightEntries, new EntryXComparator());
+                }
+                weightDataSet = new LineDataSet(weightEntries, "Weight");
+                weightChartData = new LineData(weightDataSet);
+                weightTracker.setData(weightChartData);
+                weightDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                weightDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+                weightDataSet.setLineWidth(2);
+                weightDataSet.setColor(Color.MAGENTA);
+                weightDataSet.setHighLightColor(Color.WHITE);
+                weightDataSet.setValueTextColor(Color.WHITE);
+                weightDataSet.setValueTextSize(12f);
+                weightDataSet.setDrawFilled(true);
+                weightDataSet.setFillColor(Color.rgb(120, 81, 169));
+
+                //Setting Y axis color to white.
+                weightTracker.getAxisLeft().setTextColor(Color.WHITE);
+                weightTracker.getAxisLeft().setTextSize(12);
+
+                // Setup X Axis
+                XAxis dayofMonth = weightTracker.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.TOP);
+                dayofMonth.setGranularityEnabled(true);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+            }
+        }
+    }
+
+
+
 
     public void onNothingSelected(AdapterView<?> adapterView) {}
 }
