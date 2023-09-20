@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<CheckBox> userRoutineCheck;
     private ArrayList<ArrayList<Button>> userExercisesArrayList;
     private ArrayList<ArrayList<TextView>> userGoalArrayList; //Future usage to add multiple goals to one routine
-    public int routineIDActive, goalIDActive;
+    public int routineIDActive, goalIDActive, playActiveExercise;
     private Scene routineAnimation, homeAnimation, goalAnimation, nRoutineAnimation;
 
     //Arrays Containing Workout Logs For Each Muscle Group
@@ -657,13 +657,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.routine_list);
             LoadUserRoutines();
         } else if (id == R.id.StartRoutine_Button) {
-            setContentView(R.layout.activity_dynamic_play_workout_screen);
-            //TODO: Call dynamic arrays
+            if(userExercisesArrayList.get(routineIDActive).size() != 0) {
+                //set what exercise is active
+                playActiveExercise = 0;
+                DynamicPlayWorkouts((String)userExercisesArrayList.get(routineIDActive).get(playActiveExercise).getText());
+            }
         } else if (id == R.id.PlayBackButton) {
-            //if at start, cant go back
+            if(0 != playActiveExercise) {
+                playActiveExercise = playActiveExercise - 1;
+                DynamicPlayWorkouts((String)userExercisesArrayList.get(routineIDActive).get(playActiveExercise).getText());
+            } else {
+                //go back to routine screen
+            }
         } else if (id == R.id.PlayNextWorkout) {
-            //if reach end, have a completion screen or notice
-            //then go back to routine screen
+            if(userExercisesArrayList.get(routineIDActive).size() != playActiveExercise + 1) {
+                playActiveExercise = playActiveExercise + 1;
+                DynamicPlayWorkouts((String)userExercisesArrayList.get(routineIDActive).get(playActiveExercise).getText());
+            } else {
+                //go to end screen once completed
+            }
         } else if (id == R.id.calendar_button) {
             setContentView(R.layout.calendar_screen);
         } else if (id == R.id.googleSignIn) {
@@ -835,6 +847,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     void DynamicScreenWorkouts(String string) {
         setContentView(R.layout.activity_dynamic_workout_screen);
+        String exercise = string;
+        TextView workoutTitle = findViewById(R.id.workoutTitle);
+        workoutTitle.setText(exercise);
+        TextView workoutDesc = findViewById(R.id.workoutDesc);
+        GifImageView workoutImage = findViewById(R.id.workoutPic);
+        InputStream textFile = getResources().openRawResource(R.raw.workoutdesc);
+        BufferedReader textReader = new BufferedReader(new InputStreamReader(textFile));
+        try
+        {
+            String textLine = textReader.readLine();
+            while(textLine != null)
+            {
+                String [] columns = textLine.split("\\|");
+                String exerciseName = columns[0];
+                if(exerciseName.equals(exercise))
+                {
+                    String exerciseDesc = columns[1];
+                    workoutDesc.setText(exerciseDesc);
+                    break;
+                }
+                textLine = textReader.readLine();
+            }
+            textReader.close();
+        }
+        catch(IOException E)
+        {
+            E.printStackTrace();
+        }
+        String imageName = exercise.replaceAll(" ", "").replaceAll("-", "").toLowerCase();
+        int resourceId = getResources().getIdentifier(imageName, "raw", getBaseContext().getPackageName());
+        workoutImage.setImageResource(resourceId);
+    }
+
+    void DynamicPlayWorkouts(String string) {
+        setContentView(R.layout.activity_dynamic_play_workout_screen);
         String exercise = string;
         TextView workoutTitle = findViewById(R.id.workoutTitle);
         workoutTitle.setText(exercise);
