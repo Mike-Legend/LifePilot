@@ -1541,23 +1541,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 LineChart weightTracker = findViewById(R.id.monthlyWeightMonitor);
                 for (int i = 0; i < bodyWeightChangeLog.size(); i++)
                 {
-                    weightEntries = new ArrayList<>();
-                    weightEntries.add(new Entry(bodyWeightChangeLog.get(i).timeLog.getDayOfMonth(), bodyWeightChangeLog.get(i).weightSnapShot));
-                    //For each log, create a new entry with x position at the int of day of month and y at calorie value.
-                    weightEntries.add(new Entry(4, 128));
-                    weightEntries.add(new Entry(5, 133));
-                    weightEntries.add(new Entry(10, 111));
-                    weightEntries.add(new Entry(7, 122));
-                    weightEntries.add(new Entry(21, 143));
-                    weightEntries.add(new Entry(25, 150));
-                    weightEntries.add(new Entry(1, 128));
-                    weightEntries.add(new Entry(3, 130));
-                    //Force Feeding Data for showcasing purposes, as WeightChangeLog is not synced to FireBase,
-                    //Thus, does not contain enough data for showcasing. Still requires at least one entry in array,
-                    //To fall into this code.
+                    //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                    if(LocalDateTime.now().getYear() == bodyWeightChangeLog.get(i).timeLog.getYear() && LocalDateTime.now().getMonthValue() == bodyWeightChangeLog.get(i).timeLog.getMonthValue())
+                    {
+                        weightEntries = new ArrayList<>();
+                        weightEntries.add(new Entry(bodyWeightChangeLog.get(i).timeLog.getDayOfMonth(), bodyWeightChangeLog.get(i).weightSnapShot));
+                        //For each log, create a new entry with x position at the int of day of month and y at calorie value.
+                        weightEntries.add(new Entry(4, 128));
+                        weightEntries.add(new Entry(5, 133));
+                        weightEntries.add(new Entry(10, 111));
+                        weightEntries.add(new Entry(7, 122));
+                        weightEntries.add(new Entry(21, 143));
+                        weightEntries.add(new Entry(25, 150));
+                        weightEntries.add(new Entry(1, 128));
+                        weightEntries.add(new Entry(3, 130));
+                        //Force Feeding Data for showcasing purposes, as WeightChangeLog is not synced to FireBase,
+                        //Thus, does not contain enough data for showcasing. Still requires at least one entry in array,
+                        //To fall into this code.
 
-                    //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
-                    Collections.sort(weightEntries, new EntryXComparator());
+                        //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                        Collections.sort(weightEntries, new EntryXComparator());
+                    }
                 }
                 weightDataSet = new LineDataSet(weightEntries, "Weight");
                 weightChartData = new LineData(weightDataSet);
