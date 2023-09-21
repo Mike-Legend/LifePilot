@@ -222,6 +222,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     tempUserRoutines.add(userRoutines.get(i));
                 }
                 for (int i = 0; i < userRoutines.size(); i++) {
+                    tempUserExercises.add(userExercisesArrayList.get(i));
+                }
+                for (int i = 0; i < userRoutines.size(); i++) {
                     if (userRoutines.get(i).getParent() != null) {
                         ((ViewGroup) userRoutines.get(i).getParent()).removeView(userRoutines.get(i));
                     }
@@ -254,6 +257,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         ArrayList<Button> hold = userExercisesArrayList.get(firstPosition);
                         userExercisesArrayList.set(firstPosition, userExercisesArrayList.get(secondPosition));
                         userExercisesArrayList.set(secondPosition, hold);
+                        //reset id for array reordering
+                        if (routineDeleteList.size() != 0) {
+                            for (int i = 0; i < routineDeleteList.size(); i++) {
+                                routineDeleteList.get(i).setId(i);
+                            }
+                        }
+                        for (int i = 0; i < userRoutines.size(); i++) {
+                            userRoutines.get(i).setId(i);
+                            if (userExercisesArrayList.get(i).size() != 0) {
+                                for (int j = 0; j < userExercisesArrayList.get(i).size(); j++) {
+                                    userExercisesArrayList.get(i).set(j, userExercisesArrayList.get(i).get(j));
+                                }
+                            }
+                        }
                     }
                 });
                 editChecker = 1;
@@ -294,6 +311,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             linearLayout.setLayoutParams(layoutParams);
             //reset order
             userRoutines.clear();
+            userExercisesArrayList.clear();
             for (int i = 0; i < tempUserRoutines.size(); i++) {
                 userRoutines.add(tempUserRoutines.get(i));
             }
@@ -321,15 +339,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.DeleteRoutines_Button) {
             //delete info
             editChecker = 0;
-            //reset id for array reordering
-            for (int i = 0; i < userRoutines.size(); i++) {
-                userRoutines.get(i).setId(i);
-                if (userExercisesArrayList.get(i).size() != 0) {
-                    for (int j = 0; j < userExercisesArrayList.get(i).size(); j++) {
-                        userExercisesArrayList.get(i).set(j, userExercisesArrayList.get(i).get(j));
-                    }
-                }
-            }
             Button button;
             for (int i = 0; i < userRoutines.size(); i++) {
                 button = userRoutines.get(i);
@@ -579,6 +588,158 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             userRoutineCheck.add(temp2);
             //New Exercise Array
             userExercisesArrayList.add(new ArrayList<Button>());
+        } else if (id == R.id.EditRoutineNewList_Button) {
+            //overlay trigger
+            if (userExercisesArrayList.get(routineIDActive).size() != 0) {
+                //setContentView(R.layout.routine_newlist);
+                //GenerateRoutineSelectScreen(id);
+                FrameLayout routineedit = findViewById(R.id.routineNewlistoverlayedit);
+                routineedit.setVisibility(View.VISIBLE);
+                //place routines to edit
+                DragLinearLayout dragLinearLayout = findViewById(R.id.PlaceEditRoutineNewList);
+                //temp save
+                tempUserExercises.clear();
+                for (int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
+                    tempUserRoutines.add(userExercisesArrayList.get(routineIDActive).get(i));
+                }
+                for (int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
+                    if (userExercisesArrayList.get(routineIDActive).get(i).getParent() != null) {
+                        ((ViewGroup) userExercisesArrayList.get(routineIDActive).get(i).getParent()).removeView(userExercisesArrayList.get(routineIDActive).get(i));
+                    }
+                    LinearLayout linearLayout = new LinearLayout(MainActivity.this);
+                    linearLayout.setPadding(10, 10, 10, 10);
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    linearLayout.setLayoutParams(layoutParams);
+                    ImageView imageView = new ImageView(MainActivity.this);
+                    imageView.setImageResource(R.drawable.baseline_drag_indicator_24);
+                    ViewGroup.LayoutParams layoutParamsForImageView = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    layoutParams.gravity = Gravity.CENTER;
+                    imageView.setLayoutParams(layoutParamsForImageView);
+                    Button button = userExercisesArrayList.get(routineIDActive).get(i);
+                    linearLayout.setId(userExercisesArrayList.get(routineIDActive).get(i).getId());
+                    layoutParams.gravity = Gravity.CENTER;
+                    layoutParams.weight = 1;
+                    button.setLayoutParams(layoutParams);
+                    linearLayout.addView(imageView);
+                    linearLayout.addView(button);
+                    dragLinearLayout.addDragView(linearLayout, imageView);
+                }
+                dragLinearLayout.setOnViewSwapListener(new DragLinearLayout.OnViewSwapListener() {
+                    @Override
+                    public void onSwap(View firstView, int firstPosition, View secondView, int secondPosition) {
+                        //exercise swaps
+                        Button hold = userExercisesArrayList.get(routineIDActive).get(firstPosition);
+                        userExercisesArrayList.get(routineIDActive).set(firstPosition, userExercisesArrayList.get(routineIDActive).get(secondPosition));
+                        userExercisesArrayList.get(routineIDActive).set(secondPosition, hold);
+                    }
+                });
+                editChecker = 1;
+            } else {
+                //no routine available to edit message
+            }
+        } else if (editChecker == 1) { //TODO: Fix
+            //if selected
+            GradientDrawable gradDraw = new GradientDrawable();
+            gradDraw.setShape(GradientDrawable.RECTANGLE);
+            gradDraw.setCornerRadius(100);
+            gradDraw.setColor(getResources().getColor(R.color.deleteRed));
+            if (routineDeleteList.contains(userExercisesArrayList.get(routineIDActive).get(id))) {
+                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                userExercisesArrayList.get(routineIDActive).get(id).setBackground(gradDraw);
+                //remove from array
+                routineDeleteList.remove(userExercisesArrayList.get(routineIDActive).get(id));
+            } else {
+                userExercisesArrayList.get(routineIDActive).get(id).setBackground(gradDraw);
+                //add to array
+                routineDeleteList.add(userExercisesArrayList.get(routineIDActive).get(id));
+            }
+        } else if (id == R.id.CancelEditRoutineNew_Button) {
+            //reset info
+            editChecker = 0;
+            //reset params
+            GradientDrawable gradDraw = new GradientDrawable();
+            gradDraw.setShape(GradientDrawable.RECTANGLE);
+            gradDraw.setCornerRadius(100);
+            gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+            Button button;
+            LinearLayout linearLayout = new LinearLayout(MainActivity.this);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 120);
+            layoutParams.setMargins(0, 30, 0, 0);
+            linearLayout.setLayoutParams(layoutParams);
+            //reset order
+            userExercisesArrayList.get(routineIDActive).clear();
+            for (int i = 0; i < tempUserRoutines.size(); i++) {
+                userExercisesArrayList.get(routineIDActive).add(tempUserRoutines.get(i));
+            }
+            for (int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
+                button = userExercisesArrayList.get(routineIDActive).get(i);
+                button.setLayoutParams(layoutParams);
+                button.setBackground(gradDraw);
+                for (int j = 0; j < routineDeleteList.size(); j++) {
+                    if (userExercisesArrayList.get(routineIDActive).get(i).getId() == routineDeleteList.get(j).getId()) {
+                        userExercisesArrayList.get(routineIDActive).get(i).setBackground(gradDraw);
+                    }
+                }
+            }
+            routineDeleteList.clear();
+            //overlay trigger
+            FrameLayout routineedit = findViewById(R.id.routineNewlistoverlayedit);
+            routineedit.setVisibility(View.GONE);
+            LoadUserRoutines();
+        } else if (id == R.id.DeleteRoutinesNew_Button) {
+            //delete info
+            editChecker = 0;
+            //reset id for array reordering
+            for (int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
+                userExercisesArrayList.get(routineIDActive).get(i).setId(i);
+                if (userExercisesArrayList.get(routineIDActive).size() != 0) {
+                    for (int j = 0; j < userExercisesArrayList.get(routineIDActive).size(); j++) {
+                        userExercisesArrayList.get(routineIDActive).set(j, userExercisesArrayList.get(routineIDActive).get(j));
+                    }
+                }
+            }
+            Button button;
+            for (int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
+                button = userExercisesArrayList.get(routineIDActive).get(i);
+                if (userExercisesArrayList.get(routineIDActive).size() != 0) {
+                    for (int j = 0; j < routineDeleteList.size(); j++) {
+                        if (userExercisesArrayList.get(routineIDActive).get(i).getId() == routineDeleteList.get(j).getId()) {
+                            userExercisesArrayList.get(routineIDActive).remove(i);
+                            if (userExercisesArrayList.get(routineIDActive).size() != 0) {
+                                userExercisesArrayList.get(routineIDActive).remove(i);
+                            }
+                        }
+                    }
+                }
+            }
+            //reset id for array sorting after deletion
+            for (int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
+                userExercisesArrayList.get(routineIDActive).get(i).setId(i);
+                if (userExercisesArrayList.get(routineIDActive).size() != 0) {
+                    for (int j = 0; j < userExercisesArrayList.get(routineIDActive).size(); j++) {
+                        userExercisesArrayList.get(routineIDActive).set(j, userExercisesArrayList.get(routineIDActive).get(j));
+                    }
+                }
+            }
+            //reset params
+            GradientDrawable gradDraw = new GradientDrawable();
+            gradDraw.setShape(GradientDrawable.RECTANGLE);
+            gradDraw.setCornerRadius(100);
+            gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+            LinearLayout linearLayout = new LinearLayout(MainActivity.this);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 120);
+            layoutParams.setMargins(0, 30, 0, 0);
+            linearLayout.setLayoutParams(layoutParams);
+            for (int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
+                button = userExercisesArrayList.get(routineIDActive).get(i);
+                button.setLayoutParams(layoutParams);
+                button.setBackground(gradDraw);
+            }
+            routineDeleteList.clear();
+            //overlay trigger
+            FrameLayout routineedit = findViewById(R.id.routinelistoverlayedit);
+            routineedit.setVisibility(View.GONE);
+            GenerateRoutineSelectScreen(id);
         } else if (id < userRoutines.size() || id == userRoutines.size()) {
             Transition slide = new Slide(Gravity.RIGHT);
             TransitionManager.go(nRoutineAnimation, slide);

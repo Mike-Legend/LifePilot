@@ -412,7 +412,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"
-                android:text="(Select or Hold to Move)"
+                android:text="(Select to Delete or Hold to Move)"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -429,7 +429,7 @@
                 android:layout_marginBottom="15dp"
                 android:backgroundTint="@color/royalPurple"
                 android:onClick="onClick"
-                android:text="Delete"
+                android:text="Done"
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
