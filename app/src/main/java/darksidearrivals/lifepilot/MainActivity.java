@@ -681,6 +681,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
             }
+
             routineDeleteList.clear();
             //overlay trigger
             FrameLayout routineedit = findViewById(R.id.routineNewlistoverlayedit);
