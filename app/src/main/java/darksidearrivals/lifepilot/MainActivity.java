@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (account != null && user != null) {
             performAccountStartUp();
-        }else {
+        } else {
             setContentView(R.layout.sign_in);
         }
 
@@ -172,18 +172,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) //add button with an else-if statement
     {
         int id = view.getId();
-        if(id == R.id.Goal_Button) {
+        if (id == R.id.Goal_Button) {
             Transition slide = new Slide(Gravity.RIGHT);
             TransitionManager.go(goalAnimation, slide);
             //Generate Goals
-            if(userGoals.size() != 0) {
+            if (userGoals.size() != 0) {
                 LoadUserGoals();
             }
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionGoalLayout), R.layout.routine_list, this);
         } else if (id == R.id.GoalBack_Button) {
             Transition slide = new Slide(Gravity.LEFT);
             TransitionManager.go(routineAnimation, slide);
-            if(userRoutines.size() != 0) {
+            if (userRoutines.size() != 0) {
                 LoadUserRoutines();
             }
             //setup next button animations
@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.routinesButton) {
             Transition slide = new Slide(Gravity.RIGHT);
             TransitionManager.go(routineAnimation, slide);
-            if(userRoutines.size() != 0) {
+            if (userRoutines.size() != 0) {
                 LoadUserRoutines();
             }
             //setup next button animations
@@ -410,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Button btn = new Button(this);
             btn.setAllCaps(false);
             TextView buttontext = findViewById(R.id.GoalNameEditText);
-            if(buttontext.getText().length() == 0) {
+            if (buttontext.getText().length() == 0) {
                 btn.setText("New Goal");
             } else {
                 btn.setText(buttontext.getText());
@@ -424,7 +424,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             gradDraw.setCornerRadius(100);
             gradDraw.setColor(getResources().getColor(R.color.royalPurple));
             btn.setBackground(gradDraw);
-            btn.setPadding(0,0,0,8);
+            btn.setPadding(0, 0, 0, 8);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
             params.setMargins(0, 30, 0, 0);
             btn.setLayoutParams(params);
@@ -455,8 +455,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 gradDraw.setCornerRadius(90);
                 gradDraw.setColor(getResources().getColor(R.color.royalPurple));
                 btn.setBackground(gradDraw);
-                btn.setPadding(20,0,20,8);
-                if(btn.getText().length() > 23) {
+                btn.setPadding(20, 0, 20, 8);
+                if (btn.getText().length() > 23) {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240);
                     params.setMargins(0, 30, 0, 0);
                     btn.setLayoutParams(params);
@@ -482,21 +482,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String g1 = "Goal: ";
             String g2 = String.valueOf(userGoals.get(goalIDActive).getText());
             goal.setText(g1 + g2);
-            for(int i = 0; i < userRoutineCheck.size(); i++) {
-                if(userRoutineCheck.get(i).isChecked()) {
-                    if(i + 1 > userGoalArrayList.size()) {
+            for (int i = 0; i < userRoutineCheck.size(); i++) {
+                if (userRoutineCheck.get(i).isChecked()) {
+                    if (i + 1 > userGoalArrayList.size()) {
                         userGoalArrayList.add(new ArrayList<TextView>());
-                    } else if(userGoalArrayList.get(i).size() > 0) {
+                    } else if (userGoalArrayList.get(i).size() > 0) {
                         userGoalArrayList.get(i).remove(i);
                     }
                     userGoalArrayList.get(i).add(goal);
                 } //else if(userRoutineCheck.get(i).isChecked() == false) {
-                    //if(i + 1 > userGoalArrayList.size()) {
-                        //userGoalArrayList.add(new ArrayList<TextView>());
-                   //}
-                    //if(userGoalArrayList.get(i).size() > 0) {
-                        //userGoalArrayList.get(i).get(0).setText("");
-                    //}
+                //if(i + 1 > userGoalArrayList.size()) {
+                //userGoalArrayList.add(new ArrayList<TextView>());
+                //}
+                //if(userGoalArrayList.get(i).size() > 0) {
+                //userGoalArrayList.get(i).get(0).setText("");
+                //}
                 //}
             }
         } else if (id == R.id.ConfirmNewRoutine_Button) {
@@ -508,7 +508,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Button btn = new Button(this);
             btn.setAllCaps(false);
             TextView buttontext = findViewById(R.id.RoutineNameEditText);
-            if(buttontext.getText().length() == 0) {
+            if (buttontext.getText().length() == 0) {
                 btn.setText("New Routine");
             } else {
                 btn.setText(buttontext.getText());
@@ -522,7 +522,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             gradDraw.setCornerRadius(100);
             gradDraw.setColor(getResources().getColor(R.color.royalPurple));
             btn.setBackground(gradDraw);
-            btn.setPadding(0,0,0,8);
+            btn.setPadding(0, 0, 0, 8);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
             params.setMargins(0, 30, 0, 0);
             btn.setLayoutParams(params);
@@ -553,7 +553,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
             nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
         } else if (id == R.id.RoutineDynamicbackButton) {
-            if(dynamicChecker == 0) {
+            if (dynamicChecker == 0) {
                 setContentView(R.layout.routine_newlist);
                 id = routineIDActive;
                 GenerateRoutineSelectScreen(id);
@@ -600,18 +600,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Button temp;
             for(int i = 0; i < userRoutines.size(); i++) {
                 temp = (userRoutines.get(i));
-                if(temp.getParent() != null) {
-                    ((ViewGroup)temp.getParent()).removeView(temp);
+                if (temp.getParent() != null) {
+                    ((ViewGroup) temp.getParent()).removeView(temp);
                 }
                 ll.addView(temp);
             }
             //list checkboxes to add
             LinearLayout ll2 = findViewById(R.id.GoalCheckRoutineListHere);
             CheckBox temp2;
-            for(int i = 0; i < userRoutines.size(); i++) {
+            for (int i = 0; i < userRoutines.size(); i++) {
                 temp2 = (userRoutineCheck.get(i));
-                if(temp2.getParent() != null) {
-                    ((ViewGroup)temp2.getParent()).removeView(temp2);
+                if (temp2.getParent() != null) {
+                    ((ViewGroup) temp2.getParent()).removeView(temp2);
                 }
                 ll2.addView(temp2);
             }
@@ -633,7 +633,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id == R.id.PreMadeRoutine2_Button) {
             setContentView(R.layout.routine_newlist);
-        } else if (id == R.id.PreMadeRoutine1_Button) {
+        } else if (id == R.id.PreMadeRoutine3_Button) {
             setContentView(R.layout.routine_newlist);
         } else if (id == R.id.PreMadeRoutine4_Button) {
             setContentView(R.layout.routine_newlist);
@@ -722,7 +722,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .update(userData);
             setContentView(R.layout.weight_height_input);
             WeightHeightInputSetup();
-        }
+        }  else if (id == R.id.profile_pic) {
+        setContentView(R.layout.profile_page);
+        //onClick to setting page from profile
+    } else if (id == R.id.button6) {
+        setContentView(R.layout.setting_page);
+        //onClick to support from setting page
+    } else if (id == R.id.Support) {
+        setContentView(R.layout.support_page1);
+    }
 
         //Thrown in weight button to get to input screen to log weight/height to "enable" weight graph.
         else if (id == R.id.weightButton)
