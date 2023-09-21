@@ -722,7 +722,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .update(userData);
             setContentView(R.layout.weight_height_input);
             WeightHeightInputSetup();
-        }  } else if (id == R.id.profile_button) {
+        }  else if (id == R.id.profile_pic) {
         setContentView(R.layout.profile_page);
         //onClick to setting page from profile
     } else if (id == R.id.button6) {
