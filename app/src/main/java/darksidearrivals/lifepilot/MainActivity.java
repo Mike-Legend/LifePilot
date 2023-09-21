@@ -31,11 +31,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.EntryXComparator;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -46,6 +51,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -124,6 +130,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     LineData weightChartData;
     LineDataSet weightDataSet;
 
+    //Variables for muscle group bar chart.
+    BarData muscleBarData;
+    BarDataSet muscleBarDataSet;
+    ArrayList muscleEntriesArrayList;
+
+    BarChart muscleGroupChart;
+
+    //Getting creative with spinner to display graphs on corresponding selection.
+    private boolean chestExercisesBool, shoulderExercisesBool, bicepExercisesBool,
+        tricepsExercisesBool, legExercisesBool, backExercisesBool, gluteExercisesBool, abExercisesBool,
+        calvesExercisesBool, forearmFlexorsGripExercisesBool, forearmExtensorExercisesBool, cardioExerciseBool,
+        bodyWeightBool;
 
 
     //Workout Spinner
@@ -324,8 +342,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if (id == R.id.excerciseData)
         {
             //Initiating Spinner for workout breakdown.
-            Spinner breakdownSpinner = (Spinner) findViewById(R.id.exerciseSpinner);
             setContentView(R.layout.exercise_data);
+            muscleGroupChart = findViewById(R.id.monthlyExerciseData);
+            GenerateSpinnerExerciseData();
+
+            if(chestExercisesBool == true)
+            {
+                GenerateChestChart();
+            }
             WeightChart();
         }
 
@@ -1336,60 +1360,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Push-Ups"};
 
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String currentSel = spinner.getSelectedItem().toString();
-        if(currentSel.equals("Chest Exercises"))
+
+        //Editing for usage with multiple spinners.
+        int spinId = spinner.getId();
+        if(spinId == R.id.exerciseSpin)
         {
-            workoutList.myWorkouts = chestExercises;
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Chest Exercises")) {
+                workoutList.myWorkouts = chestExercises;
+            } else if (currentSel.equals("Shoulder Exercises")) {
+                workoutList.myWorkouts = shoulderExercises;
+            } else if (currentSel.equals("Bicep Exercises")) {
+                workoutList.myWorkouts = bicepExercises;
+            } else if (currentSel.equals("Triceps Exercises")) {
+                workoutList.myWorkouts = tricepsExercises;
+            } else if (currentSel.equals("Leg Exercises")) {
+                workoutList.myWorkouts = legExercises;
+            } else if (currentSel.equals("Back Exercises")) {
+                workoutList.myWorkouts = backExercises;
+            } else if (currentSel.equals("Glute Exercises")) {
+                workoutList.myWorkouts = gluteExercises;
+            } else if (currentSel.equals("Ab Exercises")) {
+                workoutList.myWorkouts = abExercises;
+            } else if (currentSel.equals("Calves Exercises")) {
+                workoutList.myWorkouts = calvesExercises;
+            } else if (currentSel.equals("Forearm Flexors and Grip Exercises")) {
+                workoutList.myWorkouts = forearmFlexExercises;
+            } else if (currentSel.equals("Forearm Extensor Exercises")) {
+                workoutList.myWorkouts = forearmExtExercises;
+            } else if (currentSel.equals("Cardio Exercises")) {
+                workoutList.myWorkouts = cardioExercises;
+            } else if (currentSel.equals("Body Weight")) {
+                workoutList.myWorkouts = bodyweight;
+            }
+            workoutList.notifyDataSetChanged();
         }
-        else if(currentSel.equals("Shoulder Exercises"))
-        {
-            workoutList.myWorkouts = shoulderExercises;
-        }
-        else if(currentSel.equals("Bicep Exercises"))
-        {
-            workoutList.myWorkouts = bicepExercises;
-        }
-        else if(currentSel.equals("Triceps Exercises"))
-        {
-            workoutList.myWorkouts = tricepsExercises;
-        }
-        else if(currentSel.equals("Leg Exercises"))
-        {
-            workoutList.myWorkouts = legExercises;
-        }
-        else if(currentSel.equals("Back Exercises"))
-        {
-            workoutList.myWorkouts = backExercises;
-        }
-        else if(currentSel.equals("Glute Exercises"))
-        {
-            workoutList.myWorkouts = gluteExercises;
-        }
-        else if(currentSel.equals("Ab Exercises"))
-        {
-            workoutList.myWorkouts = abExercises;
-        }
-        else if(currentSel.equals("Calves Exercises"))
-        {
-            workoutList.myWorkouts = calvesExercises;
-        }
-        else if(currentSel.equals("Forearm Flexors and Grip Exercises"))
-        {
-            workoutList.myWorkouts = forearmFlexExercises;
-        }
-        else if(currentSel.equals("Forearm Extensor Exercises"))
-        {
-            workoutList.myWorkouts = forearmExtExercises;
-        }
-        else if(currentSel.equals("Cardio Exercises"))
-        {
-            workoutList.myWorkouts = cardioExercises;
-        }
-        else if(currentSel.equals("Body Weight"))
-        {
-            workoutList.myWorkouts = bodyweight;
-        }
-        workoutList.notifyDataSetChanged();
+
     }
 
     //Calculate BMI (Imperial)
@@ -1552,7 +1558,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         weightEntries = new ArrayList<>();
                         weightEntries.add(new Entry(bodyWeightChangeLog.get(i).timeLog.getDayOfMonth(), bodyWeightChangeLog.get(i).weightSnapShot));
                         //For each log, create a new entry with x position at the int of day of month and y at calorie value.
-                        weightEntries.add(new Entry(4, 128));
+                        weightEntries.add(new Entry(3, 128));
                         weightEntries.add(new Entry(5, 133));
                         weightEntries.add(new Entry(10, 111));
                         weightEntries.add(new Entry(7, 122));
@@ -2024,13 +2030,158 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //Hardcoding total for demonstrative purposes.
-        workedTotal = 31;
+        workedTotal = 27;
 
         //Passing in Progress value.
         daysWorked.setProgressCompat(workedTotal, true);
         daysWorkedText.setText(Integer.toString(workedTotal));
     }
 
+    void GenerateSpinnerExerciseData()
+    {
+        //Set workout spinner
+        spinner =  findViewById(R.id.exerciseSpinner);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                {
+                    String currentSel = spinner.getSelectedItem().toString();
+                    if (currentSel.equals("Chest Exercises"))
+                    {
+                        chestExercisesBool = true;
+                    }
+
+                    else if (currentSel.equals("Shoulder Exercises"))
+                    {
+                        chestExercisesBool = true;
+                    }
+
+                    else if (currentSel.equals("Bicep Exercises"))
+                    {
+                        workoutList.myWorkouts = bicepExercises;
+                    }
+
+                    else if (currentSel.equals("Triceps Exercises"))
+                    {
+                        workoutList.myWorkouts = tricepsExercises;
+                    }
+
+                    else if (currentSel.equals("Leg Exercises"))
+                    {
+                        workoutList.myWorkouts = legExercises;
+                    }
+
+                    else if (currentSel.equals("Back Exercises"))
+                    {
+                        workoutList.myWorkouts = backExercises;
+                    }
+
+                    else if (currentSel.equals("Glute Exercises"))
+                    {
+                        workoutList.myWorkouts = gluteExercises;
+                    }
+
+                    else if (currentSel.equals("Ab Exercises"))
+                    {
+                        workoutList.myWorkouts = abExercises;
+                    }
+
+                    else if (currentSel.equals("Calves Exercises"))
+                    {
+                        workoutList.myWorkouts = calvesExercises;
+                    }
+
+                    else if (currentSel.equals("Forearm Flexors and Grip Exercises"))
+                    {
+                        workoutList.myWorkouts = forearmFlexExercises;
+                    }
+
+                    else if (currentSel.equals("Forearm Extensor Exercises"))
+                    {
+                        workoutList.myWorkouts = forearmExtExercises;
+                    } else if (currentSel.equals("Cardio Exercises"))
+                    {
+                        workoutList.myWorkouts = cardioExercises;
+                    }
+
+                    else if (currentSel.equals("Body Weight"))
+                    {
+                        workoutList.myWorkouts = bodyweight;
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView)
+            {
+
+            }
+        });
+    }
+
+    public void GenerateChestChart()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Chest Exercises"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (chestExercisesLog.size() != 0)
+                {
+                    for (int o = 0; o < chestExercisesLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == chestExercisesLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == chestExercisesLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (chestExercisesLog.get(o).getDayOfMonth() != chestExercisesLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(chestExercisesLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(3f, 11));
+                muscleEntriesArrayList.add(new BarEntry(5f, 3f));
+                muscleEntriesArrayList.add(new BarEntry(10, 4));
+                muscleEntriesArrayList.add(new BarEntry(7, 5));
+                muscleEntriesArrayList.add(new BarEntry(21, 2));
+                muscleEntriesArrayList.add(new BarEntry(25, 4));
+                muscleEntriesArrayList.add(new BarEntry(1, 2));
+                muscleEntriesArrayList.add(new BarEntry(3, 4));
+                //Force Feeding Data for showcasing purposes, as musclue group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(14f);
+            }
+        }
+    }
 
     public void onNothingSelected(AdapterView<?> adapterView) {}
 }
