@@ -18,24 +18,25 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="25dp"
+            android:paddingBottom="10dp"
             android:text="TextView"
             android:textColor="@color/white"
             android:textSize="48sp" />
 
-        <ImageView
+        <pl.droidsonroids.gif.GifImageView
             android:id="@+id/workoutPic"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="387dp"
             android:paddingTop="0dp"
             android:paddingBottom="0dp"
-            app:srcCompat="@drawable/fitlogo" />
+            android:src="@drawable/benchpress" />
 
         <TextView
             android:id="@+id/workoutDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="0dp"
+            android:paddingTop="10dp"
             android:paddingBottom="25dp"
             android:text="TextView"
             android:textColor="@color/white"
@@ -46,8 +47,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:backgroundTint="@color/royalPurple"
             android:onClick="onClick"
-            android:text="Back
-" />
+            android:text="Back" />
+
     </LinearLayout>
 </ScrollView>
