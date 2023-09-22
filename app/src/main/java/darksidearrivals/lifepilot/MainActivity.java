@@ -416,7 +416,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             GenerateExerciseSpinnerWorkouts();
             muscleGroupChart = findViewById(R.id.monthlyExerciseData);
             WeightChart();
-
         }
 
         else if (id == R.id.breakDown)
