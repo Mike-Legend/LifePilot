@@ -32,11 +32,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.EntryXComparator;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -44,8 +49,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -115,6 +123,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList weightEntries;
     LineData weightChartData;
     LineDataSet weightDataSet;
+
+    //Variables for muscle group bar chart.
+    BarData muscleBarData;
+    BarDataSet muscleBarDataSet;
+    ArrayList muscleEntriesArrayList;
+
+    BarChart muscleGroupChart;
+
 
 
     //Workout Spinner
@@ -387,15 +403,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
         } else if (id == R.id.analytics_button) {
             setContentView(R.layout.data_screen);
-            ShowDataScreen();
-        } else if (id == R.id.analyticsHomeButton) {
+           ShowDataScreen();
+           WorkoutsThisMonth();
+        }
+
+        else if(id == R.id.analyticsHomeButton)
+        {
             GoToHomeScreen();
         } else if (id == R.id.excerciseData) {
             //Initiating Spinner for workout breakdown.
-            Spinner breakdownSpinner = (Spinner) findViewById(R.id.exerciseSpinner);
             setContentView(R.layout.exercise_data);
+            GenerateExerciseSpinnerWorkouts();
+            muscleGroupChart = findViewById(R.id.monthlyExerciseData);
             WeightChart();
-        } else if (id == R.id.breakDown) {
+
+        }
+
+        else if (id == R.id.breakDown)
+        {
             //Initiating Spinner for Month Selection
             Spinner monthSpinner = (Spinner) findViewById(R.id.monthSelect);
             setContentView(R.layout.muscle_distribution);
@@ -404,16 +429,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             GoToHomeScreen();
         } else if (id == R.id.exerciseBack) {
             setContentView(R.layout.data_screen);
-            ShowDataScreen();
-        } else if (id == R.id.exerciseHomeButton) {
+           ShowDataScreen();
+           WorkoutsThisMonth();
+        }
+
+        else if (id == R.id.exerciseHomeButton)
+        {
             GoToHomeScreen();
         } else if (id == R.id.muscleHomeButton) {
             GoToHomeScreen();
         } else if (id == R.id.muscleBack) {
             setContentView(R.layout.data_screen);
             ShowDataScreen();
-        } else if (id == R.id.log_Save) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            WorkoutsThisMonth();
+        }
+
+        else if(id == R.id.log_Save)
+        {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            {
                 SetHeightWeightAndLog();
             } else {
                 SetWeightHeight();
@@ -1523,35 +1557,110 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Push-Ups"};
 
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String currentSel = spinner.getSelectedItem().toString();
-        if (currentSel.equals("Chest Exercises")) {
-            workoutList.myWorkouts = chestExercises;
-        } else if (currentSel.equals("Shoulder Exercises")) {
-            workoutList.myWorkouts = shoulderExercises;
-        } else if (currentSel.equals("Bicep Exercises")) {
-            workoutList.myWorkouts = bicepExercises;
-        } else if (currentSel.equals("Triceps Exercises")) {
-            workoutList.myWorkouts = tricepsExercises;
-        } else if (currentSel.equals("Leg Exercises")) {
-            workoutList.myWorkouts = legExercises;
-        } else if (currentSel.equals("Back Exercises")) {
-            workoutList.myWorkouts = backExercises;
-        } else if (currentSel.equals("Glute Exercises")) {
-            workoutList.myWorkouts = gluteExercises;
-        } else if (currentSel.equals("Ab Exercises")) {
-            workoutList.myWorkouts = abExercises;
-        } else if (currentSel.equals("Calves Exercises")) {
-            workoutList.myWorkouts = calvesExercises;
-        } else if (currentSel.equals("Forearm Flexors and Grip Exercises")) {
-            workoutList.myWorkouts = forearmFlexExercises;
-        } else if (currentSel.equals("Forearm Extensor Exercises")) {
-            workoutList.myWorkouts = forearmExtExercises;
-        } else if (currentSel.equals("Cardio Exercises")) {
-            workoutList.myWorkouts = cardioExercises;
-        } else if (currentSel.equals("Body Weight")) {
-            workoutList.myWorkouts = bodyweight;
+
+        //Editing for usage with multiple spinners.
+        int spinId = spinner.getId();
+        if(spinId == R.id.exerciseSpin)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Chest Exercises")) {
+                workoutList.myWorkouts = chestExercises;
+            } else if (currentSel.equals("Shoulder Exercises")) {
+                workoutList.myWorkouts = shoulderExercises;
+            } else if (currentSel.equals("Bicep Exercises")) {
+                workoutList.myWorkouts = bicepExercises;
+            } else if (currentSel.equals("Triceps Exercises")) {
+                workoutList.myWorkouts = tricepsExercises;
+            } else if (currentSel.equals("Leg Exercises")) {
+                workoutList.myWorkouts = legExercises;
+            } else if (currentSel.equals("Back Exercises")) {
+                workoutList.myWorkouts = backExercises;
+            } else if (currentSel.equals("Glute Exercises")) {
+                workoutList.myWorkouts = gluteExercises;
+            } else if (currentSel.equals("Ab Exercises")) {
+                workoutList.myWorkouts = abExercises;
+            } else if (currentSel.equals("Calves Exercises")) {
+                workoutList.myWorkouts = calvesExercises;
+            } else if (currentSel.equals("Forearm Flexors and Grip Exercises")) {
+                workoutList.myWorkouts = forearmFlexExercises;
+            } else if (currentSel.equals("Forearm Extensor Exercises")) {
+                workoutList.myWorkouts = forearmExtExercises;
+            } else if (currentSel.equals("Cardio Exercises")) {
+                workoutList.myWorkouts = cardioExercises;
+            } else if (currentSel.equals("Body Weight")) {
+                workoutList.myWorkouts = bodyweight;
+            }
+            workoutList.notifyDataSetChanged();
         }
-        workoutList.notifyDataSetChanged();
+
+        if(spinId == R.id.exerciseSpinner)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Chest Exercises"))
+            {
+                GenerateChestChart();
+            }
+
+            else if (currentSel.equals("Shoulder Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Bicep Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Triceps Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Leg Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Back Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Glute Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Ab Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Calves Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Forearm Flexors and Grip Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Forearm Extensor Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Cardio Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Body Weight"))
+            {
+
+            }
+        }
     }
 
     //Calculate BMI (Imperial)
@@ -1585,12 +1694,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Turning user height (inches) into feet' inches" format.
         float heightLeft = userHeight;
-        int heightValueFeet = (int) (heightLeft / 12);
-        heightLeft = (heightLeft / 12) - heightValueFeet;
-        int heightValueInches = (int) (heightLeft * 12);
-        heightValFeet.setText(Integer.toString(heightValueFeet) + "\'");
-        heightValInches.setText(Integer.toString(heightValueInches) + "\"");
-        weightVal.setText(Float.toString(userWeight) + " lbs");
+        int heightValueFeet = (int)(heightLeft/12);
+        heightLeft = (heightLeft/12)-heightValueFeet;
+        BigDecimal heightValRound = new BigDecimal(heightLeft*12);
+        heightValRound = heightValRound.setScale(0, RoundingMode.HALF_UP);
+        heightLeft = heightValRound.floatValue();
+        int heightValueInches = (int)(heightLeft);
+        heightValFeet.setText(Integer.toString(heightValueFeet)+"\'");
+        heightValInches.setText(Integer.toString(heightValueInches)+"\"");
+        weightVal.setText(Float.toString(userWeight)+" lbs");
     }
 
     //Function for setting weight and height from user input.
@@ -1682,24 +1794,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //If there are weight logs, attempt to create weight chart.
             if (bodyWeightChangeLog.size() != 0) {
                 LineChart weightTracker = findViewById(R.id.monthlyWeightMonitor);
-                for (int i = 0; i < bodyWeightChangeLog.size(); i++) {
-                    weightEntries = new ArrayList<>();
-                    weightEntries.add(new Entry(bodyWeightChangeLog.get(i).timeLog.getDayOfMonth(), bodyWeightChangeLog.get(i).weightSnapShot));
-                    //For each log, create a new entry with x position at the int of day of month and y at calorie value.
-                    weightEntries.add(new Entry(4, 128));
-                    weightEntries.add(new Entry(5, 133));
-                    weightEntries.add(new Entry(10, 111));
-                    weightEntries.add(new Entry(7, 122));
-                    weightEntries.add(new Entry(21, 143));
-                    weightEntries.add(new Entry(25, 150));
-                    weightEntries.add(new Entry(1, 128));
-                    weightEntries.add(new Entry(3, 130));
-                    //Force Feeding Data for showcasing purposes, as WeightChangeLog is not synced to FireBase,
-                    //Thus, does not contain enough data for showcasing. Still requires at least one entry in array,
-                    //To fall into this code.
+                for (int i = 0; i < bodyWeightChangeLog.size(); i++)
+                {
+                    //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                    if(LocalDateTime.now().getYear() == bodyWeightChangeLog.get(i).timeLog.getYear() && LocalDateTime.now().getMonthValue() == bodyWeightChangeLog.get(i).timeLog.getMonthValue())
+                    {
+                        weightEntries = new ArrayList<>();
+                        weightEntries.add(new Entry(bodyWeightChangeLog.get(i).timeLog.getDayOfMonth(), bodyWeightChangeLog.get(i).weightSnapShot));
+                        //For each log, create a new entry with x position at the int of day of month and y at calorie value.
+                        weightEntries.add(new Entry(3, 128));
+                        weightEntries.add(new Entry(5, 133));
+                        weightEntries.add(new Entry(10, 111));
+                        weightEntries.add(new Entry(7, 122));
+                        weightEntries.add(new Entry(21, 143));
+                        weightEntries.add(new Entry(25, 150));
+                        weightEntries.add(new Entry(1, 128));
+                        weightEntries.add(new Entry(3, 130));
+                        //Force Feeding Data for showcasing purposes, as WeightChangeLog is not synced to FireBase,
+                        //Thus, does not contain enough data for showcasing. Still requires at least one entry in array,
+                        //To fall into this code.
 
-                    //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
-                    Collections.sort(weightEntries, new EntryXComparator());
+                        //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                        Collections.sort(weightEntries, new EntryXComparator());
+                    }
                 }
                 weightDataSet = new LineDataSet(weightEntries, "Weight");
                 weightChartData = new LineData(weightDataSet);
@@ -1732,7 +1849,509 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void WorkoutsThisMonth()
+    {
+        int workedTotal = 0;
+        CircularProgressIndicator daysWorked = (CircularProgressIndicator) findViewById(R.id.daysWorked);
+        TextView daysWorkedText = (TextView)  findViewById(R.id.daysWorkedText);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            daysWorked.setMin(0);
+            //Checking various muscle groups for entries on each date of month.
+            if (chestExercisesLog.size() != 0)
+            {
+               //Data should already be inputted in order of time, so sorting shouldn't be necessary.
+                for (int i = 0; i < chestExercisesLog.size(); i++)
+                {
+                //Looping through Array
+                    if (LocalDateTime.now().getYear() == chestExercisesLog.get(i).getYear() && LocalDateTime.now().getMonthValue() == chestExercisesLog.get(i).getMonthValue())
+                    {
+                    //If year and month are current year and month.
+                        if(i != 0)
+                        {
+                        //If this is not the first or only entry.
+                            if (chestExercisesLog.get(i).getDayOfMonth() != chestExercisesLog.get(i - 1).getDayOfMonth())
+                            {
+                                //If the entry does not have the same date as the entry before it. If entries are in chronological order, which they should be,
+                                //Only the first entry of each day should count.
+                                workedTotal++;
+                            }
+                        }
 
-    public void onNothingSelected(AdapterView<?> adapterView) {
+                        else
+                        {
+                            //If it is the first entry or the only entry, it automatically counts.
+                            workedTotal++;
+                        }
+
+                        //I hate nested if checks.
+                    }
+                }
+            }
+
+            if (shoulderExercisesLog.size() != 0)
+            {
+                //Data should already be inputted in order of time, so sorting shouldn't be necessary.
+                for (int i = 0; i < shoulderExercisesLog.size(); i++)
+                {
+                    //Looping through Array
+                    if (LocalDateTime.now().getYear() == shoulderExercisesLog.get(i).getYear() && LocalDateTime.now().getMonthValue() == shoulderExercisesLog.get(i).getMonthValue())
+                    {
+                        //If year and month are current year and month.
+                        if(i != 0)
+                        {
+                            //If this is not the first or only entry.
+                            if (shoulderExercisesLog.get(i).getDayOfMonth() != shoulderExercisesLog.get(i - 1).getDayOfMonth())
+                            {
+                                //If the entry does not have the same date as the entry before it. If entries are in chronological order, which they should be,
+                                //Only the first entry of each day should count.
+                                workedTotal++;
+                            }
+                        }
+
+                        else
+                        {
+                            //If it is the first entry or the only entry, it automatically counts.
+                            workedTotal++;
+                        }
+
+                        //I hate nested if checks.
+                    }
+                }
+            }
+
+            if (bicepExercisesLog.size() != 0)
+            {
+                //Data should already be inputted in order of time, so sorting shouldn't be necessary.
+                for (int i = 0; i < bicepExercisesLog.size(); i++)
+                {
+                    //Looping through Array
+                    if (LocalDateTime.now().getYear() == bicepExercisesLog.get(i).getYear() && LocalDateTime.now().getMonthValue() == bicepExercisesLog.get(i).getMonthValue())
+                    {
+                        //If year and month are current year and month.
+                        if(i != 0)
+                        {
+                            //If this is not the first or only entry.
+                            if (bicepExercisesLog.get(i).getDayOfMonth() != bicepExercisesLog.get(i - 1).getDayOfMonth())
+                            {
+                                //If the entry does not have the same date as the entry before it. If entries are in chronological order, which they should be,
+                                //Only the first entry of each day should count.
+                                workedTotal++;
+                            }
+                        }
+
+                        else
+                        {
+                            //If it is the first entry or the only entry, it automatically counts.
+                            workedTotal++;
+                        }
+
+                        //I hate nested if checks.
+                    }
+                }
+
+            }
+
+            if (tricepsExercisesLog.size() != 0)
+            {
+                //Data should already be inputted in order of time, so sorting shouldn't be necessary.
+                for (int i = 0; i < tricepsExercisesLog.size(); i++)
+                {
+                    //Looping through Array
+                    if (LocalDateTime.now().getYear() == tricepsExercisesLog.get(i).getYear() && LocalDateTime.now().getMonthValue() == tricepsExercisesLog.get(i).getMonthValue())
+                    {
+                        //If year and month are current year and month.
+                        if(i != 0)
+                        {
+                            //If this is not the first or only entry.
+                            if (tricepsExercisesLog.get(i).getDayOfMonth() != tricepsExercisesLog.get(i - 1).getDayOfMonth())
+                            {
+                                //If the entry does not have the same date as the entry before it. If entries are in chronological order, which they should be,
+                                //Only the first entry of each day should count.
+                                workedTotal++;
+                            }
+                        }
+
+                        else
+                        {
+                            //If it is the first entry or the only entry, it automatically counts.
+                            workedTotal++;
+                        }
+
+                        //I hate nested if checks.
+                    }
+                }
+
+            }
+
+            if (legExercisesLog.size() != 0)
+            {
+                //Data should already be inputted in order of time, so sorting shouldn't be necessary.
+                for (int i = 0; i < legExercisesLog.size(); i++)
+                {
+                    //Looping through Array
+                    if (LocalDateTime.now().getYear() == legExercisesLog.get(i).getYear() && LocalDateTime.now().getMonthValue() == legExercisesLog.get(i).getMonthValue())
+                    {
+                        //If year and month are current year and month.
+                        if(i != 0)
+                        {
+                            //If this is not the first or only entry.
+                            if (legExercisesLog.get(i).getDayOfMonth() != legExercisesLog.get(i - 1).getDayOfMonth())
+                            {
+                                //If the entry does not have the same date as the entry before it. If entries are in chronological order, which they should be,
+                                //Only the first entry of each day should count.
+                                workedTotal++;
+                            }
+                        }
+
+                        else
+                        {
+                            //If it is the first entry or the only entry, it automatically counts.
+                            workedTotal++;
+                        }
+
+                        //I hate nested if checks.
+                    }
+                }
+
+            }
+
+            if (backExercisesLog.size() != 0)
+            {
+                //Data should already be inputted in order of time, so sorting shouldn't be necessary.
+                for (int i = 0; i < backExercisesLog.size(); i++)
+                {
+                    //Looping through Array
+                    if (LocalDateTime.now().getYear() == backExercisesLog.get(i).getYear() && LocalDateTime.now().getMonthValue() == backExercisesLog.get(i).getMonthValue())
+                    {
+                        //If year and month are current year and month.
+                        if(i != 0)
+                        {
+                            //If this is not the first or only entry.
+                            if (backExercisesLog.get(i).getDayOfMonth() != backExercisesLog.get(i - 1).getDayOfMonth())
+                            {
+                                //If the entry does not have the same date as the entry before it. If entries are in chronological order, which they should be,
+                                //Only the first entry of each day should count.
+                                workedTotal++;
+                            }
+                        }
+
+                        else
+                        {
+                            //If it is the first entry or the only entry, it automatically counts.
+                            workedTotal++;
+                        }
+
+                        //I hate nested if checks.
+                    }
+                }
+
+            }
+
+            if (gluteExercisesLog.size() != 0)
+            {
+                //Data should already be inputted in order of time, so sorting shouldn't be necessary.
+                for (int i = 0; i < gluteExercisesLog.size(); i++)
+                {
+                    //Looping through Array
+                    if (LocalDateTime.now().getYear() == gluteExercisesLog.get(i).getYear() && LocalDateTime.now().getMonthValue() == gluteExercisesLog.get(i).getMonthValue())
+                    {
+                        //If year and month are current year and month.
+                        if(i != 0)
+                        {
+                            //If this is not the first or only entry.
+                            if (gluteExercisesLog.get(i).getDayOfMonth() != gluteExercisesLog.get(i - 1).getDayOfMonth())
+                            {
+                                //If the entry does not have the same date as the entry before it. If entries are in chronological order, which they should be,
+                                //Only the first entry of each day should count.
+                                workedTotal++;
+                            }
+                        }
+
+                        else
+                        {
+                            //If it is the first entry or the only entry, it automatically counts.
+                            workedTotal++;
+                        }
+
+                        //I hate nested if checks.
+                    }
+                }
+
+            }
+
+            if (abExercisesLog.size() != 0)
+            {
+                //Data should already be inputted in order of time, so sorting shouldn't be necessary.
+                for (int i = 0; i < abExercisesLog.size(); i++)
+                {
+                    //Looping through Array
+                    if (LocalDateTime.now().getYear() == abExercisesLog.get(i).getYear() && LocalDateTime.now().getMonthValue() == abExercisesLog.get(i).getMonthValue())
+                    {
+                        //If year and month are current year and month.
+                        if(i != 0)
+                        {
+                            //If this is not the first or only entry.
+                            if (abExercisesLog.get(i).getDayOfMonth() != abExercisesLog.get(i - 1).getDayOfMonth())
+                            {
+                                //If the entry does not have the same date as the entry before it. If entries are in chronological order, which they should be,
+                                //Only the first entry of each day should count.
+                                workedTotal++;
+                            }
+                        }
+
+                        else
+                        {
+                            //If it is the first entry or the only entry, it automatically counts.
+                            workedTotal++;
+                        }
+
+                        //I hate nested if checks.
+                    }
+                }
+
+            }
+
+            if (calvesExercisesLog.size() != 0)
+            {
+                //Data should already be inputted in order of time, so sorting shouldn't be necessary.
+                for (int i = 0; i < calvesExercisesLog.size(); i++)
+                {
+                    //Looping through Array
+                    if (LocalDateTime.now().getYear() == calvesExercisesLog.get(i).getYear() && LocalDateTime.now().getMonthValue() == calvesExercisesLog.get(i).getMonthValue())
+                    {
+                        //If year and month are current year and month.
+                        if(i != 0)
+                        {
+                            //If this is not the first or only entry.
+                            if (calvesExercisesLog.get(i).getDayOfMonth() != calvesExercisesLog.get(i - 1).getDayOfMonth())
+                            {
+                                //If the entry does not have the same date as the entry before it. If entries are in chronological order, which they should be,
+                                //Only the first entry of each day should count.
+                                workedTotal++;
+                            }
+                        }
+
+                        else
+                        {
+                            //If it is the first entry or the only entry, it automatically counts.
+                            workedTotal++;
+                        }
+
+                        //I hate nested if checks.
+                    }
+                }
+
+            }
+
+            if (forearmFlexorsGripExercisesLog.size() != 0)
+            {
+                //Data should already be inputted in order of time, so sorting shouldn't be necessary.
+                for (int i = 0; i < forearmFlexorsGripExercisesLog.size(); i++)
+                {
+                    //Looping through Array
+                    if (LocalDateTime.now().getYear() == forearmFlexorsGripExercisesLog.get(i).getYear() && LocalDateTime.now().getMonthValue() == forearmFlexorsGripExercisesLog.get(i).getMonthValue())
+                    {
+                        //If year and month are current year and month.
+                        if(i != 0)
+                        {
+                            //If this is not the first or only entry.
+                            if (forearmFlexorsGripExercisesLog.get(i).getDayOfMonth() != forearmFlexorsGripExercisesLog.get(i - 1).getDayOfMonth())
+                            {
+                                //If the entry does not have the same date as the entry before it. If entries are in chronological order, which they should be,
+                                //Only the first entry of each day should count.
+                                workedTotal++;
+                            }
+                        }
+
+                        else
+                        {
+                            //If it is the first entry or the only entry, it automatically counts.
+                            workedTotal++;
+                        }
+
+                        //I hate nested if checks.
+                    }
+                }
+
+            }
+
+            if (forearmExtensorExercisesLog.size() != 0)
+            {
+                //Data should already be inputted in order of time, so sorting shouldn't be necessary.
+                for (int i = 0; i < forearmExtensorExercisesLog.size(); i++)
+                {
+                    //Looping through Array
+                    if (LocalDateTime.now().getYear() == forearmExtensorExercisesLog.get(i).getYear() && LocalDateTime.now().getMonthValue() == forearmExtensorExercisesLog.get(i).getMonthValue())
+                    {
+                        //If year and month are current year and month.
+                        if(i != 0)
+                        {
+                            //If this is not the first or only entry.
+                            if (forearmExtensorExercisesLog.get(i).getDayOfMonth() != forearmExtensorExercisesLog.get(i - 1).getDayOfMonth())
+                            {
+                                //If the entry does not have the same date as the entry before it. If entries are in chronological order, which they should be,
+                                //Only the first entry of each day should count.
+                                workedTotal++;
+                            }
+                        }
+
+                        else
+                        {
+                            //If it is the first entry or the only entry, it automatically counts.
+                            workedTotal++;
+                        }
+
+                        //I hate nested if checks.
+                    }
+                }
+
+            }
+
+            if (cardioExercisesLog.size() != 0)
+            {
+                //Data should already be inputted in order of time, so sorting shouldn't be necessary.
+                for (int i = 0; i < cardioExercisesLog.size(); i++)
+                {
+                    //Looping through Array
+                    if (LocalDateTime.now().getYear() == cardioExercisesLog.get(i).getYear() && LocalDateTime.now().getMonthValue() == cardioExercisesLog.get(i).getMonthValue())
+                    {
+                        //If year and month are current year and month.
+                        if(i != 0)
+                        {
+                            //If this is not the first or only entry.
+                            if (cardioExercisesLog.get(i).getDayOfMonth() != cardioExercisesLog.get(i - 1).getDayOfMonth())
+                            {
+                                //If the entry does not have the same date as the entry before it. If entries are in chronological order, which they should be,
+                                //Only the first entry of each day should count.
+                                workedTotal++;
+                            }
+                        }
+
+                        else
+                        {
+                            //If it is the first entry or the only entry, it automatically counts.
+                            workedTotal++;
+                        }
+
+                        //I hate nested if checks.
+                    }
+                }
+
+            }
+
+            if (bodyWeightLog.size() != 0)
+            {
+                //Data should already be inputted in order of time, so sorting shouldn't be necessary.
+                for (int i = 0; i < bodyWeightLog.size(); i++)
+                {
+                    //Looping through Array
+                    if (LocalDateTime.now().getYear() == bodyWeightLog.get(i).getYear() && LocalDateTime.now().getMonthValue() == bodyWeightLog.get(i).getMonthValue())
+                    {
+                        //If year and month are current year and month.
+                        if(i != 0)
+                        {
+                            //If this is not the first or only entry.
+                            if (bodyWeightLog.get(i).getDayOfMonth() != bodyWeightLog.get(i - 1).getDayOfMonth())
+                            {
+                                //If the entry does not have the same date as the entry before it. If entries are in chronological order, which they should be,
+                                //Only the first entry of each day should count.
+                                workedTotal++;
+                            }
+                        }
+
+                        else
+                        {
+                            //If it is the first entry or the only entry, it automatically counts.
+                            workedTotal++;
+                        }
+
+                        //I hate nested if checks.
+                    }
+                }
+
+            }
+        }
+
+        //Hardcoding total for demonstrative purposes.
+        workedTotal = 27;
+
+        //Passing in Progress value.
+        daysWorked.setProgressCompat(workedTotal, true);
+        daysWorkedText.setText(Integer.toString(workedTotal));
     }
+
+    public void GenerateChestChart()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Chest Exercises"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (chestExercisesLog.size() != 0)
+                {
+                    for (int o = 0; o < chestExercisesLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == chestExercisesLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == chestExercisesLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (chestExercisesLog.get(o).getDayOfMonth() != chestExercisesLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(chestExercisesLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(8f, 11));
+                muscleEntriesArrayList.add(new BarEntry(5f, 3f));
+                muscleEntriesArrayList.add(new BarEntry(10, 4));
+                muscleEntriesArrayList.add(new BarEntry(7, 5));
+                muscleEntriesArrayList.add(new BarEntry(21, 2));
+                muscleEntriesArrayList.add(new BarEntry(25, 4));
+                muscleEntriesArrayList.add(new BarEntry(1, 2));
+                muscleEntriesArrayList.add(new BarEntry(3, 4));
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(14f);
+            }
+        }
+    }
+
+    void GenerateExerciseSpinnerWorkouts()
+    {
+        //Set muscle group spinner
+        spinner =  findViewById(R.id.exerciseSpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, workouts);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+    }
+
+    public void onNothingSelected(AdapterView<?> adapterView) {}
+
 }
