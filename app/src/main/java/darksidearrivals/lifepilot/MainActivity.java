@@ -137,11 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     BarChart muscleGroupChart;
 
-    //Getting creative with spinner to display graphs on corresponding selection.
-    private boolean chestExercisesBool, shoulderExercisesBool, bicepExercisesBool,
-        tricepsExercisesBool, legExercisesBool, backExercisesBool, gluteExercisesBool, abExercisesBool,
-        calvesExercisesBool, forearmFlexorsGripExercisesBool, forearmExtensorExercisesBool, cardioExerciseBool,
-        bodyWeightBool;
+
 
 
     //Workout Spinner
@@ -343,14 +339,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             //Initiating Spinner for workout breakdown.
             setContentView(R.layout.exercise_data);
+            GenerateExerciseSpinnerWorkouts();
             muscleGroupChart = findViewById(R.id.monthlyExerciseData);
-            GenerateSpinnerExerciseData();
-
-            if(chestExercisesBool == true)
-            {
-                GenerateChestChart();
-            }
             WeightChart();
+
         }
 
         else if (id == R.id.breakDown)
@@ -1396,6 +1388,74 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             workoutList.notifyDataSetChanged();
         }
 
+        if(spinId == R.id.exerciseSpinner)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Chest Exercises"))
+            {
+                GenerateChestChart();
+            }
+
+            else if (currentSel.equals("Shoulder Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Bicep Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Triceps Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Leg Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Back Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Glute Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Ab Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Calves Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Forearm Flexors and Grip Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Forearm Extensor Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Cardio Exercises"))
+            {
+
+            }
+
+            else if (currentSel.equals("Body Weight"))
+            {
+
+            }
+        }
     }
 
     //Calculate BMI (Imperial)
@@ -1437,7 +1497,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         float heightLeft = userHeight;
         int heightValueFeet = (int)(heightLeft/12);
         heightLeft = (heightLeft/12)-heightValueFeet;
-        int heightValueInches = (int)(heightLeft*12);
+        BigDecimal heightValRound = new BigDecimal(heightLeft*12);
+        heightValRound = heightValRound.setScale(0, RoundingMode.HALF_UP);
+        heightLeft = heightValRound.floatValue();
+        int heightValueInches = (int)(heightLeft);
         heightValFeet.setText(Integer.toString(heightValueFeet)+"\'");
         heightValInches.setText(Integer.toString(heightValueInches)+"\"");
         weightVal.setText(Float.toString(userWeight)+" lbs");
@@ -2037,90 +2100,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         daysWorkedText.setText(Integer.toString(workedTotal));
     }
 
-    void GenerateSpinnerExerciseData()
-    {
-        //Set workout spinner
-        spinner =  findViewById(R.id.exerciseSpinner);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l)
-            {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                {
-                    String currentSel = spinner.getSelectedItem().toString();
-                    if (currentSel.equals("Chest Exercises"))
-                    {
-                        chestExercisesBool = true;
-                    }
-
-                    else if (currentSel.equals("Shoulder Exercises"))
-                    {
-                        chestExercisesBool = true;
-                    }
-
-                    else if (currentSel.equals("Bicep Exercises"))
-                    {
-                        workoutList.myWorkouts = bicepExercises;
-                    }
-
-                    else if (currentSel.equals("Triceps Exercises"))
-                    {
-                        workoutList.myWorkouts = tricepsExercises;
-                    }
-
-                    else if (currentSel.equals("Leg Exercises"))
-                    {
-                        workoutList.myWorkouts = legExercises;
-                    }
-
-                    else if (currentSel.equals("Back Exercises"))
-                    {
-                        workoutList.myWorkouts = backExercises;
-                    }
-
-                    else if (currentSel.equals("Glute Exercises"))
-                    {
-                        workoutList.myWorkouts = gluteExercises;
-                    }
-
-                    else if (currentSel.equals("Ab Exercises"))
-                    {
-                        workoutList.myWorkouts = abExercises;
-                    }
-
-                    else if (currentSel.equals("Calves Exercises"))
-                    {
-                        workoutList.myWorkouts = calvesExercises;
-                    }
-
-                    else if (currentSel.equals("Forearm Flexors and Grip Exercises"))
-                    {
-                        workoutList.myWorkouts = forearmFlexExercises;
-                    }
-
-                    else if (currentSel.equals("Forearm Extensor Exercises"))
-                    {
-                        workoutList.myWorkouts = forearmExtExercises;
-                    } else if (currentSel.equals("Cardio Exercises"))
-                    {
-                        workoutList.myWorkouts = cardioExercises;
-                    }
-
-                    else if (currentSel.equals("Body Weight"))
-                    {
-                        workoutList.myWorkouts = bodyweight;
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView)
-            {
-
-            }
-        });
-    }
-
     public void GenerateChestChart()
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -2160,7 +2139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
                 muscleEntriesArrayList = new ArrayList<>();
-                muscleEntriesArrayList.add(new BarEntry(3f, 11));
+                muscleEntriesArrayList.add(new BarEntry(8f, 11));
                 muscleEntriesArrayList.add(new BarEntry(5f, 3f));
                 muscleEntriesArrayList.add(new BarEntry(10, 4));
                 muscleEntriesArrayList.add(new BarEntry(7, 5));
@@ -2168,7 +2147,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 muscleEntriesArrayList.add(new BarEntry(25, 4));
                 muscleEntriesArrayList.add(new BarEntry(1, 2));
                 muscleEntriesArrayList.add(new BarEntry(3, 4));
-                //Force Feeding Data for showcasing purposes, as musclue group array is not synced to FireBase,
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
                 //Thus, does not contain enough data for showcasing.
 
                 //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
@@ -2181,6 +2160,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 muscleBarDataSet.setValueTextSize(14f);
             }
         }
+    }
+
+    void GenerateExerciseSpinnerWorkouts()
+    {
+        //Set muscle group spinner
+        spinner =  findViewById(R.id.exerciseSpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, workouts);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
     }
 
     public void onNothingSelected(AdapterView<?> adapterView) {}
