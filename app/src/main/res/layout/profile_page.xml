@@ -20,6 +20,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/Home_Button"
+        android:layout_width="70dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/transparent"
+        android:foreground="@drawable/homebutton"
+        android:onClick="onClick"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="SpeakableTextPresentCheck" />
+
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
