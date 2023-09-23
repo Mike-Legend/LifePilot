@@ -251,6 +251,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 for (int i = 0; i < userRoutines.size(); i++) {
                     tempUserExercises.add(userExercisesArrayList.get(i));
+                    //tempUserExercises.get(i).clear();
+//                    for(int j = 0; j < userExercisesArrayList.get(i).size(); j++) {
+//                        tempUserExercises.get(i).add(userExercisesArrayList.get(i).get(j));
+//                    }
                 }
                 for (int i = 0; i < userRoutines.size(); i++) {
                     if (userRoutines.get(i).getParent() != null) {
@@ -345,6 +349,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             for (int i = 0; i < tempUserExercises.size(); i++) {
                 userExercisesArrayList.add(tempUserExercises.get(i));
+//                userExercisesArrayList.get(i).clear();
+//                for(int j = 0; j < tempUserExercises.get(i).size(); j++) {
+//                    userExercisesArrayList.get(i).add(tempUserExercises.get(i).get(j));
+//                }
             }
             for (int i = 0; i < userRoutines.size(); i++) {
                 button = userRoutines.get(i);
@@ -651,13 +659,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //GenerateRoutineSelectScreen(id);
                 FrameLayout routineedit = findViewById(R.id.routineNewlistoverlayedit);
                 routineedit.setVisibility(View.VISIBLE);
+                TextView edit = findViewById(R.id.EditRoutineNewList_Text);
+                edit.setText("Edit " + userRoutines.get(routineIDActive).getText());
                 //place routines to edit
                 DragLinearLayout dragLinearLayout = findViewById(R.id.PlaceEditRoutineNewList);
                 //temp save
                 tempUserExercises.clear();
-                for (int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
-                    tempUserRoutines.add(userExercisesArrayList.get(routineIDActive).get(i));
-                }
+//                for (int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
+//                    tempUserRoutines.add(userExercisesArrayList.get(routineIDActive).get(i));
+//                }
                 for (int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
                     if (userExercisesArrayList.get(routineIDActive).get(i).getParent() != null) {
                         ((ViewGroup) userExercisesArrayList.get(routineIDActive).get(i).getParent()).removeView(userExercisesArrayList.get(routineIDActive).get(i));
@@ -672,7 +682,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     layoutParams.gravity = Gravity.CENTER;
                     imageView.setLayoutParams(layoutParamsForImageView);
                     Button button = userExercisesArrayList.get(routineIDActive).get(i);
-                    linearLayout.setId(userExercisesArrayList.get(routineIDActive).get(i).getId());
+                    //linearLayout.setId(userExercisesArrayList.get(routineIDActive).get(i).getId());
                     layoutParams.gravity = Gravity.CENTER;
                     layoutParams.weight = 1;
                     button.setLayoutParams(layoutParams);
@@ -693,22 +703,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 //no routine available to edit message
             }
-        } else if (editChecker == 1) { //TODO: Fix
-            //if selected
-            GradientDrawable gradDraw = new GradientDrawable();
-            gradDraw.setShape(GradientDrawable.RECTANGLE);
-            gradDraw.setCornerRadius(100);
-            gradDraw.setColor(getResources().getColor(R.color.deleteRed));
-            if (routineDeleteList.contains(userExercisesArrayList.get(routineIDActive).get(id))) {
-                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
-                userExercisesArrayList.get(routineIDActive).get(id).setBackground(gradDraw);
-                //remove from array
-                routineDeleteList.remove(userExercisesArrayList.get(routineIDActive).get(id));
-            } else {
-                userExercisesArrayList.get(routineIDActive).get(id).setBackground(gradDraw);
-                //add to array
-                routineDeleteList.add(userExercisesArrayList.get(routineIDActive).get(id));
-            }
         } else if (id == R.id.CancelEditRoutineNew_Button) {
             //reset info
             editChecker = 0;
@@ -723,25 +717,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             layoutParams.setMargins(0, 30, 0, 0);
             linearLayout.setLayoutParams(layoutParams);
             //reset order
-            userExercisesArrayList.get(routineIDActive).clear();
-            for (int i = 0; i < tempUserRoutines.size(); i++) {
-                userExercisesArrayList.get(routineIDActive).add(tempUserRoutines.get(i));
-            }
+//            userExercisesArrayList.get(routineIDActive).clear();
+//            for (int i = 0; i < tempUserRoutines.size(); i++) {
+//                userExercisesArrayList.get(routineIDActive).add(tempUserRoutines.get(i));
+//            }
+//            for (int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
+//                button = userExercisesArrayList.get(routineIDActive).get(i);
+//                button.setLayoutParams(layoutParams);
+//                button.setBackground(gradDraw);
+//                for (int j = 0; j < routineDeleteList.size(); j++) {
+//                    if (userExercisesArrayList.get(routineIDActive).get(i).getId() == routineDeleteList.get(j).getId()) {
+//                        userExercisesArrayList.get(routineIDActive).get(i).setBackground(gradDraw);
+//                    }
+//                }
+//            }
             for (int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
                 button = userExercisesArrayList.get(routineIDActive).get(i);
                 button.setLayoutParams(layoutParams);
                 button.setBackground(gradDraw);
-                for (int j = 0; j < routineDeleteList.size(); j++) {
-                    if (userExercisesArrayList.get(routineIDActive).get(i).getId() == routineDeleteList.get(j).getId()) {
-                        userExercisesArrayList.get(routineIDActive).get(i).setBackground(gradDraw);
-                    }
-                }
+//                for (int j = 0; j < routineDeleteList.size(); j++) {
+//                    if (userRoutines.get(i).getId() == routineDeleteList.get(j).getId()) {
+//                        userRoutines.get(i).setBackground(gradDraw);
+//                    }
+//                }
             }
             routineDeleteList.clear();
             //overlay trigger
             FrameLayout routineedit = findViewById(R.id.routineNewlistoverlayedit);
             routineedit.setVisibility(View.GONE);
-            LoadUserRoutines();
+            GenerateRoutineSelectScreen(routineIDActive);
         } else if (id == R.id.DeleteRoutinesNew_Button) {
             //delete info
             editChecker = 0;
@@ -795,7 +799,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //overlay trigger
             FrameLayout routineedit = findViewById(R.id.routinelistoverlayedit);
             routineedit.setVisibility(View.GONE);
-            GenerateRoutineSelectScreen(id);
+            GenerateRoutineSelectScreen(routineIDActive);
+        } else if (editChecker == 1) { //TODO: Fix
+            //if selected
+            GradientDrawable gradDraw = new GradientDrawable();
+            gradDraw.setShape(GradientDrawable.RECTANGLE);
+            gradDraw.setCornerRadius(100);
+            gradDraw.setColor(getResources().getColor(R.color.deleteRed));
+            if (routineDeleteList.contains(userExercisesArrayList.get(routineIDActive).get(id))) {
+                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                userExercisesArrayList.get(routineIDActive).get(id).setBackground(gradDraw);
+                //remove from array
+                routineDeleteList.remove(userExercisesArrayList.get(routineIDActive).get(id));
+            } else {
+                userExercisesArrayList.get(routineIDActive).get(id).setBackground(gradDraw);
+                //add to array
+                routineDeleteList.add(userExercisesArrayList.get(routineIDActive).get(id));
+            }
         } else if (id < userRoutines.size() || id == userRoutines.size()) {
             Transition slide = new Slide(Gravity.RIGHT);
             TransitionManager.go(nRoutineAnimation, slide);
@@ -867,32 +887,296 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 ll2.addView(temp2);
             }
-        } else if (id == R.id.PreMadeRoutine3_Button) { //TODO: Finish premade routine lists
+        } else if (id == R.id.PreMadeRoutine1_Button) { //TODO: Finish premade routine lists
             setContentView(R.layout.routine_newlist);
             Button newExercise = findViewById(R.id.NewExerciseAdd_Button);
             newExercise.setVisibility(View.GONE);
             TextView topText = findViewById(R.id.NewRoutineSet_TopText);
-            topText.setText("Leg Day");
+            topText.setText("Leg Training");
             TextView goalText = findViewById(R.id.GoalofRoutine_TopText);
             goalText.setVisibility(View.GONE);
             //load premade exercise array
-
-
+            currentSelectedItems.clear();
+            currentSelectedItems.add("Hack Squat Machine");
+            currentSelectedItems.add("Hip Adduction Machine");
+            currentSelectedItems.add("Seated Leg Curl");
+            currentSelectedItems.add("Leg extension");
+            currentSelectedItems.add("Seated Calf Raise");
+            LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
+            for(int i = 0; i < currentSelectedItems.size(); i++) {
+                Button btn = new Button(this);
+                btn.setText(currentSelectedItems.get(i));
+                btn.setTextSize(24);
+                btn.setTextColor(Color.WHITE);
+                btn.setAllCaps(false);
+                btn.setClickable(true);
+                btn.setOnClickListener(getOnClickForDynamicButtons(btn));
+                GradientDrawable gradDraw = new GradientDrawable();
+                gradDraw.setShape(GradientDrawable.RECTANGLE);
+                gradDraw.setCornerRadius(90);
+                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                btn.setBackground(gradDraw);
+                btn.setPadding(20, 0, 20, 8);
+                if (btn.getText().length() > 23) {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                } else {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                }
+            }
+            currentSelectedItems.clear();
             //make save, a save to routine array list and sync
-
             goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_goals, this);
             homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.activity_main, this);
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id == R.id.PreMadeRoutine2_Button) {
             setContentView(R.layout.routine_newlist);
+            Button newExercise = findViewById(R.id.NewExerciseAdd_Button);
+            newExercise.setVisibility(View.GONE);
+            TextView topText = findViewById(R.id.NewRoutineSet_TopText);
+            topText.setText("Arm Workouts");
+            TextView goalText = findViewById(R.id.GoalofRoutine_TopText);
+            goalText.setVisibility(View.GONE);
+            //load premade exercise array
+            currentSelectedItems.clear();
+            currentSelectedItems.add("Cable curl with rope");
+            currentSelectedItems.add("Machine bicep curl");
+            currentSelectedItems.add("Barbell preacher curl");
+            currentSelectedItems.add("Overhead cable triceps extension");
+            currentSelectedItems.add("Tricep push down with bar");
+            currentSelectedItems.add("Barbell wrist curl behind the back");
+            currentSelectedItems.add("Barbell wrist extension");
+            LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
+            for(int i = 0; i < currentSelectedItems.size(); i++) {
+                Button btn = new Button(this);
+                btn.setText(currentSelectedItems.get(i));
+                btn.setTextSize(24);
+                btn.setTextColor(Color.WHITE);
+                btn.setAllCaps(false);
+                btn.setClickable(true);
+                btn.setOnClickListener(getOnClickForDynamicButtons(btn));
+                GradientDrawable gradDraw = new GradientDrawable();
+                gradDraw.setShape(GradientDrawable.RECTANGLE);
+                gradDraw.setCornerRadius(90);
+                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                btn.setBackground(gradDraw);
+                btn.setPadding(20, 0, 20, 8);
+                if (btn.getText().length() > 23) {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                } else {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                }
+            }
+            currentSelectedItems.clear();
+            //make save, a save to routine array list and sync
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.activity_main, this);
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id == R.id.PreMadeRoutine3_Button) {
             setContentView(R.layout.routine_newlist);
+            Button newExercise = findViewById(R.id.NewExerciseAdd_Button);
+            newExercise.setVisibility(View.GONE);
+            TextView topText = findViewById(R.id.NewRoutineSet_TopText);
+            topText.setText("Shoulder and Back");
+            TextView goalText = findViewById(R.id.GoalofRoutine_TopText);
+            goalText.setVisibility(View.GONE);
+            //load premade exercise array
+            currentSelectedItems.clear();
+            currentSelectedItems.add("Face Pull");
+            currentSelectedItems.add("Front hold");
+            currentSelectedItems.add("Machine lateral raise");
+            currentSelectedItems.add("Floor back extension");
+            currentSelectedItems.add("Kettlebell swing");
+            currentSelectedItems.add("Seated Machine Row");
+            LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
+            for(int i = 0; i < currentSelectedItems.size(); i++) {
+                Button btn = new Button(this);
+                btn.setText(currentSelectedItems.get(i));
+                btn.setTextSize(24);
+                btn.setTextColor(Color.WHITE);
+                btn.setAllCaps(false);
+                btn.setClickable(true);
+                btn.setOnClickListener(getOnClickForDynamicButtons(btn));
+                GradientDrawable gradDraw = new GradientDrawable();
+                gradDraw.setShape(GradientDrawable.RECTANGLE);
+                gradDraw.setCornerRadius(90);
+                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                btn.setBackground(gradDraw);
+                btn.setPadding(20, 0, 20, 8);
+                if (btn.getText().length() > 23) {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                } else {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                }
+            }
+            currentSelectedItems.clear();
+            //make save, a save to routine array list and sync
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.activity_main, this);
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id == R.id.PreMadeRoutine4_Button) {
             setContentView(R.layout.routine_newlist);
+            Button newExercise = findViewById(R.id.NewExerciseAdd_Button);
+            newExercise.setVisibility(View.GONE);
+            TextView topText = findViewById(R.id.NewRoutineSet_TopText);
+            topText.setText("Chest Workouts");
+            TextView goalText = findViewById(R.id.GoalofRoutine_TopText);
+            goalText.setVisibility(View.GONE);
+            //load premade exercise array
+            currentSelectedItems.clear();
+            currentSelectedItems.add("Floor press");
+            currentSelectedItems.add("Machine chest fly");
+            currentSelectedItems.add("Machine chest press");
+            currentSelectedItems.add("Pec deck");
+            currentSelectedItems.add("Inclined smith machine bench press");
+            LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
+            for(int i = 0; i < currentSelectedItems.size(); i++) {
+                Button btn = new Button(this);
+                btn.setText(currentSelectedItems.get(i));
+                btn.setTextSize(24);
+                btn.setTextColor(Color.WHITE);
+                btn.setAllCaps(false);
+                btn.setClickable(true);
+                btn.setOnClickListener(getOnClickForDynamicButtons(btn));
+                GradientDrawable gradDraw = new GradientDrawable();
+                gradDraw.setShape(GradientDrawable.RECTANGLE);
+                gradDraw.setCornerRadius(90);
+                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                btn.setBackground(gradDraw);
+                btn.setPadding(20, 0, 20, 8);
+                if (btn.getText().length() > 23) {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                } else {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                }
+            }
+            currentSelectedItems.clear();
+            //make save, a save to routine array list and sync
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.activity_main, this);
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id == R.id.PreMadeRoutine5_Button) {
             setContentView(R.layout.routine_newlist);
+            Button newExercise = findViewById(R.id.NewExerciseAdd_Button);
+            newExercise.setVisibility(View.GONE);
+            TextView topText = findViewById(R.id.NewRoutineSet_TopText);
+            topText.setText("Glutes and Abs");
+            TextView goalText = findViewById(R.id.GoalofRoutine_TopText);
+            goalText.setVisibility(View.GONE);
+            //load premade exercise array
+            currentSelectedItems.clear();
+            currentSelectedItems.add("Banded Side Kicks");
+            currentSelectedItems.add("Clamshells");
+            currentSelectedItems.add("Standing flute kickback in machine");
+            currentSelectedItems.add("Cable crunch");
+            currentSelectedItems.add("Hanging knee raise");
+            currentSelectedItems.add("Machine crunch");
+            LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
+            for(int i = 0; i < currentSelectedItems.size(); i++) {
+                Button btn = new Button(this);
+                btn.setText(currentSelectedItems.get(i));
+                btn.setTextSize(24);
+                btn.setTextColor(Color.WHITE);
+                btn.setAllCaps(false);
+                btn.setClickable(true);
+                btn.setOnClickListener(getOnClickForDynamicButtons(btn));
+                GradientDrawable gradDraw = new GradientDrawable();
+                gradDraw.setShape(GradientDrawable.RECTANGLE);
+                gradDraw.setCornerRadius(90);
+                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                btn.setBackground(gradDraw);
+                btn.setPadding(20, 0, 20, 8);
+                if (btn.getText().length() > 23) {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                } else {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                }
+            }
+            currentSelectedItems.clear();
+            //make save, a save to routine array list and sync
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.activity_main, this);
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id == R.id.PreMadeRoutine6_Button) {
             setContentView(R.layout.routine_newlist);
+            Button newExercise = findViewById(R.id.NewExerciseAdd_Button);
+            newExercise.setVisibility(View.GONE);
+            TextView topText = findViewById(R.id.NewRoutineSet_TopText);
+            topText.setText("Full Body Session");
+            TextView goalText = findViewById(R.id.GoalofRoutine_TopText);
+            goalText.setVisibility(View.GONE);
+            //load premade exercise array
+            currentSelectedItems.clear();
+            currentSelectedItems.add("Smithing Machine Bench Press");
+            currentSelectedItems.add("Machine Shoulder Press");
+            currentSelectedItems.add("Machine Bicep Curl");
+            currentSelectedItems.add("Tricep Pushdown with Bar");
+            currentSelectedItems.add("Leg Press");
+            currentSelectedItems.add("Back Extension");
+            currentSelectedItems.add("Banded Side Kicks");
+            currentSelectedItems.add("Machine Crunch");
+            currentSelectedItems.add("Seated Calf Raise");
+            LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
+            for(int i = 0; i < currentSelectedItems.size(); i++) {
+                Button btn = new Button(this);
+                btn.setText(currentSelectedItems.get(i));
+                btn.setTextSize(24);
+                btn.setTextColor(Color.WHITE);
+                btn.setAllCaps(false);
+                btn.setClickable(true);
+                btn.setOnClickListener(getOnClickForDynamicButtons(btn));
+                GradientDrawable gradDraw = new GradientDrawable();
+                gradDraw.setShape(GradientDrawable.RECTANGLE);
+                gradDraw.setCornerRadius(90);
+                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                btn.setBackground(gradDraw);
+                btn.setPadding(20, 0, 20, 8);
+                if (btn.getText().length() > 23) {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                } else {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+                    params.setMargins(0, 30, 0, 0);
+                    btn.setLayoutParams(params);
+                    ll.addView(btn);
+                }
+            }
+            currentSelectedItems.clear();
+            //make save, a save to routine array list and sync
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.activity_main, this);
+            routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id == R.id.ExerciseSave_Button) {
             //TODO: Sync to firebase
             //all array information
