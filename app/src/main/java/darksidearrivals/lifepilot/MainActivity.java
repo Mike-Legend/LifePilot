@@ -413,11 +413,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.excerciseData) {
             //Initiating Spinner for workout breakdown.
             setContentView(R.layout.exercise_data);
+            TextView avgDays = (TextView) findViewById(R.id.avgDays);
             GenerateExerciseSpinnerWorkouts();
             muscleGroupChart = findViewById(R.id.monthlyExerciseData);
             WeightChart();
             muscleGroupChart.invalidate();
-
+            avgDays.invalidate();
         }
 
         else if (id == R.id.breakDown)
@@ -2355,6 +2356,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dayofMonth.setTextColor(Color.WHITE);
                 dayofMonth.setTextSize(12);
                 muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 36;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
             }
         }
     }
