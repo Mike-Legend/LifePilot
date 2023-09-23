@@ -37,14 +37,15 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
-        android:entries="@array/months"
+        android:background="#40000000"
+        android:popupBackground="@drawable/gradientblackbackground"
         app:layout_constraintStart_toEndOf="@+id/month"
         app:layout_constraintTop_toBottomOf="@+id/muscleDistribution" />
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/muscleBreakdown"
-        android:layout_width="350dp"
-        android:layout_height="300dp"
+        android:layout_width="368dp"
+        android:layout_height="349dp"
         android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +55,7 @@
         android:id="@+id/totalWorkouts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         android:text="Total Workouts:"
         android:textColor="@color/white"
         android:textSize="24sp"
@@ -91,4 +92,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/totalWorkoutVal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="48sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/totalWorkouts" />
 </androidx.constraintlayout.widget.ConstraintLayout>

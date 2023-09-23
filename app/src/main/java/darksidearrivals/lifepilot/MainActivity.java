@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -41,6 +42,9 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.StackedValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
@@ -131,6 +135,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList muscleEntriesArrayList;
 
     BarChart muscleGroupChart;
+
+    //Variables for breakdown pie chart
+    ArrayList breakdownEntries;
+    PieChart breakdownChart;
+    PieData breakdownData;
+    PieDataSet breakdownDataSet;
 
 
 
@@ -411,7 +421,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(id == R.id.analyticsHomeButton)
         {
             GoToHomeScreen();
-        } else if (id == R.id.excerciseData) {
+        }
+
+        else if (id == R.id.excerciseData)
+        {
             //Initiating Spinner for workout breakdown.
             setContentView(R.layout.exercise_data);
             TextView avgDays = (TextView) findViewById(R.id.avgDays);
@@ -423,12 +436,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if (id == R.id.breakDown)
         {
             //Initiating Spinner for Month Selection
-            Spinner monthSpinner = (Spinner) findViewById(R.id.monthSelect);
             setContentView(R.layout.muscle_distribution);
-        } else if (id == R.id.weight_height_save_button) {
+            GenerateBreakdownSpinner();
+        }
+
+        else if (id == R.id.weight_height_save_button) {
             SetWeightHeight();
             GoToHomeScreen();
-        } else if (id == R.id.exerciseBack) {
+        }
+
+        else if (id == R.id.exerciseBack)
+
+        {
             setContentView(R.layout.data_screen);
            ShowDataScreen();
            WorkoutsThisMonth();
@@ -1554,6 +1573,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "Sports"};
     private String[] bodyweight = new String[]{"Jumping Jacks",
             "Push-Ups"};
+
+    //Array for month select
+    private String[] monthSelect = new String[]
+        {
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        };
 
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -3591,6 +3627,291 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, workouts);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+    }
+
+    void GenerateBreakdownSpinner()
+    {
+        //Set breakdown spinner
+        spinner =  findViewById(R.id.monthSelect);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, monthSelect);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+    }
+
+    void GenerateBreakdown()
+    {
+        //month will be used to tell what month in date logs to look for without if checking every loop
+        int month = 0;
+        int chest = 0, shoulder = 0, bicep = 0, tricep = 0, leg = 0, back = 0, glute = 0, ab = 0, calves = 0,
+            flexors = 0, extensors = 0, cardio = 0, body = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("January")) {
+                month = 1;
+            }
+
+            if (currentSel.equals("February"))
+            {
+                month = 2;
+            }
+
+            if (currentSel.equals("March"))
+            {
+                month = 3;
+            }
+
+            if (currentSel.equals("April"))
+            {
+                month = 4;
+            }
+
+            if (currentSel.equals("May"))
+            {
+                month = 5;
+            }
+
+            if (currentSel.equals("June"))
+            {
+                month = 6;
+            }
+
+            if (currentSel.equals("July"))
+            {
+                month = 7;
+            }
+
+            if (currentSel.equals("August"))
+            {
+                month = 8;
+            }
+
+            if (currentSel.equals("September"))
+            {
+                month = 9;
+            }
+
+            if (currentSel.equals("October"))
+            {
+                month = 10;
+            }
+
+            if (currentSel.equals("November"))
+            {
+                month = 11;
+            }
+
+            if (currentSel.equals("December"))
+            {
+                month = 12;
+            }
+
+            //Time to loop through all the log arrays and get totals for each month.
+            if(chestExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < chestExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == chestExercisesLog.get(i).getYear() && chestExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        chest++;
+                    }
+                }
+            }
+
+            if(shoulderExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < shoulderExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == shoulderExercisesLog.get(i).getYear() && shoulderExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        shoulder++;
+                    }
+                }
+            }
+
+            if(bicepExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < bicepExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == bicepExercisesLog.get(i).getYear() && bicepExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        bicep++;
+                    }
+                }
+            }
+
+            if(tricepsExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < tricepsExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == tricepsExercisesLog.get(i).getYear() && tricepsExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        tricep++;
+                    }
+                }
+            }
+
+            if(legExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < legExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == legExercisesLog.get(i).getYear() && legExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        leg++;
+                    }
+                }
+            }
+
+            if(backExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < backExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == backExercisesLog.get(i).getYear() && backExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        back++;
+                    }
+                }
+            }
+
+            if(gluteExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < gluteExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == gluteExercisesLog.get(i).getYear() && gluteExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        glute++;
+                    }
+                }
+            }
+
+            if(abExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < abExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == abExercisesLog.get(i).getYear() && abExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        ab++;
+                    }
+                }
+            }
+
+            if(calvesExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < calvesExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == calvesExercisesLog.get(i).getYear() && calvesExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        calves++;
+                    }
+                }
+            }
+
+            if(forearmFlexorsGripExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < forearmFlexorsGripExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == forearmFlexorsGripExercisesLog.get(i).getYear() && forearmFlexorsGripExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        flexors++;
+                    }
+                }
+            }
+
+            if(forearmExtensorExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < forearmExtensorExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == forearmExtensorExercisesLog.get(i).getYear() && forearmExtensorExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        extensors++;
+                    }
+                }
+            }
+
+            if(cardioExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < cardioExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == cardioExercisesLog.get(i).getYear() && cardioExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        cardio++;
+                    }
+                }
+            }
+
+            if(bodyWeightLog.size() != 0)
+            {
+                for (int i = 0; i < bodyWeightLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == bodyWeightLog.get(i).getYear() && bodyWeightLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        body++;
+                    }
+                }
+            }
+
+            //Hard Coding data for demonstrative purposes
+            chest = 21;
+            shoulder =12;
+            bicep = 13;
+            tricep = 32;
+            leg = 7;
+            back = 6;
+            glute = 14;
+            ab = 22;
+            calves = 17;
+            flexors = 6;
+            extensors = 9;
+            cardio = 8;
+            body = 33;
+            //Tallying the total for all exercises done for the current month.
+            int monthTotal = chest+shoulder+bicep+tricep+leg+back+glute+ab+calves+flexors+extensors+cardio+body;
+
+            TextView totalWorkOuts = (TextView) findViewById(R.id.totalWorkoutVal);
+            totalWorkOuts.setText(Integer.toString(monthTotal));
+            totalWorkOuts.invalidate();
+
+            //Setting up Pie Chart Entries
+            breakdownEntries = new ArrayList<>();
+            breakdownEntries.add(new PieEntry(chest, "Chest Exercises"));
+            breakdownEntries.add(new PieEntry(shoulder, "Shoulder Exercises"));
+            breakdownEntries.add(new PieEntry(bicep, "Bicep Exercises"));
+            breakdownEntries.add(new PieEntry(tricep, "Tricep Exercises"));
+            breakdownEntries.add(new PieEntry(leg, "Leg Exercises"));
+            breakdownEntries.add(new PieEntry(back, "Back Exercises"));
+            breakdownEntries.add(new PieEntry(glute, "Glute Exercises"));
+            breakdownEntries.add(new PieEntry(ab, "Ab Exercises"));
+            breakdownEntries.add(new PieEntry(calves, "Calves Exercises"));
+            breakdownEntries.add(new PieEntry(flexors, "Forearm Flexors and Grip Exercises"));
+            breakdownEntries.add(new PieEntry(extensors, "Forearm Extensor Exercises"));
+            breakdownEntries.add(new PieEntry(cardio, "Cardio Exercises"));
+            breakdownEntries.add(new PieEntry(body, "Body Weight"));
+
+            //Setting up dataset
+            breakdownDataSet = new PieDataSet(breakdownEntries, "Monthly Breakdown");
+            breakdownDataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
+
+            //Setting up Data
+            breakdownData = new PieData(breakdownDataSet);
+
+            //Setting up chart
+            breakdownChart.setData(breakdownData);
+            breakdownChart.animateXY(500,500);
+            breakdownChart.setDrawEntryLabels(true);
+        }
     }
 
     public void onNothingSelected(AdapterView<?> adapterView) {}
