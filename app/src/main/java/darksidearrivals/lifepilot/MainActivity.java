@@ -548,7 +548,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //overlay trigger
             FrameLayout routineoverlay = findViewById(R.id.routineoverlay);
             routineoverlay.setVisibility(View.GONE);
-
             LinearLayout ll = findViewById(R.id.ExerciseButtonAddsHere);
             for (int i = 0; i < currentSelectedItems.size(); i++) {
                 Button btn = new Button(this);
