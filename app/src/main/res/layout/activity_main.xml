@@ -23,7 +23,7 @@
 
     <Button
         android:id="@+id/routinesButton"
-        android:layout_width="0dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:backgroundTint="@color/royalPurple"
@@ -37,7 +37,7 @@
 
     <Button
         android:id="@+id/analytics_button"
-        android:layout_width="0dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:backgroundTint="@color/royalPurple"
@@ -56,6 +56,7 @@
         android:layout_marginBottom="32dp"
         android:backgroundTint="@color/royalPurple"
         android:onClick="onClick"
+        android:visibility="gone"
         android:text="@string/Calendar"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -118,7 +119,7 @@
     <CalendarView
         android:id="@+id/calendar"
         android:layout_width="370dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
         android:layout_marginBottom="10dp"
         android:theme="@style/Theme.Design.NoActionBar"

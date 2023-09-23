@@ -708,6 +708,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    }
 //                }
 //            }
+            for (int i = 0; i < userExercisesArrayList.get(routineIDActive).size(); i++) {
+                button = userExercisesArrayList.get(routineIDActive).get(i);
+                button.setLayoutParams(layoutParams);
+                button.setBackground(gradDraw);
+//                for (int j = 0; j < routineDeleteList.size(); j++) {
+//                    if (userRoutines.get(i).getId() == routineDeleteList.get(j).getId()) {
+//                        userRoutines.get(i).setBackground(gradDraw);
+//                    }
+//                }
+            }
             routineDeleteList.clear();
             //overlay trigger
             FrameLayout routineedit = findViewById(R.id.routineNewlistoverlayedit);
