@@ -416,6 +416,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             GenerateExerciseSpinnerWorkouts();
             muscleGroupChart = findViewById(R.id.monthlyExerciseData);
             WeightChart();
+            muscleGroupChart.invalidate();
 
         }
 
@@ -2334,9 +2335,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
                 muscleBarData = new BarData(muscleBarDataSet);
                 muscleGroupChart.setData(muscleBarData);
-                muscleBarDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
                 muscleBarDataSet.setValueTextColor(Color.WHITE);
-                muscleBarDataSet.setValueTextSize(14f);
+                muscleBarDataSet.setValueTextSize(10f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.TOP);
+                dayofMonth.setGranularityEnabled(true);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.invalidate();
             }
         }
     }
