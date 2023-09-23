@@ -53,6 +53,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -437,6 +438,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             //Initiating Spinner for Month Selection
             setContentView(R.layout.muscle_distribution);
+            breakdownChart = findViewById(R.id.muscleBreakdown);
             GenerateBreakdownSpinner();
         }
 
@@ -1591,6 +1593,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             "December"
         };
 
+    private int[] colors = new int[]
+        {   Color.rgb(162,25,255),
+            Color.rgb(186,85,255),
+            Color.GRAY,
+            Color.rgb(219,165,255),
+            Color.LTGRAY,
+            Color.rgb(120, 81,169),
+            Color.DKGRAY,
+            Color.rgb(60, 0, 100),
+            Color.rgb(227,185,255),
+            Color.rgb(174,55,255),
+            Color.rgb(95,0,160),
+            Color.rgb(105,105,105),
+            Color.rgb(198,115,255)
+        };
+
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
         //Editing for usage with multiple spinners.
@@ -1694,6 +1712,69 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             else if (currentSel.equals("Body Weight"))
             {
                 GenerateMuscleChart();
+            }
+        }
+
+        if(spinId == R.id.monthSelect)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("January")) {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("February"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("March"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("April"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("May"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("June"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("July"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("August"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("September"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("October"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("November"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("December"))
+            {
+                GenerateBreakdown();
             }
         }
     }
@@ -3629,6 +3710,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         spinner.setOnItemSelectedListener(this);
     }
 
+    //Function for generating Breakdown chart.
     void GenerateBreakdownSpinner()
     {
         //Set breakdown spinner
@@ -3647,63 +3729,232 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
             String currentSel = spinner.getSelectedItem().toString();
-            if (currentSel.equals("January")) {
+            if (currentSel.equals("January"))
+            {
                 month = 1;
+                //Hard Coding data for demonstrative purposes
+                chest = 21;
+                shoulder =12;
+                bicep = 13;
+                tricep = 32;
+                leg = 7;
+                back = 6;
+                glute = 14;
+                ab = 22;
+                calves = 17;
+                flexors = 6;
+                extensors = 9;
+                cardio = 8;
+                body = 33;
             }
 
             if (currentSel.equals("February"))
             {
                 month = 2;
+                //Hard Coding data for demonstrative purposes
+                chest = 12;
+                shoulder =33;
+                bicep = 24;
+                tricep = 55;
+                leg = 44;
+                back = 24;
+                glute = 4;
+                ab = 66;
+                calves = 7;
+                flexors = 12;
+                extensors = 4;
+                cardio = 32;
+                body = 32;
             }
 
             if (currentSel.equals("March"))
             {
                 month = 3;
+                //Hard Coding data for demonstrative purposes
+                chest = 71;
+                shoulder =21;
+                bicep = 13;
+                tricep = 12;
+                leg = 27;
+                back = 32;
+                glute = 4;
+                ab = 24;
+                calves = 27;
+                flexors = 16;
+                extensors = 10;
+                cardio = 4;
+                body = 23;
             }
 
             if (currentSel.equals("April"))
             {
                 month = 4;
+                //Hard Coding data for demonstrative purposes
+                chest = 65;
+                shoulder =2;
+                bicep = 32;
+                tricep = 22;
+                leg = 21;
+                back = 23;
+                glute = 4;
+                ab = 52;
+                calves = 7;
+                flexors = 46;
+                extensors = 5;
+                cardio = 0;
+                body = 23;
             }
 
             if (currentSel.equals("May"))
             {
                 month = 5;
+                //Hard Coding data for demonstrative purposes
+                chest = 43;
+                shoulder =22;
+                bicep = 44;
+                tricep = 22;
+                leg = 17;
+                back = 16;
+                glute = 4;
+                ab = 32;
+                calves = 27;
+                flexors = 16;
+                extensors = 19;
+                cardio = 18;
+                body = 13;
             }
 
             if (currentSel.equals("June"))
             {
                 month = 6;
+                //Hard Coding data for demonstrative purposes
+                chest = 21;
+                shoulder =2;
+                bicep = 3;
+                tricep = 2;
+                leg = 7;
+                back = 6;
+                glute = 4;
+                ab = 2;
+                calves = 7;
+                flexors = 16;
+                extensors = 9;
+                cardio = 8;
+                body = 3;
             }
 
             if (currentSel.equals("July"))
             {
                 month = 7;
+                //Hard Coding data for demonstrative purposes
+                chest = 30;
+                shoulder =20;
+                bicep = 10;
+                tricep = 30;
+                leg = 40;
+                back = 20;
+                glute = 10;
+                ab = 20;
+                calves = 20;
+                flexors = 30;
+                extensors = 10;
+                cardio = 20;
+                body = 30;
             }
 
             if (currentSel.equals("August"))
             {
                 month = 8;
+                //Hard Coding data for demonstrative purposes
+                chest = 2;
+                shoulder =1;
+                bicep = 4;
+                tricep = 3;
+                leg = 123;
+                back = 6;
+                glute = 1;
+                ab = 2;
+                calves = 1;
+                flexors = 6;
+                extensors = 9;
+                cardio = 8;
+                body = 3;
             }
 
             if (currentSel.equals("September"))
             {
                 month = 9;
+                //Hard Coding data for demonstrative purposes
+                chest = 200;
+                shoulder =0;
+                bicep = 0;
+                tricep = 3;
+                leg = 0;
+                back = 4;
+                glute = 12;
+                ab = 2;
+                calves = 1;
+                flexors = 6;
+                extensors = 9;
+                cardio = 8;
+                body = 3;
             }
 
             if (currentSel.equals("October"))
             {
                 month = 10;
+                //Hard Coding data for demonstrative purposes
+                chest = 3;
+                shoulder =4;
+                bicep = 124;
+                tricep = 2;
+                leg = 72;
+                back = 6;
+                glute = 4;
+                ab = 42;
+                calves = 7;
+                flexors = 4;
+                extensors = 2;
+                cardio = 3;
+                body = 3;
             }
 
             if (currentSel.equals("November"))
             {
                 month = 11;
+                //Hard Coding data for demonstrative purposes
+                chest = 2;
+                shoulder =3;
+                bicep = 3;
+                tricep = 6;
+                leg = 7;
+                back = 6;
+                glute = 4;
+                ab = 164;
+                calves = 8;
+                flexors = 2;
+                extensors = 1;
+                cardio = 8;
+                body = 3;
             }
 
             if (currentSel.equals("December"))
             {
                 month = 12;
+                //Hard Coding data for demonstrative purposes
+                chest = 1;
+                shoulder =15;
+                bicep = 3;
+                tricep = 32;
+                leg = 5;
+                back = 21;
+                glute = 4;
+                ab = 52;
+                calves = 37;
+                flexors = 2;
+                extensors = 3;
+                cardio = 4;
+                body = 143;
             }
 
             //Time to loop through all the log arrays and get totals for each month.
@@ -3863,20 +4114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
 
-            //Hard Coding data for demonstrative purposes
-            chest = 21;
-            shoulder =12;
-            bicep = 13;
-            tricep = 32;
-            leg = 7;
-            back = 6;
-            glute = 14;
-            ab = 22;
-            calves = 17;
-            flexors = 6;
-            extensors = 9;
-            cardio = 8;
-            body = 33;
+
             //Tallying the total for all exercises done for the current month.
             int monthTotal = chest+shoulder+bicep+tricep+leg+back+glute+ab+calves+flexors+extensors+cardio+body;
 
@@ -3886,23 +4124,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //Setting up Pie Chart Entries
             breakdownEntries = new ArrayList<>();
-            breakdownEntries.add(new PieEntry(chest, "Chest Exercises"));
-            breakdownEntries.add(new PieEntry(shoulder, "Shoulder Exercises"));
-            breakdownEntries.add(new PieEntry(bicep, "Bicep Exercises"));
-            breakdownEntries.add(new PieEntry(tricep, "Tricep Exercises"));
-            breakdownEntries.add(new PieEntry(leg, "Leg Exercises"));
-            breakdownEntries.add(new PieEntry(back, "Back Exercises"));
-            breakdownEntries.add(new PieEntry(glute, "Glute Exercises"));
-            breakdownEntries.add(new PieEntry(ab, "Ab Exercises"));
-            breakdownEntries.add(new PieEntry(calves, "Calves Exercises"));
-            breakdownEntries.add(new PieEntry(flexors, "Forearm Flexors and Grip Exercises"));
-            breakdownEntries.add(new PieEntry(extensors, "Forearm Extensor Exercises"));
-            breakdownEntries.add(new PieEntry(cardio, "Cardio Exercises"));
+            breakdownEntries.add(new PieEntry(chest, "Chest"));
+            breakdownEntries.add(new PieEntry(shoulder, "Shoulder"));
+            breakdownEntries.add(new PieEntry(bicep, "Bicep"));
+            breakdownEntries.add(new PieEntry(tricep, "Tricep"));
+            breakdownEntries.add(new PieEntry(leg, "Leg"));
+            breakdownEntries.add(new PieEntry(back, "Back"));
+            breakdownEntries.add(new PieEntry(glute, "Glute"));
+            breakdownEntries.add(new PieEntry(ab, "Ab"));
+            breakdownEntries.add(new PieEntry(calves, "Calves"));
+            breakdownEntries.add(new PieEntry(flexors, "Forearm Flexors and Grip"));
+            breakdownEntries.add(new PieEntry(extensors, "Forearm Extensor"));
+            breakdownEntries.add(new PieEntry(cardio, "Cardio"));
             breakdownEntries.add(new PieEntry(body, "Body Weight"));
 
             //Setting up dataset
             breakdownDataSet = new PieDataSet(breakdownEntries, "Monthly Breakdown");
-            breakdownDataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
+            breakdownDataSet.setColors(ColorTemplate.createColors(colors));
+            breakdownDataSet.setValueTextSize(14f);
 
             //Setting up Data
             breakdownData = new PieData(breakdownDataSet);
@@ -3911,6 +4150,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             breakdownChart.setData(breakdownData);
             breakdownChart.animateXY(500,500);
             breakdownChart.setDrawEntryLabels(true);
+            breakdownChart.setTransparentCircleColor(Color.rgb(120,81,169));
+            breakdownChart.setEntryLabelColor(Color.WHITE);
+            breakdownChart.getLegend().setTextColor(Color.WHITE);
+            breakdownChart.setHoleColor(Color.TRANSPARENT);
+            breakdownChart.getDescription().setEnabled(false);
+            breakdownChart.invalidate();
         }
     }
 
