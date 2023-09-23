@@ -1266,11 +1266,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.support_page1);
         }
 
-        //Thrown in weight button to get to input screen to log weight/height to "enable" weight graph.
-        else if (id == R.id.weightButton) {
-            setContentView(R.layout.weight_height_input);
-            WeightHeightInputSetup();
-        } else {
+        else {
             GoToHomeScreen();
         }
     }
@@ -2188,65 +2184,77 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //Function to construct weight tracking chart when data screen is displayed.
-    public void WeightChart() {
+    public void WeightChart()
+    {
         //If OS version allows for localdatetime functions.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //If there are weight logs, attempt to create weight chart.
-            if (bodyWeightChangeLog.size() != 0) {
-                LineChart weightTracker = findViewById(R.id.monthlyWeightMonitor);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            LineChart weightTracker = findViewById(R.id.monthlyWeightMonitor);
+            weightEntries = new ArrayList<>();
+            if (bodyWeightChangeLog.size() != 0)
+            {
                 for (int i = 0; i < bodyWeightChangeLog.size(); i++)
                 {
                     //If current year and month matches year and month of log. Reflecting data on monthly basis.
                     if(LocalDateTime.now().getYear() == bodyWeightChangeLog.get(i).timeLog.getYear() && LocalDateTime.now().getMonthValue() == bodyWeightChangeLog.get(i).timeLog.getMonthValue())
                     {
-                        weightEntries = new ArrayList<>();
                         weightEntries.add(new Entry(bodyWeightChangeLog.get(i).timeLog.getDayOfMonth(), bodyWeightChangeLog.get(i).weightSnapShot));
                         //For each log, create a new entry with x position at the int of day of month and y at calorie value.
-                        weightEntries.add(new Entry(3, 128));
-                        weightEntries.add(new Entry(5, 133));
-                        weightEntries.add(new Entry(10, 111));
-                        weightEntries.add(new Entry(7, 122));
-                        weightEntries.add(new Entry(21, 143));
-                        weightEntries.add(new Entry(25, 150));
-                        weightEntries.add(new Entry(1, 128));
-                        weightEntries.add(new Entry(3, 130));
-                        //Force Feeding Data for showcasing purposes, as WeightChangeLog is not synced to FireBase,
-                        //Thus, does not contain enough data for showcasing. Still requires at least one entry in array,
-                        //To fall into this code.
 
                         //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
                         Collections.sort(weightEntries, new EntryXComparator());
                     }
                 }
-                weightDataSet = new LineDataSet(weightEntries, "Weight");
-                weightChartData = new LineData(weightDataSet);
-                weightTracker.setData(weightChartData);
-                weightTracker.animateX(1000);
-                weightDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-                weightDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-                weightDataSet.setLineWidth(2);
-                weightDataSet.setColor(Color.MAGENTA);
-                weightDataSet.setHighLightColor(Color.WHITE);
-                weightDataSet.setValueTextColor(Color.WHITE);
-                weightDataSet.setValueTextSize(12f);
-                weightDataSet.setDrawFilled(true);
-                weightDataSet.setFillColor(Color.rgb(120, 81, 169));
 
-                //Setting Y axis color to white.
-                weightTracker.getAxisLeft().setTextColor(Color.WHITE);
-                weightTracker.getAxisLeft().setTextSize(12);
 
-                // Setup X Axis
-                XAxis dayofMonth = weightTracker.getXAxis();
-                dayofMonth.setPosition(XAxis.XAxisPosition.TOP);
-                dayofMonth.setGranularityEnabled(true);
-                dayofMonth.setGranularity(1.0f);
-                dayofMonth.setXOffset(1f);
-                dayofMonth.setAxisMinimum(1);
-                dayofMonth.setAxisMaximum(31);
-                dayofMonth.setTextColor(Color.WHITE);
-                dayofMonth.setTextSize(12);
             }
+            weightEntries.add(new Entry(3, 128));
+            weightEntries.add(new Entry(5, 133));
+            weightEntries.add(new Entry(10, 111));
+            weightEntries.add(new Entry(7, 122));
+            weightEntries.add(new Entry(21, 143));
+            weightEntries.add(new Entry(25, 150));
+            weightEntries.add(new Entry(1, 128));
+            weightEntries.add(new Entry(3, 130));
+            //Force Feeding Data for showcasing purposes, as WeightChangeLog is not synced to FireBase,
+            //Thus, does not contain enough dataa for showcasing.
+
+            //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+            Collections.sort(weightEntries, new EntryXComparator());
+
+            weightDataSet = new LineDataSet(weightEntries, "Weight");
+            weightChartData = new LineData(weightDataSet);
+            weightTracker.setData(weightChartData);
+            weightTracker.animateX(1000);
+            weightDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+            weightDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+            weightDataSet.setLineWidth(2);
+            weightDataSet.setColor(Color.MAGENTA);
+            weightDataSet.setHighLightColor(Color.WHITE);
+            weightDataSet.setValueTextColor(Color.WHITE);
+            weightDataSet.setValueTextSize(12f);
+            weightDataSet.setDrawFilled(true);
+            weightDataSet.setFillColor(Color.rgb(120, 81, 169));
+
+            //Setting Y axis color to white.
+            weightTracker.getAxisLeft().setTextColor(Color.WHITE);
+            weightTracker.getAxisLeft().setTextSize(12);
+            weightTracker.getAxisRight().setTextColor(Color.WHITE);
+            weightTracker.getAxisRight().setTextSize(12);
+
+            // Setup X Axis
+            XAxis dayofMonth = weightTracker.getXAxis();
+            dayofMonth.setPosition(XAxis.XAxisPosition.TOP);
+            dayofMonth.setGranularityEnabled(true);
+            dayofMonth.setGranularity(1.0f);
+            dayofMonth.setXOffset(1f);
+            dayofMonth.setAxisMinimum(1);
+            dayofMonth.setAxisMaximum(31);
+            dayofMonth.setTextColor(Color.WHITE);
+            dayofMonth.setTextSize(12);
+
+            weightTracker.getLegend().setEnabled(false);
+            weightTracker.invalidate();
         }
     }
 
