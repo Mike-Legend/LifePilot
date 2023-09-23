@@ -605,6 +605,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //userGoalArrayList.get(i).get(0).setText("");
                 //}
                 //}
+
             }
         } else if (id == R.id.ConfirmNewRoutine_Button) {
             //overlay trigger
