@@ -4,7 +4,6 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
-
     <style name="Theme.LifePilot" parent="Base.Theme.LifePilot" />
 
     <style name="roundedImageViewRounded">

@@ -19,22 +19,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/exerciseSpinner"
-        android:layout_width="300dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="32dp"
-        android:entries="@array/workOuts"
-        android:scrollbarSize="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exerciseData" />
-
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/monthlyExerciseData"
         android:layout_width="350dp"
         android:layout_height="200dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exerciseSpinner" />
@@ -43,18 +32,20 @@
         android:id="@+id/avgSetPerDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="194dp"
         android:text="Avg. Sets (Per Day):"
         android:textColor="@color/white"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@+id/exerciseSpinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/monthlyExerciseData" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/monthlyWeightMonitor"
-        android:layout_width="350dp"
-        android:layout_height="125dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="386dp"
+        android:layout_height="189dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +55,7 @@
         android:id="@+id/weightLineText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:text="Weight (Monthly)"
         android:textColor="@color/white"
         android:textSize="22sp"
@@ -101,5 +92,28 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="SpeakableTextPresentCheck" />
+
+    <Spinner
+        android:id="@+id/exerciseSpinner"
+        android:layout_width="359dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:background="#40000000"
+        android:popupBackground="@drawable/gradientblackbackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exerciseData" />
+
+    <TextView
+        android:id="@+id/avgDays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/avgSetPerDay"
+        app:layout_constraintTop_toBottomOf="@+id/monthlyExerciseData" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
