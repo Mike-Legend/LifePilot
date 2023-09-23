@@ -103,7 +103,7 @@
             android:onClick="onClick"
             android:backgroundTint="@color/royalPurple"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:text="Home" />
 
     </LinearLayout>
 </ScrollView>
