@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -41,6 +42,10 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.StackedValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.EntryXComparator;
@@ -48,6 +53,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -130,6 +136,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList muscleEntriesArrayList;
 
     BarChart muscleGroupChart;
+
+    //Variables for breakdown pie chart
+    ArrayList breakdownEntries;
+    PieChart breakdownChart;
+    PieData breakdownData;
+    PieDataSet breakdownDataSet;
 
 
 
@@ -418,9 +430,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(id == R.id.analyticsHomeButton)
         {
             GoToHomeScreen();
-        } else if (id == R.id.excerciseData) {
+        }
+
+        else if (id == R.id.excerciseData)
+        {
             //Initiating Spinner for workout breakdown.
             setContentView(R.layout.exercise_data);
+            TextView avgDays = (TextView) findViewById(R.id.avgDays);
             GenerateExerciseSpinnerWorkouts();
             muscleGroupChart = findViewById(R.id.monthlyExerciseData);
             WeightChart();
@@ -429,12 +445,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if (id == R.id.breakDown)
         {
             //Initiating Spinner for Month Selection
-            Spinner monthSpinner = (Spinner) findViewById(R.id.monthSelect);
             setContentView(R.layout.muscle_distribution);
-        } else if (id == R.id.weight_height_save_button) {
+            breakdownChart = findViewById(R.id.muscleBreakdown);
+            GenerateBreakdownSpinner();
+        }
+
+        else if (id == R.id.weight_height_save_button) {
             SetWeightHeight();
             GoToHomeScreen();
-        } else if (id == R.id.exerciseBack) {
+        }
+
+        else if (id == R.id.exerciseBack)
+
+        {
             setContentView(R.layout.data_screen);
            ShowDataScreen();
            WorkoutsThisMonth();
@@ -1243,11 +1266,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setContentView(R.layout.support_page1);
         }
 
-        //Thrown in weight button to get to input screen to log weight/height to "enable" weight graph.
-        else if (id == R.id.weightButton) {
-            setContentView(R.layout.weight_height_input);
-            WeightHeightInputSetup();
-        } else {
+        else {
             GoToHomeScreen();
         }
     }
@@ -1837,6 +1856,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String[] bodyweight = new String[]{"Jumping Jacks",
             "Push-Ups"};
 
+    //Array for month select
+    private String[] monthSelect = new String[]
+        {
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        };
+
+    private int[] colors = new int[]
+        {   Color.rgb(162,25,255),
+            Color.rgb(186,85,255),
+            Color.GRAY,
+            Color.rgb(219,165,255),
+            Color.LTGRAY,
+            Color.rgb(120, 81,169),
+            Color.DKGRAY,
+            Color.rgb(60, 0, 100),
+            Color.rgb(227,185,255),
+            Color.rgb(174,55,255),
+            Color.rgb(95,0,160),
+            Color.rgb(105,105,105),
+            Color.rgb(198,115,255)
+        };
+
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
         //Editing for usage with multiple spinners.
@@ -1879,67 +1931,130 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String currentSel = spinner.getSelectedItem().toString();
             if (currentSel.equals("Chest Exercises"))
             {
-                GenerateChestChart();
+                GenerateMuscleChart();
             }
 
             else if (currentSel.equals("Shoulder Exercises"))
             {
-
+                GenerateMuscleChart();
             }
 
             else if (currentSel.equals("Bicep Exercises"))
             {
-
+                GenerateMuscleChart();
             }
 
             else if (currentSel.equals("Triceps Exercises"))
             {
-
+                GenerateMuscleChart();
             }
 
             else if (currentSel.equals("Leg Exercises"))
             {
-
+                GenerateMuscleChart();
             }
 
             else if (currentSel.equals("Back Exercises"))
             {
-
+                GenerateMuscleChart();
             }
 
             else if (currentSel.equals("Glute Exercises"))
             {
-
+                GenerateMuscleChart();
             }
 
             else if (currentSel.equals("Ab Exercises"))
             {
-
+                GenerateMuscleChart();
             }
 
             else if (currentSel.equals("Calves Exercises"))
             {
-
+                GenerateMuscleChart();
             }
 
             else if (currentSel.equals("Forearm Flexors and Grip Exercises"))
             {
-
+                GenerateMuscleChart();
             }
 
             else if (currentSel.equals("Forearm Extensor Exercises"))
             {
-
+                GenerateMuscleChart();
             }
 
             else if (currentSel.equals("Cardio Exercises"))
             {
-
+                GenerateMuscleChart();
             }
 
             else if (currentSel.equals("Body Weight"))
             {
+                GenerateMuscleChart();
+            }
+        }
 
+        if(spinId == R.id.monthSelect)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("January")) {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("February"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("March"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("April"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("May"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("June"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("July"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("August"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("September"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("October"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("November"))
+            {
+                GenerateBreakdown();
+            }
+
+            if (currentSel.equals("December"))
+            {
+                GenerateBreakdown();
             }
         }
     }
@@ -2069,64 +2184,77 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     //Function to construct weight tracking chart when data screen is displayed.
-    public void WeightChart() {
+    public void WeightChart()
+    {
         //If OS version allows for localdatetime functions.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //If there are weight logs, attempt to create weight chart.
-            if (bodyWeightChangeLog.size() != 0) {
-                LineChart weightTracker = findViewById(R.id.monthlyWeightMonitor);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            LineChart weightTracker = findViewById(R.id.monthlyWeightMonitor);
+            weightEntries = new ArrayList<>();
+            if (bodyWeightChangeLog.size() != 0)
+            {
                 for (int i = 0; i < bodyWeightChangeLog.size(); i++)
                 {
                     //If current year and month matches year and month of log. Reflecting data on monthly basis.
                     if(LocalDateTime.now().getYear() == bodyWeightChangeLog.get(i).timeLog.getYear() && LocalDateTime.now().getMonthValue() == bodyWeightChangeLog.get(i).timeLog.getMonthValue())
                     {
-                        weightEntries = new ArrayList<>();
                         weightEntries.add(new Entry(bodyWeightChangeLog.get(i).timeLog.getDayOfMonth(), bodyWeightChangeLog.get(i).weightSnapShot));
                         //For each log, create a new entry with x position at the int of day of month and y at calorie value.
-                        weightEntries.add(new Entry(3, 128));
-                        weightEntries.add(new Entry(5, 133));
-                        weightEntries.add(new Entry(10, 111));
-                        weightEntries.add(new Entry(7, 122));
-                        weightEntries.add(new Entry(21, 143));
-                        weightEntries.add(new Entry(25, 150));
-                        weightEntries.add(new Entry(1, 128));
-                        weightEntries.add(new Entry(3, 130));
-                        //Force Feeding Data for showcasing purposes, as WeightChangeLog is not synced to FireBase,
-                        //Thus, does not contain enough data for showcasing. Still requires at least one entry in array,
-                        //To fall into this code.
 
                         //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
                         Collections.sort(weightEntries, new EntryXComparator());
                     }
                 }
-                weightDataSet = new LineDataSet(weightEntries, "Weight");
-                weightChartData = new LineData(weightDataSet);
-                weightTracker.setData(weightChartData);
-                weightDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
-                weightDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
-                weightDataSet.setLineWidth(2);
-                weightDataSet.setColor(Color.MAGENTA);
-                weightDataSet.setHighLightColor(Color.WHITE);
-                weightDataSet.setValueTextColor(Color.WHITE);
-                weightDataSet.setValueTextSize(12f);
-                weightDataSet.setDrawFilled(true);
-                weightDataSet.setFillColor(Color.rgb(120, 81, 169));
 
-                //Setting Y axis color to white.
-                weightTracker.getAxisLeft().setTextColor(Color.WHITE);
-                weightTracker.getAxisLeft().setTextSize(12);
 
-                // Setup X Axis
-                XAxis dayofMonth = weightTracker.getXAxis();
-                dayofMonth.setPosition(XAxis.XAxisPosition.TOP);
-                dayofMonth.setGranularityEnabled(true);
-                dayofMonth.setGranularity(1.0f);
-                dayofMonth.setXOffset(1f);
-                dayofMonth.setAxisMinimum(1);
-                dayofMonth.setAxisMaximum(31);
-                dayofMonth.setTextColor(Color.WHITE);
-                dayofMonth.setTextSize(12);
             }
+            weightEntries.add(new Entry(3, 128));
+            weightEntries.add(new Entry(5, 133));
+            weightEntries.add(new Entry(10, 111));
+            weightEntries.add(new Entry(7, 122));
+            weightEntries.add(new Entry(21, 143));
+            weightEntries.add(new Entry(25, 150));
+            weightEntries.add(new Entry(1, 128));
+            weightEntries.add(new Entry(3, 130));
+            //Force Feeding Data for showcasing purposes, as WeightChangeLog is not synced to FireBase,
+            //Thus, does not contain enough dataa for showcasing.
+
+            //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+            Collections.sort(weightEntries, new EntryXComparator());
+
+            weightDataSet = new LineDataSet(weightEntries, "Weight");
+            weightChartData = new LineData(weightDataSet);
+            weightTracker.setData(weightChartData);
+            weightTracker.animateX(1000);
+            weightDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+            weightDataSet.setMode(LineDataSet.Mode.HORIZONTAL_BEZIER);
+            weightDataSet.setLineWidth(2);
+            weightDataSet.setColor(Color.MAGENTA);
+            weightDataSet.setHighLightColor(Color.WHITE);
+            weightDataSet.setValueTextColor(Color.WHITE);
+            weightDataSet.setValueTextSize(12f);
+            weightDataSet.setDrawFilled(true);
+            weightDataSet.setFillColor(Color.rgb(120, 81, 169));
+
+            //Setting Y axis color to white.
+            weightTracker.getAxisLeft().setTextColor(Color.WHITE);
+            weightTracker.getAxisLeft().setTextSize(12);
+            weightTracker.getAxisRight().setTextColor(Color.WHITE);
+            weightTracker.getAxisRight().setTextSize(12);
+
+            // Setup X Axis
+            XAxis dayofMonth = weightTracker.getXAxis();
+            dayofMonth.setPosition(XAxis.XAxisPosition.TOP);
+            dayofMonth.setGranularityEnabled(true);
+            dayofMonth.setGranularity(1.0f);
+            dayofMonth.setXOffset(1f);
+            dayofMonth.setAxisMinimum(1);
+            dayofMonth.setAxisMaximum(31);
+            dayofMonth.setTextColor(Color.WHITE);
+            dayofMonth.setTextSize(12);
+
+            weightTracker.getLegend().setEnabled(false);
+            weightTracker.invalidate();
         }
     }
 
@@ -2562,7 +2690,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         daysWorkedText.setText(Integer.toString(workedTotal));
     }
 
-    public void GenerateChestChart()
+    public void GenerateMuscleChart()
     {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
@@ -2604,7 +2732,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 muscleEntriesArrayList.add(new BarEntry(8f, 11));
                 muscleEntriesArrayList.add(new BarEntry(5f, 3f));
                 muscleEntriesArrayList.add(new BarEntry(10, 4));
-                muscleEntriesArrayList.add(new BarEntry(7, 5));
+                muscleEntriesArrayList.add(new BarEntry(8, 5));
                 muscleEntriesArrayList.add(new BarEntry(21, 2));
                 muscleEntriesArrayList.add(new BarEntry(25, 4));
                 muscleEntriesArrayList.add(new BarEntry(1, 2));
@@ -2616,10 +2744,1251 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Collections.sort(muscleEntriesArrayList, new EntryXComparator());
                 muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
                 muscleBarData = new BarData(muscleBarDataSet);
+                muscleBarData.setDrawValues(false);
                 muscleGroupChart.setData(muscleBarData);
-                muscleBarDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
                 muscleBarDataSet.setValueTextColor(Color.WHITE);
-                muscleBarDataSet.setValueTextSize(14f);
+                muscleBarDataSet.setValueTextSize(10f);
+                muscleBarData.setBarWidth(0.9f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisLeft().setGranularityEnabled(true);
+                muscleGroupChart.getAxisLeft().setGranularity(1f);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisRight().setGranularityEnabled(true);
+                muscleGroupChart.getAxisRight().setGranularity(1f);
+
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.BOTTOM);
+                dayofMonth.setGranularityEnabled(false);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.setDrawValueAboveBar(true);
+                muscleGroupChart.getDescription().setEnabled(false);
+                muscleGroupChart.getLegend().setEnabled(false);
+                muscleGroupChart.setFitBars(true);
+                muscleGroupChart.animateXY(500,500);
+                muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 36;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                BigDecimal avgD = new BigDecimal(averageDays);
+                avgD = avgD.setScale(2, RoundingMode.HALF_UP);
+                averageDays = avgD.floatValue();
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Shoulder Exercises"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (shoulderExercisesLog.size() != 0)
+                {
+                    for (int o = 0; o < shoulderExercisesLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == shoulderExercisesLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == shoulderExercisesLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (shoulderExercisesLog.get(o).getDayOfMonth() != shoulderExercisesLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(shoulderExercisesLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(6f, 1));
+                muscleEntriesArrayList.add(new BarEntry(3f, 5f));
+                muscleEntriesArrayList.add(new BarEntry(10, 4));
+                muscleEntriesArrayList.add(new BarEntry(8, 5));
+                muscleEntriesArrayList.add(new BarEntry(21, 2));
+                muscleEntriesArrayList.add(new BarEntry(25, 4));
+                muscleEntriesArrayList.add(new BarEntry(1, 2));
+                muscleEntriesArrayList.add(new BarEntry(8, 9));
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleBarData.setDrawValues(false);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(10f);
+                muscleBarData.setBarWidth(0.9f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisLeft().setGranularityEnabled(true);
+                muscleGroupChart.getAxisLeft().setGranularity(1f);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisRight().setGranularityEnabled(true);
+                muscleGroupChart.getAxisRight().setGranularity(1f);
+
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.BOTTOM);
+                dayofMonth.setGranularityEnabled(false);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.setDrawValueAboveBar(true);
+                muscleGroupChart.getDescription().setEnabled(false);
+                muscleGroupChart.getLegend().setEnabled(false);
+                muscleGroupChart.setFitBars(true);
+                muscleGroupChart.animateXY(500,500);
+                muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 42;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                BigDecimal avgD = new BigDecimal(averageDays);
+                avgD = avgD.setScale(2, RoundingMode.HALF_UP);
+                averageDays = avgD.floatValue();
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Bicep Exercises"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (bicepExercisesLog.size() != 0)
+                {
+                    for (int o = 0; o < bicepExercisesLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == bicepExercisesLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == bicepExercisesLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (bicepExercisesLog.get(o).getDayOfMonth() != bicepExercisesLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(bicepExercisesLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(6f, 1));
+                muscleEntriesArrayList.add(new BarEntry(3f, 5f));
+                muscleEntriesArrayList.add(new BarEntry(22, 4));
+                muscleEntriesArrayList.add(new BarEntry(4, 21));
+                muscleEntriesArrayList.add(new BarEntry(11, 2));
+                muscleEntriesArrayList.add(new BarEntry(25, 4));
+                muscleEntriesArrayList.add(new BarEntry(30, 14));
+                muscleEntriesArrayList.add(new BarEntry(8, 9));
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleBarData.setDrawValues(false);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(10f);
+                muscleBarData.setBarWidth(0.9f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisLeft().setGranularityEnabled(true);
+                muscleGroupChart.getAxisLeft().setGranularity(1f);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisRight().setGranularityEnabled(true);
+                muscleGroupChart.getAxisRight().setGranularity(1f);
+
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.BOTTOM);
+                dayofMonth.setGranularityEnabled(false);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.setDrawValueAboveBar(true);
+                muscleGroupChart.getDescription().setEnabled(false);
+                muscleGroupChart.getLegend().setEnabled(false);
+                muscleGroupChart.setFitBars(true);
+                muscleGroupChart.animateXY(500,500);
+                muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 34;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                BigDecimal avgD = new BigDecimal(averageDays);
+                avgD = avgD.setScale(2, RoundingMode.HALF_UP);
+                averageDays = avgD.floatValue();
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Triceps Exercises"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (tricepsExercisesLog.size() != 0)
+                {
+                    for (int o = 0; o < tricepsExercisesLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == tricepsExercisesLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == tricepsExercisesLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (tricepsExercisesLog.get(o).getDayOfMonth() != tricepsExercisesLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(tricepsExercisesLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(6f, 12));
+                muscleEntriesArrayList.add(new BarEntry(5f, 2f));
+                muscleEntriesArrayList.add(new BarEntry(12, 3));
+                muscleEntriesArrayList.add(new BarEntry(3, 11));
+                muscleEntriesArrayList.add(new BarEntry(1, 2));
+                muscleEntriesArrayList.add(new BarEntry(25, 4));
+                muscleEntriesArrayList.add(new BarEntry(30, 14));
+                muscleEntriesArrayList.add(new BarEntry(15, 9));
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleBarData.setDrawValues(false);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(10f);
+                muscleBarData.setBarWidth(0.9f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisLeft().setGranularityEnabled(true);
+                muscleGroupChart.getAxisLeft().setGranularity(1f);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisRight().setGranularityEnabled(true);
+                muscleGroupChart.getAxisRight().setGranularity(1f);
+
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.BOTTOM);
+                dayofMonth.setGranularityEnabled(false);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.setDrawValueAboveBar(true);
+                muscleGroupChart.getDescription().setEnabled(false);
+                muscleGroupChart.getLegend().setEnabled(false);
+                muscleGroupChart.setFitBars(true);
+                muscleGroupChart.animateXY(500,500);
+                muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 12;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                BigDecimal avgD = new BigDecimal(averageDays);
+                avgD = avgD.setScale(2, RoundingMode.HALF_UP);
+                averageDays = avgD.floatValue();
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Leg Exercises"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (legExercisesLog.size() != 0)
+                {
+                    for (int o = 0; o < legExercisesLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == legExercisesLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == legExercisesLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (legExercisesLog.get(o).getDayOfMonth() != legExercisesLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(legExercisesLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(3f, 7));
+                muscleEntriesArrayList.add(new BarEntry(5f, 3f));
+                muscleEntriesArrayList.add(new BarEntry(12, 3));
+                muscleEntriesArrayList.add(new BarEntry(15, 14));
+                muscleEntriesArrayList.add(new BarEntry(1, 2));
+                muscleEntriesArrayList.add(new BarEntry(25, 4));
+                muscleEntriesArrayList.add(new BarEntry(30, 14));
+                muscleEntriesArrayList.add(new BarEntry(16, 9));
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleBarData.setDrawValues(false);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(10f);
+                muscleBarData.setBarWidth(0.9f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisLeft().setGranularityEnabled(true);
+                muscleGroupChart.getAxisLeft().setGranularity(1f);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisRight().setGranularityEnabled(true);
+                muscleGroupChart.getAxisRight().setGranularity(1f);
+
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.BOTTOM);
+                dayofMonth.setGranularityEnabled(false);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.setDrawValueAboveBar(true);
+                muscleGroupChart.getDescription().setEnabled(false);
+                muscleGroupChart.getLegend().setEnabled(false);
+                muscleGroupChart.setFitBars(true);
+                muscleGroupChart.animateXY(500,500);
+                muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 6;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                BigDecimal avgD = new BigDecimal(averageDays);
+                avgD = avgD.setScale(2, RoundingMode.HALF_UP);
+                averageDays = avgD.floatValue();
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Back Exercises"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (backExercisesLog.size() != 0)
+                {
+                    for (int o = 0; o < backExercisesLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == backExercisesLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == backExercisesLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (backExercisesLog.get(o).getDayOfMonth() != backExercisesLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(backExercisesLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(13f, 3));
+                muscleEntriesArrayList.add(new BarEntry(17f, 11f));
+                muscleEntriesArrayList.add(new BarEntry(12, 3));
+                muscleEntriesArrayList.add(new BarEntry(15, 14));
+                muscleEntriesArrayList.add(new BarEntry(3, 12));
+                muscleEntriesArrayList.add(new BarEntry(25, 7));
+                muscleEntriesArrayList.add(new BarEntry(10, 14));
+                muscleEntriesArrayList.add(new BarEntry(16, 9));
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleBarData.setDrawValues(false);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(10f);
+                muscleBarData.setBarWidth(0.9f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisLeft().setGranularityEnabled(true);
+                muscleGroupChart.getAxisLeft().setGranularity(1f);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisRight().setGranularityEnabled(true);
+                muscleGroupChart.getAxisRight().setGranularity(1f);
+
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.BOTTOM);
+                dayofMonth.setGranularityEnabled(false);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.setDrawValueAboveBar(true);
+                muscleGroupChart.getDescription().setEnabled(false);
+                muscleGroupChart.getLegend().setEnabled(false);
+                muscleGroupChart.setFitBars(true);
+                muscleGroupChart.animateXY(500,500);
+                muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 55;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                BigDecimal avgD = new BigDecimal(averageDays);
+                avgD = avgD.setScale(2, RoundingMode.HALF_UP);
+                averageDays = avgD.floatValue();
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Glute Exercises"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (gluteExercisesLog.size() != 0)
+                {
+                    for (int o = 0; o < gluteExercisesLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == gluteExercisesLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == gluteExercisesLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (gluteExercisesLog.get(o).getDayOfMonth() != gluteExercisesLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(gluteExercisesLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(15f, 3));
+                muscleEntriesArrayList.add(new BarEntry(17f, 11f));
+                muscleEntriesArrayList.add(new BarEntry(11, 21));
+                muscleEntriesArrayList.add(new BarEntry(18, 4));
+                muscleEntriesArrayList.add(new BarEntry(3, 12));
+                muscleEntriesArrayList.add(new BarEntry(25, 13));
+                muscleEntriesArrayList.add(new BarEntry(18, 11));
+                muscleEntriesArrayList.add(new BarEntry(29, 12));
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleBarData.setDrawValues(false);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(10f);
+                muscleBarData.setBarWidth(0.9f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisLeft().setGranularityEnabled(true);
+                muscleGroupChart.getAxisLeft().setGranularity(1f);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisRight().setGranularityEnabled(true);
+                muscleGroupChart.getAxisRight().setGranularity(1f);
+
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.BOTTOM);
+                dayofMonth.setGranularityEnabled(false);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.setDrawValueAboveBar(true);
+                muscleGroupChart.getDescription().setEnabled(false);
+                muscleGroupChart.getLegend().setEnabled(false);
+                muscleGroupChart.setFitBars(true);
+                muscleGroupChart.animateXY(500,500);
+                muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 15;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                BigDecimal avgD = new BigDecimal(averageDays);
+                avgD = avgD.setScale(2, RoundingMode.HALF_UP);
+                averageDays = avgD.floatValue();
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Ab Exercises"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (abExercisesLog.size() != 0)
+                {
+                    for (int o = 0; o < abExercisesLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == abExercisesLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == abExercisesLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (abExercisesLog.get(o).getDayOfMonth() != abExercisesLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(abExercisesLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(1f, 5));
+                muscleEntriesArrayList.add(new BarEntry(3f, 1f));
+                muscleEntriesArrayList.add(new BarEntry(6, 12));
+                muscleEntriesArrayList.add(new BarEntry(18, 4));
+                muscleEntriesArrayList.add(new BarEntry(14, 13));
+                muscleEntriesArrayList.add(new BarEntry(25, 13));
+                muscleEntriesArrayList.add(new BarEntry(22, 13));
+                muscleEntriesArrayList.add(new BarEntry(29, 12));
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleBarData.setDrawValues(false);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(10f);
+                muscleBarData.setBarWidth(0.9f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisLeft().setGranularityEnabled(true);
+                muscleGroupChart.getAxisLeft().setGranularity(1f);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisRight().setGranularityEnabled(true);
+                muscleGroupChart.getAxisRight().setGranularity(1f);
+
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.BOTTOM);
+                dayofMonth.setGranularityEnabled(false);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.setDrawValueAboveBar(true);
+                muscleGroupChart.getDescription().setEnabled(false);
+                muscleGroupChart.getLegend().setEnabled(false);
+                muscleGroupChart.setFitBars(true);
+                muscleGroupChart.animateXY(500,500);
+                muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 26;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                BigDecimal avgD = new BigDecimal(averageDays);
+                avgD = avgD.setScale(2, RoundingMode.HALF_UP);
+                averageDays = avgD.floatValue();
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Calves Exercises"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (calvesExercisesLog.size() != 0)
+                {
+                    for (int o = 0; o < calvesExercisesLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == calvesExercisesLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == calvesExercisesLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (calvesExercisesLog.get(o).getDayOfMonth() != calvesExercisesLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(calvesExercisesLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(11f, 5));
+                muscleEntriesArrayList.add(new BarEntry(3f, 1f));
+                muscleEntriesArrayList.add(new BarEntry(6, 12));
+                muscleEntriesArrayList.add(new BarEntry(7, 7));
+                muscleEntriesArrayList.add(new BarEntry(14, 13));
+                muscleEntriesArrayList.add(new BarEntry(25, 13));
+                muscleEntriesArrayList.add(new BarEntry(20, 11));
+                muscleEntriesArrayList.add(new BarEntry(30, 12));
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleBarData.setDrawValues(false);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(10f);
+                muscleBarData.setBarWidth(0.9f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisLeft().setGranularityEnabled(true);
+                muscleGroupChart.getAxisLeft().setGranularity(1f);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisRight().setGranularityEnabled(true);
+                muscleGroupChart.getAxisRight().setGranularity(1f);
+
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.BOTTOM);
+                dayofMonth.setGranularityEnabled(false);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.setDrawValueAboveBar(true);
+                muscleGroupChart.getDescription().setEnabled(false);
+                muscleGroupChart.getLegend().setEnabled(false);
+                muscleGroupChart.setFitBars(true);
+                muscleGroupChart.animateXY(500,500);
+                muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 31;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                BigDecimal avgD = new BigDecimal(averageDays);
+                avgD = avgD.setScale(2, RoundingMode.HALF_UP);
+                averageDays = avgD.floatValue();
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Forearm Flexors and Grip Exercises"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (forearmFlexorsGripExercisesLog.size() != 0)
+                {
+                    for (int o = 0; o < forearmFlexorsGripExercisesLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == forearmFlexorsGripExercisesLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == forearmFlexorsGripExercisesLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (forearmFlexorsGripExercisesLog.get(o).getDayOfMonth() != forearmFlexorsGripExercisesLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(forearmFlexorsGripExercisesLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(17f, 1));
+                muscleEntriesArrayList.add(new BarEntry(5f, 1f));
+                muscleEntriesArrayList.add(new BarEntry(6, 12));
+                muscleEntriesArrayList.add(new BarEntry(7, 7));
+                muscleEntriesArrayList.add(new BarEntry(24, 2));
+                muscleEntriesArrayList.add(new BarEntry(25, 3));
+                muscleEntriesArrayList.add(new BarEntry(19, 17));
+                muscleEntriesArrayList.add(new BarEntry(30, 12));
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleBarData.setDrawValues(false);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(10f);
+                muscleBarData.setBarWidth(0.9f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisLeft().setGranularityEnabled(true);
+                muscleGroupChart.getAxisLeft().setGranularity(1f);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisRight().setGranularityEnabled(true);
+                muscleGroupChart.getAxisRight().setGranularity(1f);
+
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.BOTTOM);
+                dayofMonth.setGranularityEnabled(false);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.setDrawValueAboveBar(true);
+                muscleGroupChart.getDescription().setEnabled(false);
+                muscleGroupChart.getLegend().setEnabled(false);
+                muscleGroupChart.setFitBars(true);
+                muscleGroupChart.animateXY(500,500);
+                muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 28;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                BigDecimal avgD = new BigDecimal(averageDays);
+                avgD = avgD.setScale(2, RoundingMode.HALF_UP);
+                averageDays = avgD.floatValue();
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Forearm Extensor Exercises"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (forearmExtensorExercisesLog.size() != 0)
+                {
+                    for (int o = 0; o < forearmExtensorExercisesLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == forearmExtensorExercisesLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == forearmExtensorExercisesLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (forearmExtensorExercisesLog.get(o).getDayOfMonth() != forearmExtensorExercisesLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(forearmExtensorExercisesLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(13f, 12));
+                muscleEntriesArrayList.add(new BarEntry(1f, 1f));
+                muscleEntriesArrayList.add(new BarEntry(8, 12));
+                muscleEntriesArrayList.add(new BarEntry(7, 7));
+                muscleEntriesArrayList.add(new BarEntry(22, 3));
+                muscleEntriesArrayList.add(new BarEntry(25, 3));
+                muscleEntriesArrayList.add(new BarEntry(18, 19));
+                muscleEntriesArrayList.add(new BarEntry(30, 12));
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleBarData.setDrawValues(false);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(10f);
+                muscleBarData.setBarWidth(0.9f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisLeft().setGranularityEnabled(true);
+                muscleGroupChart.getAxisLeft().setGranularity(1f);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisRight().setGranularityEnabled(true);
+                muscleGroupChart.getAxisRight().setGranularity(1f);
+
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.BOTTOM);
+                dayofMonth.setGranularityEnabled(false);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.setDrawValueAboveBar(true);
+                muscleGroupChart.getDescription().setEnabled(false);
+                muscleGroupChart.getLegend().setEnabled(false);
+                muscleGroupChart.setFitBars(true);
+                muscleGroupChart.animateXY(500,500);
+                muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 18;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                BigDecimal avgD = new BigDecimal(averageDays);
+                avgD = avgD.setScale(2, RoundingMode.HALF_UP);
+                averageDays = avgD.floatValue();
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Cardio Exercises"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (cardioExercisesLog.size() != 0)
+                {
+                    for (int o = 0; o < cardioExercisesLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == cardioExercisesLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == cardioExercisesLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (cardioExercisesLog.get(o).getDayOfMonth() != cardioExercisesLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(cardioExercisesLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(7f, 11));
+                muscleEntriesArrayList.add(new BarEntry(4f, 3f));
+                muscleEntriesArrayList.add(new BarEntry(10, 12));
+                muscleEntriesArrayList.add(new BarEntry(11, 14));
+                muscleEntriesArrayList.add(new BarEntry(24, 2));
+                muscleEntriesArrayList.add(new BarEntry(25, 3));
+                muscleEntriesArrayList.add(new BarEntry(21, 7));
+                muscleEntriesArrayList.add(new BarEntry(30, 12));
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleBarData.setDrawValues(false);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(10f);
+                muscleBarData.setBarWidth(0.9f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisLeft().setGranularityEnabled(true);
+                muscleGroupChart.getAxisLeft().setGranularity(1f);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisRight().setGranularityEnabled(true);
+                muscleGroupChart.getAxisRight().setGranularity(1f);
+
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.BOTTOM);
+                dayofMonth.setGranularityEnabled(false);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.setDrawValueAboveBar(true);
+                muscleGroupChart.getDescription().setEnabled(false);
+                muscleGroupChart.getLegend().setEnabled(false);
+                muscleGroupChart.setFitBars(true);
+                muscleGroupChart.animateXY(500,500);
+                muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 24;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                BigDecimal avgD = new BigDecimal(averageDays);
+                avgD = avgD.setScale(2, RoundingMode.HALF_UP);
+                averageDays = avgD.floatValue();
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("Body Weight"))
+            {
+                int muscleGroupTally = 0;
+                int dailyTally = 0;
+                if (bodyWeightLog.size() != 0)
+                {
+                    for (int o = 0; o < bodyWeightLog.size(); o++)
+                    {
+                        //If current year and month matches year and month of log. Reflecting data on monthly basis.
+                        if(LocalDateTime.now().getYear() == bodyWeightLog.get(o).getYear() && LocalDateTime.now().getMonthValue() == bodyWeightLog.get(o).getMonthValue())
+                        {
+                            //Increment total for month.
+                            muscleGroupTally++;
+
+                            //If this is not the first or only entry.
+                            if(o != 0)
+                            {
+                                //If the current entry's day has gone over to the next day, array should be in chronological order
+                                //daily tally is reset.
+                                if (bodyWeightLog.get(o).getDayOfMonth() != bodyWeightLog.get(o - 1).getDayOfMonth())
+                                {
+                                    dailyTally = 0;
+                                }
+                            }
+
+                            //If dates are the same, tally is incremented by 1.
+                            dailyTally++;
+                            muscleEntriesArrayList = new ArrayList<>();
+                            muscleEntriesArrayList.add(new BarEntry(bodyWeightLog.get(o).getDayOfMonth(), dailyTally));
+                            //For each log, create a new entry with x position at the int of day of month and y at dailyTally value.
+                        }
+                    }
+                }
+                muscleEntriesArrayList = new ArrayList<>();
+                muscleEntriesArrayList.add(new BarEntry(1f, 1));
+                muscleEntriesArrayList.add(new BarEntry(22f, 13f));
+                muscleEntriesArrayList.add(new BarEntry(4, 2));
+                muscleEntriesArrayList.add(new BarEntry(11, 14));
+                muscleEntriesArrayList.add(new BarEntry(14, 5));
+                muscleEntriesArrayList.add(new BarEntry(15, 3));
+                muscleEntriesArrayList.add(new BarEntry(21, 7));
+                muscleEntriesArrayList.add(new BarEntry(30, 12));
+                //Force Feeding Data for showcasing purposes, as muscle group array is not synced to FireBase,
+                //Thus, does not contain enough data for showcasing.
+
+                //Sorting Entries as chart is created in order data is passed. Just in case data is out of order.
+                Collections.sort(muscleEntriesArrayList, new EntryXComparator());
+                muscleBarDataSet = new BarDataSet(muscleEntriesArrayList, "");
+                muscleBarData = new BarData(muscleBarDataSet);
+                muscleBarData.setDrawValues(false);
+                muscleGroupChart.setData(muscleBarData);
+                muscleBarDataSet.setColors(Color.rgb(120, 81, 169));
+                muscleBarDataSet.setValueTextColor(Color.WHITE);
+                muscleBarDataSet.setValueTextSize(10f);
+                muscleBarData.setBarWidth(0.9f);
+                //Setting Y axis color to white.
+                muscleGroupChart.getAxisLeft().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisLeft().setTextSize(12);
+                muscleGroupChart.getAxisLeft().setGranularityEnabled(true);
+                muscleGroupChart.getAxisLeft().setGranularity(1f);
+                muscleGroupChart.getAxisRight().setTextSize(12);
+                muscleGroupChart.getAxisRight().setTextColor(Color.WHITE);
+                muscleGroupChart.getAxisRight().setGranularityEnabled(true);
+                muscleGroupChart.getAxisRight().setGranularity(1f);
+
+
+                // Setup X Axis
+                XAxis dayofMonth = muscleGroupChart.getXAxis();
+                dayofMonth.setPosition(XAxis.XAxisPosition.BOTTOM);
+                dayofMonth.setGranularityEnabled(false);
+                dayofMonth.setGranularity(1.0f);
+                dayofMonth.setXOffset(1f);
+                dayofMonth.setAxisMinimum(1);
+                dayofMonth.setAxisMaximum(31);
+                dayofMonth.setTextColor(Color.WHITE);
+                dayofMonth.setTextSize(12);
+                muscleGroupChart.setDrawValueAboveBar(true);
+                muscleGroupChart.getDescription().setEnabled(false);
+                muscleGroupChart.getLegend().setEnabled(false);
+                muscleGroupChart.setFitBars(true);
+                muscleGroupChart.animateXY(500,500);
+                muscleGroupChart.invalidate();
+
+                TextView avgWorked = (TextView) findViewById(R.id.avgDays);
+                muscleGroupTally = 64;
+
+                //Getting average of workouts per day by dividing total workouts for the month by month length, assuming not a leap year.
+                int daysOfMonth = LocalDateTime.now().getMonth().length(false);
+                float averageDays = (float)muscleGroupTally/(float)daysOfMonth;
+                BigDecimal avgD = new BigDecimal(averageDays);
+                avgD = avgD.setScale(2, RoundingMode.HALF_UP);
+                averageDays = avgD.floatValue();
+                avgWorked.setText(Float.toString(averageDays));
+                avgWorked.invalidate();
             }
         }
     }
@@ -2631,6 +4000,455 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, workouts);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+    }
+
+    //Function for generating Breakdown chart.
+    void GenerateBreakdownSpinner()
+    {
+        //Set breakdown spinner
+        spinner =  findViewById(R.id.monthSelect);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_dropdown_item, monthSelect);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+    }
+
+    void GenerateBreakdown()
+    {
+        //month will be used to tell what month in date logs to look for without if checking every loop
+        int month = 0;
+        int chest = 0, shoulder = 0, bicep = 0, tricep = 0, leg = 0, back = 0, glute = 0, ab = 0, calves = 0,
+            flexors = 0, extensors = 0, cardio = 0, body = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String currentSel = spinner.getSelectedItem().toString();
+            if (currentSel.equals("January"))
+            {
+                month = 1;
+                //Hard Coding data for demonstrative purposes
+                chest = 21;
+                shoulder =12;
+                bicep = 13;
+                tricep = 32;
+                leg = 7;
+                back = 6;
+                glute = 14;
+                ab = 22;
+                calves = 17;
+                flexors = 6;
+                extensors = 9;
+                cardio = 8;
+                body = 33;
+            }
+
+            if (currentSel.equals("February"))
+            {
+                month = 2;
+                //Hard Coding data for demonstrative purposes
+                chest = 12;
+                shoulder =33;
+                bicep = 24;
+                tricep = 55;
+                leg = 44;
+                back = 24;
+                glute = 4;
+                ab = 66;
+                calves = 7;
+                flexors = 12;
+                extensors = 4;
+                cardio = 32;
+                body = 32;
+            }
+
+            if (currentSel.equals("March"))
+            {
+                month = 3;
+                //Hard Coding data for demonstrative purposes
+                chest = 71;
+                shoulder =21;
+                bicep = 13;
+                tricep = 12;
+                leg = 27;
+                back = 32;
+                glute = 4;
+                ab = 24;
+                calves = 27;
+                flexors = 16;
+                extensors = 10;
+                cardio = 4;
+                body = 23;
+            }
+
+            if (currentSel.equals("April"))
+            {
+                month = 4;
+                //Hard Coding data for demonstrative purposes
+                chest = 65;
+                shoulder =2;
+                bicep = 32;
+                tricep = 22;
+                leg = 21;
+                back = 23;
+                glute = 4;
+                ab = 52;
+                calves = 7;
+                flexors = 46;
+                extensors = 5;
+                cardio = 0;
+                body = 23;
+            }
+
+            if (currentSel.equals("May"))
+            {
+                month = 5;
+                //Hard Coding data for demonstrative purposes
+                chest = 43;
+                shoulder =22;
+                bicep = 44;
+                tricep = 22;
+                leg = 17;
+                back = 16;
+                glute = 4;
+                ab = 32;
+                calves = 27;
+                flexors = 16;
+                extensors = 19;
+                cardio = 18;
+                body = 13;
+            }
+
+            if (currentSel.equals("June"))
+            {
+                month = 6;
+                //Hard Coding data for demonstrative purposes
+                chest = 21;
+                shoulder =2;
+                bicep = 3;
+                tricep = 2;
+                leg = 7;
+                back = 6;
+                glute = 4;
+                ab = 2;
+                calves = 7;
+                flexors = 16;
+                extensors = 9;
+                cardio = 8;
+                body = 3;
+            }
+
+            if (currentSel.equals("July"))
+            {
+                month = 7;
+                //Hard Coding data for demonstrative purposes
+                chest = 30;
+                shoulder =20;
+                bicep = 10;
+                tricep = 30;
+                leg = 40;
+                back = 20;
+                glute = 10;
+                ab = 20;
+                calves = 20;
+                flexors = 30;
+                extensors = 10;
+                cardio = 20;
+                body = 30;
+            }
+
+            if (currentSel.equals("August"))
+            {
+                month = 8;
+                //Hard Coding data for demonstrative purposes
+                chest = 2;
+                shoulder =1;
+                bicep = 4;
+                tricep = 3;
+                leg = 123;
+                back = 6;
+                glute = 1;
+                ab = 2;
+                calves = 1;
+                flexors = 6;
+                extensors = 9;
+                cardio = 8;
+                body = 3;
+            }
+
+            if (currentSel.equals("September"))
+            {
+                month = 9;
+                //Hard Coding data for demonstrative purposes
+                chest = 200;
+                shoulder =0;
+                bicep = 0;
+                tricep = 3;
+                leg = 0;
+                back = 4;
+                glute = 12;
+                ab = 2;
+                calves = 1;
+                flexors = 6;
+                extensors = 9;
+                cardio = 8;
+                body = 3;
+            }
+
+            if (currentSel.equals("October"))
+            {
+                month = 10;
+                //Hard Coding data for demonstrative purposes
+                chest = 3;
+                shoulder =4;
+                bicep = 124;
+                tricep = 2;
+                leg = 72;
+                back = 6;
+                glute = 4;
+                ab = 42;
+                calves = 7;
+                flexors = 4;
+                extensors = 2;
+                cardio = 3;
+                body = 3;
+            }
+
+            if (currentSel.equals("November"))
+            {
+                month = 11;
+                //Hard Coding data for demonstrative purposes
+                chest = 2;
+                shoulder =3;
+                bicep = 3;
+                tricep = 6;
+                leg = 7;
+                back = 6;
+                glute = 4;
+                ab = 164;
+                calves = 8;
+                flexors = 2;
+                extensors = 1;
+                cardio = 8;
+                body = 3;
+            }
+
+            if (currentSel.equals("December"))
+            {
+                month = 12;
+                //Hard Coding data for demonstrative purposes
+                chest = 1;
+                shoulder =15;
+                bicep = 3;
+                tricep = 32;
+                leg = 5;
+                back = 21;
+                glute = 4;
+                ab = 52;
+                calves = 37;
+                flexors = 2;
+                extensors = 3;
+                cardio = 4;
+                body = 143;
+            }
+
+            //Time to loop through all the log arrays and get totals for each month.
+            if(chestExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < chestExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == chestExercisesLog.get(i).getYear() && chestExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        chest++;
+                    }
+                }
+            }
+
+            if(shoulderExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < shoulderExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == shoulderExercisesLog.get(i).getYear() && shoulderExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        shoulder++;
+                    }
+                }
+            }
+
+            if(bicepExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < bicepExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == bicepExercisesLog.get(i).getYear() && bicepExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        bicep++;
+                    }
+                }
+            }
+
+            if(tricepsExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < tricepsExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == tricepsExercisesLog.get(i).getYear() && tricepsExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        tricep++;
+                    }
+                }
+            }
+
+            if(legExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < legExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == legExercisesLog.get(i).getYear() && legExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        leg++;
+                    }
+                }
+            }
+
+            if(backExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < backExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == backExercisesLog.get(i).getYear() && backExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        back++;
+                    }
+                }
+            }
+
+            if(gluteExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < gluteExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == gluteExercisesLog.get(i).getYear() && gluteExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        glute++;
+                    }
+                }
+            }
+
+            if(abExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < abExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == abExercisesLog.get(i).getYear() && abExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        ab++;
+                    }
+                }
+            }
+
+            if(calvesExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < calvesExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == calvesExercisesLog.get(i).getYear() && calvesExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        calves++;
+                    }
+                }
+            }
+
+            if(forearmFlexorsGripExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < forearmFlexorsGripExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == forearmFlexorsGripExercisesLog.get(i).getYear() && forearmFlexorsGripExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        flexors++;
+                    }
+                }
+            }
+
+            if(forearmExtensorExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < forearmExtensorExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == forearmExtensorExercisesLog.get(i).getYear() && forearmExtensorExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        extensors++;
+                    }
+                }
+            }
+
+            if(cardioExercisesLog.size() != 0)
+            {
+                for (int i = 0; i < cardioExercisesLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == cardioExercisesLog.get(i).getYear() && cardioExercisesLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        cardio++;
+                    }
+                }
+            }
+
+            if(bodyWeightLog.size() != 0)
+            {
+                for (int i = 0; i < bodyWeightLog.size(); i++)
+                {
+                    if(LocalDateTime.now().getYear() == bodyWeightLog.get(i).getYear() && bodyWeightLog.get(i).getMonthValue() == month)
+                    {
+                        //If the current entry matches the current year and month, add to month tally.
+                        body++;
+                    }
+                }
+            }
+
+
+            //Tallying the total for all exercises done for the current month.
+            int monthTotal = chest+shoulder+bicep+tricep+leg+back+glute+ab+calves+flexors+extensors+cardio+body;
+
+            TextView totalWorkOuts = (TextView) findViewById(R.id.totalWorkoutVal);
+            totalWorkOuts.setText(Integer.toString(monthTotal));
+            totalWorkOuts.invalidate();
+
+            //Setting up Pie Chart Entries
+            breakdownEntries = new ArrayList<>();
+            breakdownEntries.add(new PieEntry(chest, "Chest"));
+            breakdownEntries.add(new PieEntry(shoulder, "Shoulder"));
+            breakdownEntries.add(new PieEntry(bicep, "Bicep"));
+            breakdownEntries.add(new PieEntry(tricep, "Tricep"));
+            breakdownEntries.add(new PieEntry(leg, "Leg"));
+            breakdownEntries.add(new PieEntry(back, "Back"));
+            breakdownEntries.add(new PieEntry(glute, "Glute"));
+            breakdownEntries.add(new PieEntry(ab, "Ab"));
+            breakdownEntries.add(new PieEntry(calves, "Calves"));
+            breakdownEntries.add(new PieEntry(flexors, "Forearm Flexors and Grip"));
+            breakdownEntries.add(new PieEntry(extensors, "Forearm Extensor"));
+            breakdownEntries.add(new PieEntry(cardio, "Cardio"));
+            breakdownEntries.add(new PieEntry(body, "Body Weight"));
+
+            //Setting up dataset
+            breakdownDataSet = new PieDataSet(breakdownEntries, "Monthly Breakdown");
+            breakdownDataSet.setColors(ColorTemplate.createColors(colors));
+            breakdownDataSet.setValueTextSize(14f);
+
+            //Setting up Data
+            breakdownData = new PieData(breakdownDataSet);
+
+            //Setting up chart
+            breakdownChart.setData(breakdownData);
+            breakdownChart.animateXY(500,500);
+            breakdownChart.setDrawEntryLabels(true);
+            breakdownChart.setTransparentCircleColor(Color.rgb(120,81,169));
+            breakdownChart.setEntryLabelColor(Color.WHITE);
+            breakdownChart.getLegend().setTextColor(Color.WHITE);
+            breakdownChart.setHoleColor(Color.TRANSPARENT);
+            breakdownChart.getDescription().setEnabled(false);
+            breakdownChart.invalidate();
+        }
     }
 
     public void onNothingSelected(AdapterView<?> adapterView) {}

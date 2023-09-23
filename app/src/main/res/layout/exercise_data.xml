@@ -32,8 +32,8 @@
         android:id="@+id/avgSetPerDay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="164dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="194dp"
         android:text="Avg. Sets (Per Day):"
         android:textColor="@color/white"
         android:textSize="18sp"
@@ -43,8 +43,8 @@
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/monthlyWeightMonitor"
-        android:layout_width="388dp"
-        android:layout_height="182dp"
+        android:layout_width="386dp"
+        android:layout_height="189dp"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.508"
@@ -103,5 +103,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/exerciseData" />
+
+    <TextView
+        android:id="@+id/avgDays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="16dp"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/avgSetPerDay"
+        app:layout_constraintTop_toBottomOf="@+id/monthlyExerciseData" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
