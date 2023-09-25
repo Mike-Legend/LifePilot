@@ -1183,11 +1183,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id == R.id.ExerciseSave_Button) {
             //TODO: Sync to firebase
-            Log.d("TEST", "629");
             SyncUserRoutines();
-            Log.d("TEST", "631");
             SyncUserRoutineExercises();
-            Log.d("TEST", "633");
             Transition slide = new Slide(Gravity.LEFT);
             TransitionManager.go(routineAnimation, slide);
 
