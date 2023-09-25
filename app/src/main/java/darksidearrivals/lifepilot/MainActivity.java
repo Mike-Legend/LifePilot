@@ -79,6 +79,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -414,6 +415,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 button.setBackground(gradDraw);
             }
             routineDeleteList.clear();
+            //Resync routines and exercises to firbase
+            SyncUserRoutines();
+            SyncUserRoutineExercises();
             //overlay trigger
             FrameLayout routineedit = findViewById(R.id.routinelistoverlayedit);
             routineedit.setVisibility(View.GONE);
@@ -651,6 +655,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             userRoutineCheck.add(temp2);
             //New Exercise Array
             userExercisesArrayList.add(new ArrayList<Button>());
+            SyncUserRoutines();
         } else if (id == R.id.EditRoutineNewList_Button) {
             //overlay trigger
             if (userExercisesArrayList.get(routineIDActive).size() != 0) {
@@ -1178,16 +1183,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             routineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionNewRoutineLayout), R.layout.routine_list, this);
         } else if (id == R.id.ExerciseSave_Button) {
             //TODO: Sync to firebase
-            //all array information
-            /*Map<String, Object> userArray = new HashMap<>();
-            ArrayList<String> userStringRoutines = new ArrayList<>();
-            for (int i=0; i<userRoutines.size(); i++){
-                 userStringRoutines.add(userRoutines.get(i).toString());
-            }
-            userArray.put("Routines", Arrays.asList(userStringRoutines.get(0)));
-            db.collection("Users").document(user.getUid())
-                    .update(userArray);*/
-            setContentView(R.layout.routine_list);
+            SyncUserRoutines();
+            SyncUserRoutineExercises();
+            Transition slide = new Slide(Gravity.LEFT);
+            TransitionManager.go(routineAnimation, slide);
+
+            //setup next button animations
+            goalAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_goals, this);
+            homeAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.activity_main, this);
+            nRoutineAnimation = Scene.getSceneForLayout(findViewById(R.id.TransitionRoutineLayout), R.layout.routine_newlist, this);
+           // setContentView(R.layout.routine_list);
             LoadUserRoutines();
         } else if (id == R.id.StartRoutine_Button) {
             if (userExercisesArrayList.get(routineIDActive).size() != 0) {
@@ -1505,11 +1510,76 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                             if (task.isSuccessful()) {
                                                 DocumentSnapshot document = task.getResult();
                                                 if (document.exists()) {
+                                                    //Getting user weight and height
                                                     double weight = ((double) document.getData().get("Weight"));
                                                     double height = ((double) document.getData().get("Height"));
                                                     userWeight = (float) weight;
                                                     userHeight = (float) height;
-                                                } else {
+
+                                                    //Getting user routines
+                                                    if (document.getData().get("Routines") != null) {
+                                                        ArrayList<String> routineNames = (ArrayList<String>) document.getData().get("Routines");
+                                                        for (int i=0; i<routineNames.size(); i++){
+                                                            //button creation
+                                                            //LinearLayout ll = findViewById(R.id.RoutineButtonAddsHere);
+                                                            Button btn = new Button(MainActivity.this);
+                                                            btn.setAllCaps(false);
+                                                            btn.setText(routineNames.get(i));
+                                                            btn.setTextSize(24);
+                                                            btn.setTextColor(Color.WHITE);
+                                                            btn.setClickable(true);
+                                                            btn.setOnClickListener(MainActivity.this::onClick);
+                                                            GradientDrawable gradDraw = new GradientDrawable();
+                                                            gradDraw.setShape(GradientDrawable.RECTANGLE);
+                                                            gradDraw.setCornerRadius(100);
+                                                            gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                                                            btn.setBackground(gradDraw);
+                                                            btn.setPadding(0,0,0,8);
+                                                            btn.setId(i);
+                                                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+                                                            params.setMargins(0, 30, 0, 0);
+                                                            btn.setLayoutParams(params);
+                                                            //added to routine list
+                                                            userRoutines.add(btn);
+                                                            //New Exercise Array
+                                                            userExercisesArrayList.add(new ArrayList<Button>());
+                                                        }
+                                                    }
+
+                                                    //Getting user routines exercises
+                                                    if (document.getData().get("Routines") != null) {
+                                                        Map<String, Object> firebaseExerciseArrays = (Map<String, Object>) document.getData().get("Exercises");
+                                                        for (int i=0; i<firebaseExerciseArrays.size(); i++) {
+                                                            ArrayList<String> userRoutineExerciseNames = (ArrayList<String>) firebaseExerciseArrays.get(Integer.toString(i));
+                                                            for (int j = 0; j < userRoutineExerciseNames.size(); j++) {
+                                                                Button btn = new Button(MainActivity.this);
+                                                                btn.setText(userRoutineExerciseNames.get(j));
+                                                                btn.setTextSize(24);
+                                                                btn.setTextColor(Color.WHITE);
+                                                                btn.setAllCaps(false);
+                                                                btn.setClickable(true);
+                                                                btn.setOnClickListener(getOnClickForDynamicButtons(btn));
+                                                                GradientDrawable gradDraw = new GradientDrawable();
+                                                                gradDraw.setShape(GradientDrawable.RECTANGLE);
+                                                                gradDraw.setCornerRadius(90);
+                                                                gradDraw.setColor(getResources().getColor(R.color.royalPurple));
+                                                                btn.setBackground(gradDraw);
+                                                                btn.setPadding(20,0,20,8);
+                                                                if(btn.getText().length() > 23) {
+                                                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 240);
+                                                                    params.setMargins(0, 30, 0, 0);
+                                                                    btn.setLayoutParams(params);
+                                                                    userExercisesArrayList.get(i).add(btn);
+                                                                } else {
+                                                                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 120);
+                                                                    params.setMargins(0, 30, 0, 0);
+                                                                    btn.setLayoutParams(params);
+                                                                    userExercisesArrayList.get(i).add(btn);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }else{
                                                     Toast.makeText(getApplicationContext(), "Error, user document doesn't exist", Toast.LENGTH_SHORT).show();
                                                 }
                                             } else {
@@ -1537,6 +1607,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
+    }
+
+    private void SyncUserRoutines() {
+        //Saving button info from UserRoutines to firebase
+        Map<String, Object> userArray = new HashMap<>();
+        ArrayList<String> userStringRoutines = new ArrayList<>();
+        for (int i=0; i<userRoutines.size(); i++){
+            userStringRoutines.add(userRoutines.get(i).getId(),userRoutines.get(i).getText().toString());
+        }
+        userArray.put("Routines", userStringRoutines);
+        db.collection("Users").document(user.getUid())
+                .update(userArray);
+    }
+
+    private void SyncUserRoutineExercises(){
+        //Saving button info from UserExercisesArrayList to firebase
+        ArrayList<ArrayList<String>> userRoutineExerciseNames = new ArrayList<ArrayList<String>>();
+        for (int i=0; i<userExercisesArrayList.size(); i++){
+            userRoutineExerciseNames.add(new ArrayList<String>());
+            for (int j=0; j<userExercisesArrayList.get(i).size(); j++){
+                userRoutineExerciseNames.get(i).add(userExercisesArrayList.get(i).get(j).getText().toString());
+            }
+
+        }
+        Map<String, Object> firebaseExerciseArrays = new HashMap<>();
+
+        for (int i=0; i<userRoutineExerciseNames.size(); i++) {
+            firebaseExerciseArrays.put(Integer.toString(i), userRoutineExerciseNames.get(i));
+        }
+        Map<String, Object> userArray = new HashMap<>();
+        userArray.put("Exercises", firebaseExerciseArrays);
+        db.collection("Users").document(user.getUid())
+                .update(userArray);
     }
 
     //Signing in
