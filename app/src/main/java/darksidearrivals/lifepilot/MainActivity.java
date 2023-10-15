@@ -87,6 +87,7 @@ import pl.droidsonroids.gif.GifImageView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
+
     //Routine and goal variables and arrays
     private ArrayList<Button> userRoutines, tempUserRoutines, userGoals, routineDeleteList;
     private ArrayList<String> currentSelectedItems = new ArrayList<>();
@@ -609,6 +610,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //userGoalArrayList.get(i).get(0).setText("");
                 //}
                 //}
+
             }
         } else if (id == R.id.ConfirmNewRoutine_Button) {
             //overlay trigger
