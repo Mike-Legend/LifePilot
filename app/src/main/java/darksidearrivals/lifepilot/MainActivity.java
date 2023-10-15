@@ -87,7 +87,6 @@ import pl.droidsonroids.gif.GifImageView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-
     //Routine and goal variables and arrays
     private ArrayList<Button> userRoutines, tempUserRoutines, userGoals, routineDeleteList;
     private ArrayList<String> currentSelectedItems = new ArrayList<>();
